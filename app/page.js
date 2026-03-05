@@ -144,7 +144,7 @@ export default function HomePage() {
                 Réussissez le concours <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-rose-600">infirmier FPC</span> sans stress.
               </h1>
               <p className="text-lg sm:text-xl text-slate-600 mb-8 font-medium leading-relaxed">
-                La première plateforme de révision conçue exclusivement pour les professionnels en reconversion. Maîtrisez parfaitement les <strong className="text-slate-800">calculs de doses</strong> </br>et la <strong className="text-slate-800">culture sanitaire</strong>.
+                La première plateforme de révision conçue exclusivement pour les professionnels en reconversion. Maîtrisez parfaitement les <strong className="text-slate-800">calculs de doses</strong> <br/>et la <strong className="text-slate-800">culture sanitaire</strong>.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 mb-10">
                 <a href="/qcm.html" className="flex-1 bg-slate-900 hover:bg-black text-white px-6 py-4 rounded-2xl font-bold text-base shadow-xl transition-all flex items-center justify-center gap-2 group">
