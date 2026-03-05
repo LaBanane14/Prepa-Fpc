@@ -70,6 +70,7 @@ export default function HomePage() {
         .spin-border::before { content: ''; position: absolute; inset: -3px; border-radius: 9999px; border: 3px solid transparent; border-top-color: #dc2626; animation: spin-smooth 1.5s linear infinite; }
         @keyframes spin-smooth { to { transform: rotate(360deg); } }
         .faq-content { transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out; overflow: hidden; }
+        ::selection { background: rgba(220, 38, 38, 0.2); color: inherit; }
       `}</style>
 
       {/* NAVIGATION */}
@@ -143,7 +144,7 @@ export default function HomePage() {
                 Réussissez le concours <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-rose-600">infirmier FPC</span> sans stress.
               </h1>
               <p className="text-lg sm:text-xl text-slate-600 mb-8 font-medium leading-relaxed">
-                La première plateforme de révision conçue exclusivement pour les professionnels en reconversion. Maîtrisez parfaitement les <br/><strong className="text-slate-800">calculs de doses</strong> et la <strong className="text-slate-800">culture sanitaire</strong>.
+                La première plateforme de révision conçue exclusivement pour les professionnels en reconversion. Maîtrisez parfaitement les <strong className="text-slate-800">calculs de doses</strong> </br>et la <strong className="text-slate-800">culture sanitaire</strong>.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 mb-10">
                 <a href="/qcm.html" className="flex-1 bg-slate-900 hover:bg-black text-white px-6 py-4 rounded-2xl font-bold text-base shadow-xl transition-all flex items-center justify-center gap-2 group">
@@ -156,10 +157,10 @@ export default function HomePage() {
               </div>
               <div className="flex items-center gap-4 text-sm font-semibold text-slate-500">
                 <div className="flex -space-x-2">
-                  <div className="w-8 h-8 rounded-full border-2 border-white bg-slate-200 flex items-center justify-center text-xs text-slate-500 z-40"><svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
-                  <div className="w-8 h-8 rounded-full border-2 border-white bg-slate-300 flex items-center justify-center text-xs text-slate-500 z-30"><svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
-                  <div className="w-8 h-8 rounded-full border-2 border-white bg-slate-200 flex items-center justify-center text-xs text-slate-500 z-20"><svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
-                </div>
+                <div className="w-8 h-8 rounded-full border-2 border-white bg-red-500 flex items-center justify-center text-xs text-white font-bold z-40">M</div>
+                <div className="w-8 h-8 rounded-full border-2 border-white bg-slate-700 flex items-center justify-center text-xs text-white font-bold z-30">S</div>
+                <div className="w-8 h-8 rounded-full border-2 border-white bg-rose-400 flex items-center justify-center text-xs text-white font-bold z-20">L</div>
+               </div>
                 <p>Rejoignez <span className="text-slate-800 font-bold">plus de 1 200</span> futurs IDE</p>
               </div>
             </div>
@@ -284,12 +285,12 @@ export default function HomePage() {
           <div className="grid md:grid-cols-2 gap-8">
             <div className="bg-slate-800 p-8 rounded-3xl border border-slate-700 relative overflow-hidden text-white hover:scale-[1.02] transition-transform duration-300 shadow-xl shadow-slate-900/50">
               <div className="absolute top-4 right-4 bg-white/20 text-white px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider backdrop-blur-sm">20 points</div>
-              <div className="w-14 h-14 bg-red-500/30 rounded-2xl flex items-center justify-center mb-6 shadow-sm"><svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="m12 19 7-7 3 3-7 7-3-3Z"/><path d="m18 13-1.5-7.5L2 2l3.5 14.5L13 18l5-5Z"/><path d="m2 2 7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg></div>
+              <div className="w-14 h-14 bg-red-500/30 rounded-2xl flex items-center justify-center mb-6 shadow-sm"><svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg></div>
               <h3 className="text-2xl font-black text-white mb-6">Épreuve écrite — 1 heure</h3>
               <div className="space-y-4 text-slate-300 font-medium">
                 <div className="flex items-start gap-3"><div className="bg-red-500/30 p-1.5 rounded-lg mt-0.5 shrink-0"><svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg></div><p><strong className="text-white">Sous-épreuve de calculs</strong> : calculs de doses, conversions, pourcentages, produits en croix (sur 10 points)</p></div>
                 <div className="flex items-start gap-3"><div className="bg-red-500/30 p-1.5 rounded-lg mt-0.5 shrink-0"><svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg></div><p><strong className="text-white">Sous-épreuve de rédaction</strong> : analyse ou questions/réponses sur un texte de culture sanitaire et sociale (sur 10 points)</p></div>
-                <div className="flex items-start gap-3"><div className="bg-red-500/30 p-1.5 rounded-lg mt-0.5 shrink-0"><svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div><p><strong className="text-white">ATTENTION !</strong> Une note en dessous de <strong className="text-white">8/20</strong> à l'épreuve écrite est <strong className="text-white">ELIMINATOIRE</strong></p></div>
+                <div className="flex items-start gap-3"><div className="bg-red-500/30 p-1.5 rounded-lg mt-0.5 shrink-0"><svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><p><strong className="text-white">ATTENTION !</strong> Une note en dessous de <strong className="text-white">8/20</strong> à l'épreuve écrite est <strong className="text-white">ELIMINATOIRE</strong></p></div>
               </div>
             </div>
             <div className="bg-slate-800 p-8 rounded-3xl border border-slate-700 relative overflow-hidden text-white hover:scale-[1.02] transition-transform duration-300 shadow-xl shadow-slate-900/50">
@@ -299,7 +300,7 @@ export default function HomePage() {
               <div className="space-y-4 text-slate-300 font-medium">
                 <div className="flex items-start gap-3"><div className="bg-slate-700 p-1.5 rounded-lg mt-0.5 shrink-0"><svg className="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg></div><p><strong className="text-white">Présentation du parcours</strong> : valoriser votre expérience professionnelle et votre projet (10 min)</p></div>
                 <div className="flex items-start gap-3"><div className="bg-slate-700 p-1.5 rounded-lg mt-0.5 shrink-0"><svg className="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg></div><p><strong className="text-white">Entretien avec le jury</strong> : questions sur vos motivations, connaissances du métier IDE (10 min)</p></div>
-                <div className="flex items-start gap-3"><div className="bg-slate-700 p-1.5 rounded-lg mt-0.5 shrink-0"><svg className="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div><p><strong className="text-white">ATTENTION !</strong> Une note en dessous de <strong className="text-white">8/20</strong> à l'épreuve orale est <strong className="text-white">ELIMINATOIRE</strong></p></div>
+                <div className="flex items-start gap-3"><div className="bg-slate-700 p-1.5 rounded-lg mt-0.5 shrink-0"><svg className="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><p><strong className="text-white">ATTENTION !</strong> Une note en dessous de <strong className="text-white">8/20</strong> à l'épreuve orale est <strong className="text-white">ELIMINATOIRE</strong></p></div>
               </div>
             </div>
           </div>
