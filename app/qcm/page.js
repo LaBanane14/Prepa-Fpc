@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 
 const quizData = [
   { category: "Calcul de dose", question: "Vous devez préparer 1,5g de Clamoxyl. Vous disposez de flacons de 500mg à diluer dans 5ml. Combien de ml prélevez-vous ?", options: ["5 ml", "10 ml", "15 ml", "20 ml"], correct: 2, explanation: "Conversion : 1,5 g = 1500 mg<br/><br/>Si 500 mg → 5 ml<br/>Alors 1500 mg → <strong>x</strong> ml<br/><br/>Calcul : <strong>(1500 × 5) / 500 = 15 ml</strong><br/><br/><em>Astuce : 1500 est le triple de 500, donc 3 × 5 ml = 15 ml</em>" },
@@ -137,110 +137,117 @@ export default function QuizPage() {
 
       <Nav />
 
-      <main className="flex-grow w-full max-w-3xl mx-auto px-4 py-4 sm:py-6">
-        {/* QCM CARD */}
-        <div className={`${colors.wrapper} rounded-2xl sm:rounded-[2.5rem] p-3 sm:p-6 shadow-sm transition-colors duration-300 mt-2 sm:mt-4`}>
-          <div className="bg-white rounded-xl sm:rounded-[2rem] shadow-xl flex flex-col overflow-hidden relative">
-            {/* Header */}
-            <div className="relative flex flex-wrap justify-between items-center p-3 sm:p-5 border-b border-slate-100 gap-2">
-              <div className="flex items-center gap-2 sm:gap-4">
-                <span className="text-slate-600 font-bold text-xs sm:text-sm tracking-wide">Question {current + 1}/{quizData.length}</span>
-                <div className="flex items-center gap-1.5 bg-slate-100 border border-slate-200 px-2 sm:px-3 py-1 rounded-lg font-bold text-slate-700 text-xs">
-                  <svg className="w-3 h-3 text-blue-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                  <span className="tabular-nums">{mins}:{secs}</span>
+      {/* Remplacement du conteneur max-w-3xl par max-w-6xl pour permettre un affichage côte à côte */}
+      <main className="flex-grow w-full max-w-6xl mx-auto px-4 py-4 sm:py-6 overflow-hidden">
+        
+        {/* Conteneur Flex pour afficher la question et la réponse côte à côte sur PC */}
+        <div className={`flex flex-col lg:flex-row gap-6 lg:gap-8 items-start transition-all duration-500 ease-in-out ${hasAnswered ? 'justify-start' : 'justify-center'}`}>
+          
+          {/* QCM CARD - S'adapte en largeur si on a répondu */}
+          <div className={`w-full ${hasAnswered ? 'lg:w-1/2' : 'lg:w-2/3 lg:max-w-3xl'} transition-all duration-500 ${colors.wrapper} rounded-2xl sm:rounded-[2.5rem] p-3 sm:p-6 shadow-sm mt-2 sm:mt-4`}>
+            <div className="bg-white rounded-xl sm:rounded-[2rem] shadow-xl flex flex-col overflow-hidden relative">
+              {/* Header */}
+              <div className="relative flex flex-wrap justify-between items-center p-3 sm:p-5 border-b border-slate-100 gap-2">
+                <div className="flex items-center gap-2 sm:gap-4">
+                  <span className="text-slate-600 font-bold text-xs sm:text-sm tracking-wide">Question {current + 1}/{quizData.length}</span>
+                  <div className="flex items-center gap-1.5 bg-slate-100 border border-slate-200 px-2 sm:px-3 py-1 rounded-lg font-bold text-slate-700 text-xs">
+                    <svg className="w-3 h-3 text-blue-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    <span className="tabular-nums">{mins}:{secs}</span>
+                  </div>
+                </div>
+                <span className={`${colors.badge} px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg text-[10px] sm:text-xs font-bold tracking-wide uppercase transition-colors duration-300`}>{data.category}</span>
+                <div className="absolute bottom-0 left-0 w-full h-1 bg-slate-50">
+                  <div className="h-full bg-slate-900 transition-all duration-500" style={{width: `${progress}%`}}></div>
                 </div>
               </div>
-              <span className={`${colors.badge} px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg text-[10px] sm:text-xs font-bold tracking-wide uppercase transition-colors duration-300`}>{data.category}</span>
-              <div className="absolute bottom-0 left-0 w-full h-1 bg-slate-50">
-                <div className="h-full bg-slate-900 transition-all duration-500" style={{width: `${progress}%`}}></div>
-              </div>
-            </div>
 
-            {/* Question */}
-            <div className="p-4 sm:p-6 flex-grow">
-              <h2 className="text-base sm:text-lg font-bold text-slate-900 mb-4 sm:mb-5 leading-relaxed">{data.question}</h2>
-              <div className="space-y-2 sm:space-y-3">
-                {data.options.map((option, index) => {
-                  let optClass = 'p-3 sm:p-4 border rounded-xl flex justify-between items-center group transition-all '
-                  let letterClass = 'w-7 h-7 sm:w-8 sm:h-8 rounded-lg font-bold flex items-center justify-center text-xs sm:text-sm shrink-0 transition-all '
-                  let circleContent = null
+              {/* Question */}
+              <div className="p-4 sm:p-6 flex-grow">
+                <h2 className="text-base sm:text-lg font-bold text-slate-900 mb-4 sm:mb-5 leading-relaxed">{data.question}</h2>
+                <div className="space-y-2 sm:space-y-3">
+                  {data.options.map((option, index) => {
+                    let optClass = 'p-3 sm:p-4 border rounded-xl flex justify-between items-center group transition-all '
+                    let letterClass = 'w-7 h-7 sm:w-8 sm:h-8 rounded-lg font-bold flex items-center justify-center text-xs sm:text-sm shrink-0 transition-all '
+                    let circleContent = null
 
-                  if (hasAnswered) {
-                    if (index === data.correct) {
-                      optClass += 'border-green-500 bg-green-50 '
-                      letterClass += 'bg-green-500 text-white '
-                      circleContent = <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-green-500 flex items-center justify-center"><svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg></div>
-                    } else if (index === answers[current]) {
-                      optClass += 'border-red-500 bg-red-50 '
-                      letterClass += 'bg-red-500 text-white '
-                      circleContent = <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-red-500 flex items-center justify-center"><svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></div>
+                    if (hasAnswered) {
+                      if (index === data.correct) {
+                        optClass += 'border-green-500 bg-green-50 '
+                        letterClass += 'bg-green-500 text-white '
+                        circleContent = <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-green-500 flex items-center justify-center"><svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg></div>
+                      } else if (index === answers[current]) {
+                        optClass += 'border-red-500 bg-red-50 '
+                        letterClass += 'bg-red-500 text-white '
+                        circleContent = <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-red-500 flex items-center justify-center"><svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></div>
+                      } else {
+                        optClass += 'border-slate-200 opacity-50 '
+                        letterClass += 'bg-slate-100 text-slate-500 '
+                        circleContent = <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full border-2 border-slate-300"></div>
+                      }
+                    } else if (selected === index) {
+                      optClass += 'border-slate-900 bg-slate-50 shadow-[0_0_0_4px_rgba(15,23,42,0.05)] cursor-pointer '
+                      letterClass += 'bg-slate-900 text-white '
+                      circleContent = <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full border-2 border-slate-900 flex items-center justify-center"><div className="w-2 h-2 sm:w-2.5 sm:h-2.5 bg-slate-900 rounded-full"></div></div>
                     } else {
-                      optClass += 'border-slate-200 opacity-50 '
-                      letterClass += 'bg-slate-100 text-slate-500 '
+                      optClass += 'border-slate-200 cursor-pointer hover:bg-slate-50 '
+                      letterClass += 'bg-slate-100 text-slate-500 group-hover:bg-slate-200 '
                       circleContent = <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full border-2 border-slate-300"></div>
                     }
-                  } else if (selected === index) {
-                    optClass += 'border-slate-900 bg-slate-50 shadow-[0_0_0_4px_rgba(15,23,42,0.05)] cursor-pointer '
-                    letterClass += 'bg-slate-900 text-white '
-                    circleContent = <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full border-2 border-slate-900 flex items-center justify-center"><div className="w-2 h-2 sm:w-2.5 sm:h-2.5 bg-slate-900 rounded-full"></div></div>
-                  } else {
-                    optClass += 'border-slate-200 cursor-pointer hover:bg-slate-50 '
-                    letterClass += 'bg-slate-100 text-slate-500 group-hover:bg-slate-200 '
-                    circleContent = <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full border-2 border-slate-300"></div>
-                  }
 
-                  return (
-                    <div key={index} className={optClass} onClick={() => !hasAnswered && selectOption(index)}>
-                      <div className="flex items-center gap-3 sm:gap-4">
-                        <span className={letterClass}>{letters[index]}</span>
-                        <span className="font-bold text-slate-800 text-sm sm:text-base">{option}</span>
+                    return (
+                      <div key={index} className={optClass} onClick={() => !hasAnswered && selectOption(index)}>
+                        <div className="flex items-center gap-3 sm:gap-4">
+                          <span className={letterClass}>{letters[index]}</span>
+                          <span className="font-bold text-slate-800 text-sm sm:text-base">{option}</span>
+                        </div>
+                        {circleContent}
                       </div>
-                      {circleContent}
-                    </div>
-                  )
-                })}
-              </div>
-            </div>
-
-            {/* Actions */}
-            <div className="p-4 sm:p-5 pt-0 flex gap-3">
-              {current > 0 && (
-                <button onClick={goPrev} className="bg-slate-100 text-slate-700 font-bold py-3 px-4 sm:px-5 rounded-xl transition-colors hover:bg-slate-200 flex items-center justify-center gap-2 text-sm">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M19 12H5m7-7-7 7 7 7"/></svg>
-                  <span className="hidden sm:inline">Précédent</span>
-                </button>
-              )}
-              <button onClick={handleAction} className={`flex-grow bg-slate-900 text-white font-bold py-3 px-4 rounded-xl transition-colors hover:bg-black flex items-center justify-center gap-2 text-sm sm:text-base shadow-md ${state === 'questioning' && selected === null ? 'opacity-50 cursor-not-allowed' : 'opacity-100 cursor-pointer'}`}>
-                {state === 'questioning' ? (
-                  <>Valider ma réponse <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg></>
-                ) : current === quizData.length - 1 ? (
-                  <>Voir mes résultats <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg></>
-                ) : (
-                  <>Question suivante <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14m-7-7 7 7-7 7"/></svg></>
-                )}
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* EXPLANATION - sous le QCM */}
-        {hasAnswered && (
-          <div className="animate-fade-in mt-4 sm:mt-6">
-            <div className={`rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 flex flex-col border-2 transition-colors duration-300 ${isCorrect ? 'bg-green-50 border-green-400 text-green-900' : 'bg-red-50 border-red-400 text-red-900'}`}>
-              <div className="flex items-center gap-3 mb-3 sm:mb-4">
-                <div className={`w-8 h-8 rounded-full text-white flex items-center justify-center shrink-0 ${isCorrect ? 'bg-green-500' : 'bg-red-500'}`}>
-                  {isCorrect ? (
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg>
-                  ) : (
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-                  )}
+                    )
+                  })}
                 </div>
-                <span className="text-lg sm:text-xl font-black">{isCorrect ? 'Bonne réponse !' : 'Mauvaise réponse'}</span>
               </div>
-              <div className="leading-relaxed font-medium text-slate-900 bg-white/60 p-3 sm:p-5 rounded-xl border border-white/40 shadow-sm text-sm sm:text-base" dangerouslySetInnerHTML={{__html: data.explanation}}></div>
+
+              {/* Actions */}
+              <div className="p-4 sm:p-5 pt-0 flex gap-3">
+                {current > 0 && (
+                  <button onClick={goPrev} className="bg-slate-100 text-slate-700 font-bold py-3 px-4 sm:px-5 rounded-xl transition-colors hover:bg-slate-200 flex items-center justify-center gap-2 text-sm">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M19 12H5m7-7-7 7 7 7"/></svg>
+                    <span className="hidden sm:inline">Précédent</span>
+                  </button>
+                )}
+                <button onClick={handleAction} className={`flex-grow bg-slate-900 text-white font-bold py-3 px-4 rounded-xl transition-colors hover:bg-black flex items-center justify-center gap-2 text-sm sm:text-base shadow-md ${state === 'questioning' && selected === null ? 'opacity-50 cursor-not-allowed' : 'opacity-100 cursor-pointer'}`}>
+                  {state === 'questioning' ? (
+                    <>Valider ma réponse <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg></>
+                  ) : current === quizData.length - 1 ? (
+                    <>Voir mes résultats <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg></>
+                  ) : (
+                    <>Question suivante <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14m-7-7 7 7-7 7"/></svg></>
+                  )}
+                </button>
+              </div>
             </div>
           </div>
-        )}
+
+          {/* EXPLANATION - À droite sur les écrans larges (lg), en dessous sur mobile */}
+          {hasAnswered && (
+            <div className="w-full lg:w-1/2 animate-fade-in mt-2 sm:mt-4 lg:mt-8">
+              <div className={`rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 flex flex-col border-2 transition-colors duration-300 ${isCorrect ? 'bg-green-50 border-green-400 text-green-900' : 'bg-red-50 border-red-400 text-red-900'}`}>
+                <div className="flex items-center gap-3 mb-3 sm:mb-4">
+                  <div className={`w-8 h-8 rounded-full text-white flex items-center justify-center shrink-0 ${isCorrect ? 'bg-green-500' : 'bg-red-500'}`}>
+                    {isCorrect ? (
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg>
+                    ) : (
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                    )}
+                  </div>
+                  <span className="text-lg sm:text-xl font-black">{isCorrect ? 'Bonne réponse !' : 'Mauvaise réponse'}</span>
+                </div>
+                <div className="leading-relaxed font-medium text-slate-900 bg-white/60 p-3 sm:p-5 rounded-xl border border-white/40 shadow-sm text-sm sm:text-base" dangerouslySetInnerHTML={{__html: data.explanation}}></div>
+              </div>
+            </div>
+          )}
+
+        </div>
       </main>
 
       <Footer />
@@ -254,7 +261,7 @@ function Nav() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
         <a href="/" className="flex items-center gap-2 sm:gap-3">
           <div className="bg-red-600 text-white p-1.5 sm:p-2 rounded-xl shadow-sm">
-            <img src="/stethoscope.svg" alt="" className="w-6 h-6 sm:w-7 sm:h-7" />
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6 sm:w-7 sm:h-7"><path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 1 0 .3.3"/><path d="M8 15v1a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6v-4"/><circle cx="20" cy="10" r="2"/></svg>
           </div>
           <div>
             <span className="font-black text-xl sm:text-2xl tracking-tight text-slate-900 block leading-none">Prépa <span className="text-red-600">FPC</span></span>
@@ -282,7 +289,6 @@ function Footer() {
       <div className="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
         <div className="lg:col-span-2">
           <div className="flex items-center gap-2 mb-4">
-            <img src="/stethoscope-red.svg" alt="" className="w-5 h-5" />
             <h4 className="text-white font-bold text-lg">Prépa FPC</h4>
           </div>
           <p className="max-w-xs leading-relaxed">La plateforme d'entraînement de référence pour la réussite du concours infirmier (Aides-Soignants et Auxiliaires de Puériculture).</p>
