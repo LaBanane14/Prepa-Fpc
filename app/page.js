@@ -78,13 +78,7 @@ export default function HomePage() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
           <a href="/" className="flex items-center gap-3">
             <div className="bg-red-600 text-white p-2 rounded-xl shadow-sm">
-              <div className="bg-red-600 text-white p-1.5 sm:p-2 rounded-xl shadow-sm">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6 sm:w-7 sm:h-7">
-              <path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 1 0 .3.3"/>
-              <path d="M8 15v1a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6v-4"/>
-             <circle cx="20" cy="10" r="2"/>
-          </svg>
-        </div>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-7 h-7"><path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 1 0 .3.3"/><path d="M8 15v1a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6v-4"/><circle cx="20" cy="10" r="2"/></svg>
             </div>
             <div>
               <span className="font-black text-2xl tracking-tight text-slate-900 block leading-none">Prépa <span className="text-red-600">FPC</span></span>
@@ -380,7 +374,7 @@ export default function HomePage() {
         <div className="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           <div className="lg:col-span-2">
             <div className="flex items-center gap-2 mb-4">
-              <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4.8 2.1L2 5v2.8c0 2.7 2.2 4.8 4.8 4.8h2.4c2.7 0 4.8-2.2 4.8-4.8V5l-2.8-2.9"/><path d="M8 15v1a2 2 0 0 0 4 0v-1"/><circle cx="20" cy="10" r="2"/><path d="M20 12v2c0 2.2-1.8 4-4 4h-1"/><path d="M2 2h3"/><path d="M11 2h3"/></svg>
+              <svg className="w-5 h-5 text-red-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 1 0 .3.3"/><path d="M8 15v1a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6v-4"/><circle cx="20" cy="10" r="2"/></svg>
               <h4 className="text-white font-bold text-lg">Prépa FPC</h4>
             </div>
             <p className="max-w-xs leading-relaxed">La plateforme d'entraînement de référence pour la réussite du concours infirmier (Aides-Soignants et Auxiliaires de Puériculture).</p>
