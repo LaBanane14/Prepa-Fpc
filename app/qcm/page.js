@@ -358,7 +358,7 @@ function Nav() {
         <div className="hidden md:flex items-center gap-8 font-semibold text-slate-600">
           <a href="/" className="hover:text-red-600 transition">Accueil</a>
           <a href="/calculs-doses.html" className="hover:text-red-600 transition">Calculs de doses</a>
-          <a href="/blog.html" className="hover:text-red-600 transition">Blog</a>
+          <a href="/blog" className="hover:text-red-600 transition">Blog</a>
           <a href="/tarifs" className="hover:text-red-600 transition">Tarifs</a>
         </div>
         <div className="flex items-center gap-3 sm:gap-4">
@@ -383,8 +383,8 @@ function Footer() {
         <div>
           <h4 className="text-white font-bold mb-4 uppercase tracking-wider text-xs">Ressources IFSI</h4>
           <ul className="space-y-3">
-            <li><a href="/blog.html" className="hover:text-white transition">Dates concours FPC</a></li>
-            <li><a href="/blog.html" className="hover:text-white transition">Dossier Passerelle AS/AP</a></li>
+            <li><a href="/blog" className="hover:text-white transition">Dates concours FPC</a></li>
+            <li><a href="/blog" className="hover:text-white transition">Dossier Passerelle AS/AP</a></li>
             <li><a href="/calculs-doses.html" className="hover:text-white transition">Formules calculs de doses</a></li>
           </ul>
         </div>

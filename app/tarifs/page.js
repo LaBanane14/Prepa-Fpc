@@ -29,7 +29,7 @@ export default function TarifsPage() {
   const navLinks = [
     { href: '/', label: 'Accueil', active: false },
     { href: '/calculs-doses.html', label: 'Calculs de doses', active: false },
-    { href: '/blog.html', label: 'Blog', active: false },
+    { href: '/blog', label: 'Blog', active: false },
     { href: '/tarifs', label: 'Tarifs', active: true }
   ]
 
@@ -213,8 +213,8 @@ export default function TarifsPage() {
           <div>
             <h4 className="text-white font-bold mb-4 uppercase tracking-wider text-xs">Ressources IFSI</h4>
             <ul className="space-y-3">
-              <li><a href="/blog.html" className="hover:text-white transition">Dates concours FPC</a></li>
-              <li><a href="/blog.html" className="hover:text-white transition">Dossier Passerelle AS/AP</a></li>
+              <li><a href="/blog" className="hover:text-white transition">Dates concours FPC</a></li>
+              <li><a href="/blog" className="hover:text-white transition">Dossier Passerelle AS/AP</a></li>
               <li><a href="/calculs-doses.html" className="hover:text-white transition">Formules calculs de doses</a></li>
             </ul>
           </div>
