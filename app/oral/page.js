@@ -224,29 +224,79 @@ export default function OralPage() {
           )}
 
           {/* ===== QUESTIONS ===== */}
-          {step === 'questions' && q && (
-            <div className="animate-fade-in max-w-3xl mx-auto">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-bold text-slate-500">Question {currentQ + 1}/{questions.length}</span>
-                <span className={`text-xs font-bold px-2.5 py-1 rounded-lg ${colors.badge}`}>{q.category}</span>
-              </div>
-              <div className="w-full h-1.5 bg-slate-200 rounded-full mb-8">
-                <div className="h-full bg-red-600 rounded-full transition-all duration-500" style={{width: `${progress}%`}}></div>
-              </div>
+         {step === 'questions' && q && (
+            <div className="max-w-3xl mx-auto animate-fade-in">
+              {/* Wrapper coloré style QCM */}
+              <div className={`${colors.bg} border ${colors.border} rounded-2xl sm:rounded-[2.5rem] p-3 sm:p-6 shadow-sm`}>
+                <div className="bg-white rounded-xl sm:rounded-[2rem] shadow-xl flex flex-col overflow-hidden relative">
+                  {/* Header */}
+                  <div className="relative flex flex-wrap justify-between items-center p-3 sm:p-5 border-b border-slate-100 gap-2">
+                    <span className="text-slate-600 font-bold text-xs sm:text-sm tracking-wide">Question {currentQ + 1}/{questions.length}</span>
+                    <span className={`${colors.badge} px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg text-[10px] sm:text-xs font-bold tracking-wide uppercase`}>{q.category}</span>
+                    <div className="absolute bottom-0 left-0 w-full h-1 bg-slate-50">
+                      <div className="h-full bg-slate-900 transition-all duration-500" style={{width: `${progress}%`}}></div>
+                    </div>
+                  </div>
 
-              <div className={`${colors.bg} border ${colors.border} rounded-2xl p-6 sm:p-8 mb-6`}>
-                <h2 className="text-lg sm:text-xl font-black text-slate-900 leading-relaxed">{q.question}</h2>
-              </div>
+                  {/* Question */}
+                  <div className="p-4 sm:p-6">
+                    <h2 className="text-base sm:text-lg font-bold text-slate-900 mb-5 leading-relaxed">{q.question}</h2>
 
-              <button onClick={() => setShowTip(!showTip)} className="flex items-center gap-2 text-sm font-bold text-amber-600 hover:text-amber-700 transition mb-4 cursor-pointer">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
-                {showTip ? 'Masquer le conseil' : 'Voir le conseil'}
-              </button>
-              {showTip && (
-                <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6 text-sm text-amber-800 font-medium animate-fade-in">
-                  <strong>Conseil :</strong> {q.tips}
+                    {/* Zone réponse */}
+                    <div className="mb-4">
+                      <label className="block text-sm font-bold text-slate-700 mb-2">Votre réponse</label>
+                      <textarea
+                        rows={5}
+                        value={answers[q.id] || ''}
+                        onChange={e => handleAnswer(q.id, e.target.value)}
+                        placeholder="Rédigez votre réponse ici comme si vous étiez face au jury..."
+                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:bg-white focus:border-transparent outline-none font-medium text-sm resize-y"
+                      />
+                    </div>
+
+                    {/* Conseil */}
+                    <button onClick={() => setShowTip(!showTip)} className="flex items-center gap-2 text-sm font-bold text-amber-600 hover:text-amber-700 transition cursor-pointer mb-2">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+                      {showTip ? 'Masquer le conseil' : 'Voir le conseil'}
+                    </button>
+                    {showTip && (
+                      <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-2 text-sm text-amber-800 font-medium animate-fade-in">
+                        <strong>Conseil :</strong> {q.tips}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Actions */}
+                  <div className="p-4 sm:p-5 pt-0 flex gap-3">
+                    {currentQ > 0 && (
+                      <button onClick={() => { setCurrentQ(currentQ - 1); setShowTip(false) }} className="bg-slate-100 text-slate-700 font-bold py-3 px-4 sm:px-5 rounded-xl hover:bg-slate-200 flex items-center gap-2 text-sm transition">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M19 12H5m7-7-7 7 7 7"/></svg>
+                        <span className="hidden sm:inline">Précédent</span>
+                      </button>
+                    )}
+                    {currentQ < questions.length - 1 ? (
+                      <button onClick={() => { setCurrentQ(currentQ + 1); setShowTip(false) }} className="flex-grow bg-slate-900 hover:bg-black text-white font-bold py-3 px-4 rounded-xl text-sm flex items-center justify-center gap-2 shadow-md transition">
+                        Question suivante <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14m-7-7 7 7-7 7"/></svg>
+                      </button>
+                    ) : (
+                      <button onClick={restart} className="flex-grow bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-4 rounded-xl text-sm flex items-center justify-center gap-2 shadow-md transition">
+                        Recommencer <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+                      </button>
+                    )}
+                  </div>
                 </div>
-              )}
+              </div>
+
+              {/* Grille navigation */}
+              <div className="mt-6 flex flex-wrap gap-2 justify-center">
+                {questions.map((qq, i) => (
+                  <button key={qq.id} onClick={() => { setCurrentQ(i); setShowTip(false) }} className={`w-9 h-9 rounded-lg text-xs font-bold transition cursor-pointer ${i === currentQ ? 'bg-emerald-600 text-white' : answers[qq.id] ? 'bg-green-100 text-green-700 border border-green-200' : 'bg-white text-slate-500 border border-slate-200 hover:border-slate-300'}`}>
+                    {i + 1}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
 
               <div className="mb-6">
                 <label className="block text-sm font-bold text-slate-700 mb-2">Votre réponse</label>
