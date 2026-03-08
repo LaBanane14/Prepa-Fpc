@@ -190,7 +190,7 @@ export default function Dashboard() {
                   <h3 className="font-bold text-slate-900 text-sm mb-1">Examen blanc</h3>
                   <p className="text-xs text-slate-500">Conditions réelles, 1h chronométrée</p>
                 </a>
-                <a href="/blog" className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-emerald-200 transition group block">
+                <a href="/oral" className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-emerald-200 transition group block">
                   <div className="w-11 h-11 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
                   </div>
