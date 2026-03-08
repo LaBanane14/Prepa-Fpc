@@ -20,7 +20,7 @@ export async function POST(request) {
 
     // Appel Gemini
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -35,9 +35,9 @@ export async function POST(request) {
                   }
                 },
                 {
-                  text: `Tu es un membre du jury d'admission en IFSI (Institut de Formation en Soins Infirmiers) pour l'épreuve orale du concours FPC (Formation Professionnelle Continue). Tu viens de recevoir le CV/parcours d'un candidat qui est actuellement Aide-Soignant(e) ou Auxiliaire de Puériculture.
+                  text: `Tu es un membre du jury d'admission en IFSI (Institut de Formation en Soins Infirmiers) pour l'épreuve orale du concours FPC (Formation Professionnelle Continue). Tu viens de recevoir le CV/parcours d'un candidat qui est actuellement Aide-Soignant(e) ou Auxiliaire de Puériculture ou en reconversion total.
 
-Analyse attentivement ce document et génère exactement 10 questions personnalisées que le jury pourrait poser lors de l'entretien oral de 20 minutes. Les questions doivent couvrir ces 3 catégories :
+Analyse attentivement ce document et génère exactement 10 questions personnalisées que le jury pourrait poser lors de l'entretien oral de 10 minutes. Les questions doivent couvrir ces 3 catégories :
 
 CATÉGORIE 1 - PARCOURS PROFESSIONNEL (4 questions) :
 - Questions sur les expériences mentionnées dans le CV
