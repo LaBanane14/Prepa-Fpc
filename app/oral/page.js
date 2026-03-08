@@ -83,8 +83,8 @@ export default function OralPage() {
   if (authLoading) return <div className="min-h-screen bg-slate-50 flex items-center justify-center"><div className="animate-spin w-8 h-8 border-4 border-red-600 border-t-transparent rounded-full"></div></div>
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex" style={{backgroundImage: 'radial-gradient(#cbd5e1 1px, transparent 1px)', backgroundSize: '24px 24px'}}>
-      <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+    <div className="min-h-screen bg-slate-100 text-slate-900 flex" style={{backgroundImage: 'radial-gradient(#22c55e 1px, transparent 1px)', backgroundSize: '24px 24px'}}>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
       <style>{`
         .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -169,10 +169,10 @@ export default function OralPage() {
                 </h3>
                 <div className="space-y-2 text-sm text-slate-600 font-medium">
                   <p><strong className="text-slate-800">1.</strong> Vous importez votre CV au format PDF</p>
-                  <p><strong className="text-slate-800">2.</strong> L'IA analyse votre parcours professionnel</p>
+                  <p><strong className="text-slate-800">2.</strong> Notre IA spécialisée analyse votre parcours professionnel</p>
                   <p><strong className="text-slate-800">3.</strong> 10 questions personnalisées sont générées (parcours, motivation, métier)</p>
                   <p><strong className="text-slate-800">4.</strong> Vous vous entraînez à répondre avec des conseils pour chaque question</p>
-                  <p><strong className="text-slate-800">5.</strong> Il n'y a pas de note à l'issue des 10 questions, étant donné qu'il s'agit de votre carrière ! Le but est seulement de vous préparer !</p>
+                  <p><strong className="text-slate-800">5.</strong> <strong>Il n'y a pas de note à l'issue des 10 questions, étant donné qu'il s'agit de votre carrière ! Le but est seulement de vous préparer !</strong></p>
                 </div>
               </div>
             </div>
