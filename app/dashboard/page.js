@@ -99,7 +99,7 @@ export default function Dashboard() {
           {/* Nav */}
           <nav className="flex-1 flex flex-col items-center gap-0.5 w-full px-1.5">
             {menuItems.map(item => (
-              <button key={item.id} onClick={() => navigateTo(item.id)} className={`w-full flex flex-col items-center gap-[3px] py-2.5 rounded-xl text-[9px] font-semibold tracking-wide transition-all cursor-pointer ${page === item.id ? 'bg-red-50 text-red-600' : 'text-slate-500 hover:bg-slate-50'}`}>
+              <button key={item.id} onClick={() => navigateTo(item.id)} className={`w-full flex flex-col items-center gap-[3px] py-2.5 rounded-xl text-[9px] font-bold tracking-wide transition-all cursor-pointer ${page === item.id ? 'bg-red-50 text-red-600' : 'text-slate-500 hover:bg-slate-50'}`}>
                 {item.icon(page === item.id)}
                 <span>{item.label}</span>
               </button>
