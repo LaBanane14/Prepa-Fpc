@@ -14,11 +14,11 @@ export async function POST(request) {
 
     const apiKey = process.env.GEMINI_API_KEY
     if (!apiKey) {
-      return NextResponse.json({ error: 'Clé API Gemini manquante. Vérifiez GEMINI_API_KEY dans Vercel.' }, { status: 500 })
+      return NextResponse.json({ error: 'Clé API manquante. Vérifiez dans Vercel.' }, { status: 500 })
     }
 
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -78,7 +78,7 @@ Adapte chaque question au contenu réel du CV. Sois précis en faisant référen
     if (!response.ok) {
       const errorText = await response.text()
       console.error('Gemini API error:', response.status, errorText)
-      return NextResponse.json({ error: `Erreur API Gemini (${response.status}). Vérifiez votre clé API.` }, { status: 500 })
+      return NextResponse.json({ error: `Erreur API  (${response.status}). Contactez l'adminsitrateur du site .` }, { status: 500 })
     }
 
     const data = await response.json()
@@ -86,7 +86,7 @@ Adapte chaque question au contenu réel du CV. Sois précis en faisant référen
 
     if (!text) {
       console.error('Gemini empty response:', JSON.stringify(data))
-      return NextResponse.json({ error: 'Réponse vide de Gemini. Réessayez.' }, { status: 500 })
+      return NextResponse.json({ error: 'Erreur. Réessayez.' }, { status: 500 })
     }
 
     const cleaned = text.replace(/```json/g, '').replace(/```/g, '').trim()
