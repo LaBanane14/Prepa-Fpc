@@ -5,11 +5,11 @@ import { supabase } from '../../lib/supabase'
 const Stethoscope = ({className}) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 1 0 .3.3"/><path d="M8 15v1a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6v-4"/><circle cx="20" cy="10" r="2"/></svg>
 
 const menuItems = [
-  { id: 'dashboard', label: 'Accueil', icon: (active) => <svg className="w-5 h-5" fill="none" stroke={active ? '#dc2626' : '#1e293b'} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> },
-  { id: 'progression', label: 'Mes stats', icon: (active) => <svg className="w-5 h-5" fill="none" stroke={active ? '#dc2626' : '#1e293b'} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg> },
-  { id: 'historique', label: 'Historique', icon: (active) => <svg className="w-5 h-5" fill="none" stroke={active ? '#dc2626' : '#1e293b'} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M12 7v5l3 3"/><circle cx="12" cy="12" r="10"/></svg> },
-  { id: 'profil', label: 'Mon compte', icon: (active) => <svg className="w-5 h-5" fill="none" stroke={active ? '#dc2626' : '#1e293b'} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></svg> },
-  { id: 'abonnement', label: 'Mes offres', icon: (active) => <svg className="w-5 h-5" fill="none" stroke={active ? '#dc2626' : '#1e293b'} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M12 2 2 7l10 5 10-5-10-5Z"/><path d="m2 17 10 5 10-5"/><path d="m2 12 10 5 10-5"/></svg> }
+  { id: 'dashboard', label: 'Accueil', icon: (active) => <svg className="w-6 h-6" viewBox="0 0 24 24" fill={active ? '#dc2626' : '#1e293b'} stroke="none"><path d="M11.47 3.84a.75.75 0 0 1 1.06 0l8.69 8.69a.75.75 0 1 1-1.06 1.06l-.22-.22V19.5a1.5 1.5 0 0 1-1.5 1.5h-3.75a.75.75 0 0 1-.75-.75v-3.75a.75.75 0 0 0-.75-.75h-1.5a.75.75 0 0 0-.75.75v3.75a.75.75 0 0 1-.75.75H6.56a1.5 1.5 0 0 1-1.5-1.5V13.37l-.22.22a.75.75 0 0 1-1.06-1.06l8.69-8.69Z"/></svg> },
+  { id: 'progression', label: 'Mes stats', icon: (active) => <svg className="w-6 h-6" viewBox="0 0 24 24" fill={active ? '#dc2626' : '#1e293b'} stroke="none"><path d="M18.375 2.25c-1.035 0-1.875.84-1.875 1.875v15.75c0 1.035.84 1.875 1.875 1.875h.75c1.035 0 1.875-.84 1.875-1.875V4.125c0-1.036-.84-1.875-1.875-1.875h-.75ZM9.75 8.625c0-1.036.84-1.875 1.875-1.875h.75c1.036 0 1.875.84 1.875 1.875v11.25c0 1.035-.84 1.875-1.875 1.875h-.75a1.875 1.875 0 0 1-1.875-1.875V8.625ZM3 13.125c0-1.036.84-1.875 1.875-1.875h.75c1.036 0 1.875.84 1.875 1.875v6.75c0 1.035-.84 1.875-1.875 1.875h-.75A1.875 1.875 0 0 1 3 19.875v-6.75Z"/></svg> },
+  { id: 'historique', label: 'Historique', icon: (active) => <svg className="w-6 h-6" viewBox="0 0 24 24" fill={active ? '#dc2626' : '#1e293b'} stroke="none"><path fillRule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z" clipRule="evenodd"/></svg> },
+  { id: 'profil', label: 'Mon compte', icon: (active) => <svg className="w-6 h-6" viewBox="0 0 24 24" fill={active ? '#dc2626' : '#1e293b'} stroke="none"><path fillRule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clipRule="evenodd"/></svg> },
+  { id: 'abonnement', label: 'Mes offres', icon: (active) => <svg className="w-6 h-6" viewBox="0 0 24 24" fill={active ? '#dc2626' : '#1e293b'} stroke="none"><path d="M9.375 3a1.875 1.875 0 0 0 0 3.75h1.875v4.5H3.375A1.875 1.875 0 0 1 1.5 9.375v-.75c0-1.036.84-1.875 1.875-1.875h3.193A3.375 3.375 0 0 1 12 2.753a3.375 3.375 0 0 1 5.432 3.997h3.193c1.035 0 1.875.84 1.875 1.875v.75c0 1.036-.84 1.875-1.875 1.875H12.75v-4.5h1.875a1.875 1.875 0 0 0 0-3.75h-.75a1.875 1.875 0 0 0-1.875 1.875v.75h-1.5v-.75A1.875 1.875 0 0 0 8.625 3h-.75ZM3 12.75v7.5a2.25 2.25 0 0 0 2.25 2.25h5.25v-9.75H3Zm10.5 0v9.75h5.25A2.25 2.25 0 0 0 21 20.25v-7.5h-7.5Z"/></svg> }
 ]
 
 export default function Dashboard() {
@@ -99,8 +99,8 @@ export default function Dashboard() {
           {/* Nav */}
           <nav className="flex-1 flex flex-col items-center gap-0.5 w-full px-1.5">
             {menuItems.map(item => (
-              <button key={item.id} onClick={() => navigateTo(item.id)} className={`w-full flex flex-col items-center gap-[3px] py-2.5 rounded-xl text-[9px] font-bold tracking-wide transition-all cursor-pointer ${page === item.id ? 'bg-red-50 text-red-600' : 'text-slate-500 hover:bg-slate-50'}`}>
-                {item.icon(page === item.id)}
+              <button key={item.id} onClick={() => navigateTo(item.id)} className={`w-full flex flex-col items-center gap-1 py-3 rounded-xl text-[11px] font-bold transition-all cursor-pointer ${page === item.id ? 'bg-red-50 text-red-600' : 'text-slate-800 hover:bg-slate-50'}`}>
+              {item.icon(page === item.id)}
                 <span>{item.label}</span>
               </button>
             ))}
