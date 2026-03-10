@@ -262,20 +262,8 @@ export default function Dashboard() {
 
           {/* ============ MON HISTORIQUE ============ */}
           {page === 'historique' && (() => {
-            const fakeHistory = [
-              { id: 1, type: 'QCM', label: 'QCM Mathématiques', score: '16/20', duration: '12 min', questions: 20, day: 10, time: '14h30' },
-              { id: 2, type: 'Oral', label: 'Oral — Analyse CV', score: null, duration: '25 min', questions: 10, day: 10, time: '11h00' },
-              { id: 3, type: 'QCM', label: 'QCM Calculs de doses', score: '13/20', duration: '15 min', questions: 20, day: 9, time: '18h45' },
-              { id: 4, type: 'Examen', label: 'Examen blanc écrit', score: '14/20', duration: '45 min', questions: 40, day: 9, time: '10h00' },
-              { id: 5, type: 'QCM', label: 'QCM Conversions', score: '18/20', duration: '8 min', questions: 20, day: 7, time: '16h20' },
-              { id: 6, type: 'QCM', label: 'QCM Pourcentages', score: '15/20', duration: '11 min', questions: 20, day: 5, time: '09h15' },
-              { id: 7, type: 'Oral', label: 'Oral — Analyse CV', score: null, duration: '20 min', questions: 10, day: 3, time: '14h00' },
-              { id: 8, type: 'QCM', label: 'QCM Équations', score: '12/20', duration: '14 min', questions: 20, day: 1, time: '17h30' },
-              { id: 9, type: 'QCM', label: 'QCM Calcul mental', score: '17/20', duration: '9 min', questions: 20, day: 15, time: '08h00' },
-              { id: 10, type: 'Examen', label: 'Examen blanc écrit', score: '11/20', duration: '50 min', questions: 40, day: 20, time: '14h00' },
-              { id: 11, type: 'Oral', label: 'Oral — Analyse CV', score: null, duration: '22 min', questions: 10, day: 22, time: '16h00' },
-              { id: 12, type: 'QCM', label: 'QCM Produit en croix', score: '19/20', duration: '7 min', questions: 20, day: 25, time: '11h30' },
-            ]
+            // TODO: remplacer par les vraies données depuis Supabase
+            const fakeHistory = []
 
             const calMonth = window.__calMonth ?? 2
             const calYear = window.__calYear ?? 2026
@@ -333,15 +321,15 @@ export default function Dashboard() {
                   <p className="text-xs font-bold text-slate-400 uppercase mt-1">Exercices</p>
                 </div>
                 <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 text-center">
-                  <p className="text-2xl font-black text-red-600">14.8<span className="text-sm">/20</span></p>
+                  <p className="text-2xl font-black text-red-600">—<span className="text-sm">/20</span></p>
                   <p className="text-xs font-bold text-slate-400 uppercase mt-1">Moyenne</p>
                 </div>
                 <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 text-center">
-                  <p className="text-2xl font-black text-slate-900">19<span className="text-sm">/20</span></p>
+                  <p className="text-2xl font-black text-slate-900">—<span className="text-sm">/20</span></p>
                   <p className="text-xs font-bold text-slate-400 uppercase mt-1">Meilleur score</p>
                 </div>
                 <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 text-center">
-                  <p className="text-2xl font-black text-slate-900">3h38</p>
+                  <p className="text-2xl font-black text-slate-900">0h00</p>
                   <p className="text-xs font-bold text-slate-400 uppercase mt-1">Temps total</p>
                 </div>
               </div>
