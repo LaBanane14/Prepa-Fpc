@@ -346,29 +346,94 @@ export default function Dashboard() {
             </div>
           )}
 
-          {/* ============ MES OFFRES ============ */}
+          {/* ============ DEVENIR PREMIUM ============ */}
           {page === 'abonnement' && (
             <div>
-              <h1 className="text-2xl sm:text-3xl font-black text-slate-900 mb-2">Mes offres</h1>
-              <p className="text-slate-500 font-medium text-sm mb-8">Gérez votre formule d'accès.</p>
-              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8 max-w-xl mb-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 bg-slate-100 text-slate-400 rounded-xl flex items-center justify-center"><svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></svg></div>
-                  <div><h3 className="font-black text-slate-900">Plan Gratuit</h3><p className="text-xs text-slate-500 font-medium">Accès limité</p></div>
+              <h1 className="text-2xl sm:text-3xl font-black text-slate-900 mb-2">Devenir Premium</h1>
+              <p className="text-slate-500 font-medium text-sm mb-8">Choisissez la formule qui s'adapte le plus à votre besoin.</p>
+              <div className="grid md:grid-cols-3 gap-6 lg:gap-8 max-w-[90%]">
+
+                {/* Essai Gratuit */}
+                <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm flex flex-col transition hover:shadow-md">
+                  <div className="mb-6">
+                    <h3 className="text-lg font-black text-slate-900 mb-1 uppercase tracking-tight">Essai Gratuit</h3>
+                    <p className="text-slate-500 font-bold text-sm">Testez la plateforme pendant 7 jours.</p>
+                  </div>
+                  <div className="mb-8">
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-3xl font-black text-slate-900 tracking-tight">0€</span>
+                      <span className="text-slate-500 font-bold">/ 7 jours</span>
+                    </div>
+                    <p className="text-slate-400 text-xs font-bold mt-1 uppercase">Sans carte bancaire</p>
+                  </div>
+                  <div className="flex-1">
+                    <ul className="space-y-3 mb-8">
+                      {["Entrainement rédaction et mathématique illimités", "Entrainement à partir d'annales", "Examen blanc écrit", "Dashboard personnalisable", "Méthodologie Dossier & Oral"].map((item, i) => (
+                        <li key={i} className="flex items-center gap-3 text-slate-900 font-bold text-sm">
+                          <div className="bg-slate-200 p-0.5 rounded-md shrink-0"><svg className="w-3.5 h-3.5 text-slate-900" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg></div>
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="w-full py-3.5 bg-slate-50 border border-slate-200 text-slate-700 font-black rounded-xl text-center text-sm">Expire dans {trialDays} jour{trialDays > 1 ? 's' : ''}</div>
                 </div>
-                <div className="bg-slate-50 rounded-xl p-4 space-y-2 text-sm">
-                  {['QCM gratuit (20 questions)', 'Accès au blog'].map((t,i) => (
-                    <div key={i} className="flex items-center gap-2 text-slate-600 font-medium"><svg className="w-4 h-4 text-green-500 shrink-0" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg>{t}</div>
-                  ))}
-                  {['Entraînements illimités', 'Examens blancs', 'Annales corrigées'].map((t,i) => (
-                    <div key={i} className="flex items-center gap-2 text-slate-400 font-medium"><svg className="w-4 h-4 text-slate-300 shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>{t}</div>
-                  ))}
+
+                {/* Formule Mensuelle */}
+                <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm flex flex-col transition hover:shadow-md">
+                  <div className="mb-6">
+                    <h3 className="text-lg font-black text-slate-900 mb-1 uppercase tracking-tight">Formule Mensuelle</h3>
+                    <p className="text-slate-500 font-bold text-sm">Flexibilité totale, sans engagement.</p>
+                  </div>
+                  <div className="mb-8">
+                    <div className="flex items-baseline gap-1 text-red-600">
+                      <span className="text-3xl font-black tracking-tight">12,99€</span>
+                      <span className="text-slate-500 font-bold">/mois</span>
+                    </div>
+                    <p className="text-red-500 text-xs font-bold mt-1 uppercase">Renouvellement automatique</p>
+                  </div>
+                  <div className="flex-1">
+                    <ul className="space-y-3 mb-8">
+                      {["Entrainement rédaction et mathématique illimités", "Entrainement à partir d'annales", "Examen blanc écrit", "Dashboard personnalisable", "Résiliable à tout moment"].map((item, i) => (
+                        <li key={i} className="flex items-center gap-3 text-slate-900 font-bold text-sm">
+                          <div className="bg-red-100 p-0.5 rounded-md shrink-0"><svg className="w-3.5 h-3.5 text-red-600" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg></div>
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <button className="w-full py-3.5 bg-red-600 hover:bg-red-700 text-white font-black rounded-xl text-center transition shadow-lg shadow-red-200 text-sm cursor-pointer">S'abonner maintenant</button>
                 </div>
-              </div>
-              <div className="bg-slate-900 rounded-2xl p-6 sm:p-8 max-w-xl">
-                <h3 className="text-lg font-black text-white mb-2">Débloquez tout le contenu</h3>
-                <p className="text-slate-400 font-medium text-sm mb-6">QCM, calculs de doses, examens blancs et rédactions en illimité.</p>
-                <a href="/tarifs" className="bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-3 rounded-xl transition shadow-lg shadow-red-900/30 text-sm">Voir les offres à partir de 12,99€/mois</a>
+
+                {/* Pack Sérénité */}
+                <div className="bg-white p-6 sm:p-8 rounded-2xl border-2 border-red-600 shadow-lg shadow-red-100 relative flex flex-col overflow-hidden">
+                  <div className="absolute top-4 right-4">
+                    <div className="bg-red-50 text-red-600 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">40% d'Économie</div>
+                  </div>
+                  <div className="mb-6">
+                    <h3 className="text-lg font-black text-slate-900 mb-1 uppercase tracking-tight">Pack Sérénité</h3>
+                    <p className="text-slate-500 font-bold text-sm">Accès complet pendant 1 an.</p>
+                  </div>
+                  <div className="mb-8">
+                    <div className="flex items-baseline gap-1 text-red-600">
+                      <span className="text-3xl font-black tracking-tight">89,99€</span>
+                      <span className="text-slate-500 font-bold">pour 1 an</span>
+                    </div>
+                    <p className="text-red-500 text-xs font-black mt-1 uppercase">1 seul paiement · Pas de renouvellement</p>
+                  </div>
+                  <div className="flex-1">
+                    <ul className="space-y-3 mb-8">
+                      {["Entrainement rédaction et mathématique illimités", "Entrainement à partir d'annales", "Examen blanc écrit", "Dashboard personnalisable", "Méthodologie Dossier & Oral"].map((item, i) => (
+                        <li key={i} className="flex items-center gap-3 text-slate-900 font-bold text-sm">
+                          <div className="bg-red-100 p-0.5 rounded-md shrink-0"><svg className="w-3.5 h-3.5 text-red-600" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg></div>
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <button className="w-full py-3.5 bg-red-600 hover:bg-red-700 text-white font-black rounded-xl text-center transition shadow-lg shadow-red-200 text-sm cursor-pointer">S'abonner maintenant</button>
+                </div>
+
               </div>
             </div>
           )}
