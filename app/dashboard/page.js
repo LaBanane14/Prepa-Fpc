@@ -7,7 +7,7 @@ const menuItems = [
   { id: 'dashboard', label: 'Accueil', icon: Home },
   { id: 'progression', label: 'Mes stats', icon: TrendingUp },
   { id: 'historique', label: 'Historique', icon: RotateCcw },
-  { id: 'profil', label: 'Mon compte', icon: UserRound },
+  { id: 'profil', label: 'Compte', icon: UserRound },
   { id: 'abonnement', label: 'Devenir Premium', icon: BadgeCheck, premium: true }
 ]
 
@@ -18,6 +18,7 @@ export default function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [trialDays, setTrialDays] = useState(7)
 
+  const [newLastName, setNewLastName] = useState('')
   const [newFirstName, setNewFirstName] = useState('')
   const [newPassword, setNewPassword] = useState('')
   const [profileMsg, setProfileMsg] = useState('')
@@ -28,6 +29,7 @@ export default function Dashboard() {
       if (!session) { window.location.href = '/auth'; return }
       setUser(session.user)
       setNewFirstName(session.user?.user_metadata?.first_name || '')
+      setNewLastName(session.user?.user_metadata?.last_name || '')
       // Calcul trial
       const created = new Date(session.user.created_at)
       const now = new Date()
@@ -52,12 +54,12 @@ export default function Dashboard() {
     e.preventDefault()
     setProfileSaving(true)
     setProfileMsg('')
-    const updates = { data: { first_name: newFirstName } }
+    const updates = { data: { first_name: newFirstName, last_name: newLastName } }
     if (newPassword) updates.password = newPassword
     const { error } = await supabase.auth.updateUser(updates)
     setProfileSaving(false)
     if (error) setProfileMsg('Erreur : ' + error.message)
-    else { setProfileMsg('Profil mis à jour !'); setNewPassword('') }
+    else { setProfileMsg('Profil correctement mis à jour !'); setNewPassword(''); setTimeout(() => setProfileMsg(''), 5000) }
   }
 
   if (loading) {
@@ -277,32 +279,68 @@ export default function Dashboard() {
             <div>
               <h1 className="text-2xl sm:text-3xl font-black text-slate-900 mb-2">Mon compte</h1>
               <p className="text-slate-500 font-medium text-sm mb-8">Gérez vos informations personnelles.</p>
-              {profileMsg && <div className={`p-4 rounded-xl mb-6 font-bold text-sm ${profileMsg.startsWith('Erreur') ? 'bg-red-50 text-red-700 border border-red-200' : 'bg-green-50 text-green-700 border border-green-200'}`}>{profileMsg}</div>}
-              <form onSubmit={updateProfile} className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-5 max-w-xl">
-                <div>
-                  <label className="block text-sm font-bold text-slate-700 mb-1.5">Adresse email</label>
-                  <input type="email" value={email} disabled className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl font-medium text-slate-400 cursor-not-allowed"/>
-                  <p className="text-xs text-slate-400 mt-1">L'email ne peut pas être modifié.</p>
-                </div>
-                <div>
-                  <label className="block text-sm font-bold text-slate-700 mb-1.5">Prénom</label>
-                  <input type="text" value={newFirstName} onChange={e => setNewFirstName(e.target.value)} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-red-500 focus:bg-white focus:border-transparent outline-none font-medium"/>
-                </div>
-                <div>
-                  <label className="block text-sm font-bold text-slate-700 mb-1.5">Nouveau mot de passe</label>
-                  <input type="password" value={newPassword} onChange={e => setNewPassword(e.target.value)} placeholder="Laisser vide pour ne pas changer" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-red-500 focus:bg-white focus:border-transparent outline-none font-medium"/>
-                  <p className="text-xs text-slate-400 mt-1">Min. 8 caractères, 1 majuscule, 1 chiffre, 1 spécial.</p>
-                </div>
-                <div className="pt-2">
-                  <button type="submit" disabled={profileSaving} className="bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-3 rounded-xl transition shadow-lg shadow-red-600/20 text-sm">{profileSaving ? 'Enregistrement...' : 'Sauvegarder'}</button>
-                </div>
-              </form>
-              <div className="mt-8 bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8 max-w-xl">
-                <h3 className="font-black text-slate-900 mb-4">Informations du compte</h3>
-                <div className="space-y-3 text-sm">
-                  <div className="flex justify-between py-2 border-b border-slate-100"><span className="text-slate-500 font-medium">Email</span><span className="font-bold text-slate-900">{email}</span></div>
-                  <div className="flex justify-between py-2 border-b border-slate-100"><span className="text-slate-500 font-medium">Membre depuis</span><span className="font-bold text-slate-900">{createdAt}</span></div>
-                  <div className="flex justify-between py-2 border-b border-slate-100"><span className="text-slate-500 font-medium">Connexion</span><span className="font-bold text-slate-900">{user?.app_metadata?.provider === 'google' ? 'Google' : 'Email'}</span></div>
+              {profileMsg && <div className={`p-4 rounded-xl mb-6 font-bold text-sm ${profileMsg.startsWith('Erreur') ? 'bg-red-50 text-red-700 border border-red-200' : 'bg-red-50 text-red-600 border border-red-200'}`}>{profileMsg}</div>}
+              <div className="flex flex-col lg:flex-row gap-6">
+                <form onSubmit={updateProfile} className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-5 flex-1">
+                  <div>
+                    <label className="block text-sm font-bold text-slate-700 mb-1.5">Adresse email</label>
+                    <input type="email" value={email} disabled className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl font-medium text-slate-400 cursor-not-allowed"/>
+                    <p className="text-xs text-slate-400 mt-1">L'email ne peut pas être modifié.</p>
+                  </div>
+                  <div className="flex gap-4">
+                    <div className="flex-1">
+                      <label className="block text-sm font-bold text-slate-700 mb-1.5">Prénom</label>
+                      <input type="text" value={newFirstName} onChange={e => setNewFirstName(e.target.value)} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-red-500 focus:bg-white focus:border-transparent outline-none font-medium"/>
+                    </div>
+                    <div className="flex-1">
+                      <label className="block text-sm font-bold text-slate-700 mb-1.5">Nom</label>
+                      <input type="text" value={newLastName} onChange={e => setNewLastName(e.target.value)} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-red-500 focus:bg-white focus:border-transparent outline-none font-medium"/>
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-bold text-slate-700 mb-1.5">Mot de passe</label>
+                    <div className="flex items-center gap-3">
+                      <button type="button" onClick={() => { supabase.auth.resetPasswordForEmail(email); setProfileMsg('Email de réinitialisation envoyé !'); setTimeout(() => setProfileMsg(''), 5000) }} className="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-sm px-5 py-3 rounded-xl transition flex items-center gap-2 cursor-pointer">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                        Modifier le mot de passe
+                      </button>
+                      <button type="button" onClick={() => navigateTo('abonnement')} className="bg-amber-400 hover:bg-amber-500 text-black font-bold text-sm px-5 py-3 rounded-xl transition flex items-center gap-2 cursor-pointer">
+                        <BadgeCheck size={16} strokeWidth={2} />
+                        {isPremium ? 'Gérer mon abonnement' : 'Devenir Premium'}
+                      </button>
+                    </div>
+                  </div>
+                  <div className="pt-2">
+                    <button type="submit" disabled={profileSaving} className="bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-3 rounded-xl transition shadow-lg shadow-red-600/20 text-sm">{profileSaving ? 'Enregistrement...' : 'Sauvegarder'}</button>
+                  </div>
+                </form>
+                <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8 lg:w-[380px] h-fit">
+                  <h3 className="font-black text-slate-900 mb-4">Informations du compte</h3>
+                  <div className="space-y-3 text-sm">
+                    <div className="flex justify-between py-2 border-b border-slate-100"><span className="text-slate-500 font-medium">Email</span><span className="font-bold text-slate-900">{email}</span></div>
+                    <div className="flex justify-between py-2 border-b border-slate-100"><span className="text-slate-500 font-medium">Membre depuis</span><span className="font-bold text-slate-900">{createdAt}</span></div>
+                    <div className="flex justify-between py-2 border-b border-slate-100"><span className="text-slate-500 font-medium">Connexion</span><span className="font-bold text-slate-900">{user?.app_metadata?.provider === 'google' ? 'Google' : 'Email'}</span></div>
+                    <div className="flex justify-between py-2 border-b border-slate-100"><span className="text-slate-500 font-medium">Dernière connexion</span><span className="font-bold text-slate-900">{user?.last_sign_in_at ? new Date(user.last_sign_in_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—'}</span></div>
+                    <div className="flex justify-between items-center py-2 border-b border-slate-100">
+                      <span className="text-slate-500 font-medium">Email vérifié</span>
+                      {user?.email_confirmed_at ? (
+                        <span className="flex items-center gap-1.5 text-red-600 font-bold"><svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg>Vérifié</span>
+                      ) : (
+                        <button onClick={async () => { await supabase.auth.resend({ type: 'signup', email }); setProfileMsg('Email de vérification envoyé !') }} className="bg-amber-400 hover:bg-amber-500 text-black font-bold text-xs px-3 py-1.5 rounded-lg transition flex items-center gap-1.5 cursor-pointer">
+                          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                          Vérifier mon email
+                        </button>
+                      )}
+                    </div>
+                    <div className="flex justify-between py-2 border-b border-slate-100">
+                      <span className="text-slate-500 font-medium">Premium</span>
+                      {isPremium ? (
+                        <span className="text-red-600 font-bold">Oui</span>
+                      ) : (
+                        <span className="text-slate-400 font-bold">Non</span>
+                      )}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

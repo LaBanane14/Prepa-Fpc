@@ -13,7 +13,7 @@ const sidebarItems = [
   { id: 'dashboard', label: 'Accueil', href: '/dashboard', icon: Home },
   { id: 'progression', label: 'Mes stats', href: '/dashboard', icon: TrendingUp },
   { id: 'historique', label: 'Historique', href: '/dashboard', icon: RotateCcw },
-  { id: 'profil', label: 'Mon compte', href: '/dashboard', icon: UserRound },
+  { id: 'profil', label: 'Compte', href: '/dashboard', icon: UserRound },
   { id: 'abonnement', label: 'Devenir Premium', href: '/dashboard', icon: BadgeCheck, premium: true }
 ]
 
@@ -287,13 +287,14 @@ export default function OralPage() {
           {/* ===== QUESTIONS ===== */}
           
          {step === 'questions' && q && (
-            <div className="max-w-3xl mx-auto animate-fade-in">
-              <div className="flex justify-end mb-4">
+            <div className="relative animate-fade-in">
+              <div className="absolute top-0 right-0">
                 <a href="/dashboard" className="bg-slate-900 hover:bg-black text-white font-bold text-sm px-5 py-2.5 rounded-xl transition flex items-center gap-2">
                   Quitter l'exercice
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                 </a>
               </div>
+              <div className="max-w-3xl mx-auto">
               {/* Wrapper coloré style QCM */}
               <div className="bg-emerald-50 border border-emerald-200 rounded-2xl sm:rounded-[2.5rem] p-3 sm:p-6 shadow-sm">
                 <div className="bg-white rounded-xl sm:rounded-[2rem] shadow-xl flex flex-col overflow-hidden relative">
@@ -362,6 +363,7 @@ export default function OralPage() {
                     {i + 1}
                   </button>
                 ))}
+              </div>
               </div>
             </div>
           )}
