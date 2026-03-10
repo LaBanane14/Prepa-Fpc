@@ -254,7 +254,7 @@ export default function OralPage() {
           {/* ===== LOADING ===== */}
             {step === 'loading' && (
             <div className="animate-fade-in">
-            <div className="bg-white border border-slate-200 rounded-2xl shadow-sm min-h-[calc(100vh-2.5rem)] flex flex-col items-center justify-center py-16">
+            <div className="bg-white border border-slate-200 rounded-2xl shadow-sm max-w-xl mx-auto flex flex-col items-center justify-center py-12 px-8">
               <style>{`
                 @keyframes morph { 0%, 100% { border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; } 33% { border-radius: 70% 30% 50% 50% / 30% 30% 70% 70%; } 66% { border-radius: 100% 60% 60% 100% / 100% 100% 60% 60%; } }
               `}</style>
