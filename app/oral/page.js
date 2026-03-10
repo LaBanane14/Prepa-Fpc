@@ -14,7 +14,7 @@ const sidebarItems = [
   { id: 'progression', label: 'Mes stats', href: '/dashboard', icon: TrendingUp },
   { id: 'historique', label: 'Historique', href: '/dashboard', icon: RotateCcw },
   { id: 'profil', label: 'Mon compte', href: '/dashboard', icon: UserRound },
-  { id: 'abonnement', label: 'Mes offres', href: '/dashboard', icon: BadgeCheck }
+  { id: 'abonnement', label: 'Devenir Premium', href: '/dashboard', icon: BadgeCheck, premium: true }
 ]
 
 export default function OralPage() {
@@ -84,6 +84,7 @@ export default function OralPage() {
   }
 
   const firstName = user?.user_metadata?.first_name || user?.email?.split('@')[0] || ''
+  const isPremium = false // TODO: brancher sur le statut premium réel
   const q = questions[currentQ]
   const colors = q ? (catColors[q.category] || catColors['Parcours professionnel']) : {}
   const progress = questions.length > 0 ? ((currentQ + 1) / questions.length) * 100 : 0
@@ -96,6 +97,8 @@ export default function OralPage() {
       <style>{`
         .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes premiumScan { 0%, 80% { opacity: 1; } 85% { opacity: 0.4; transform: scale(1.15); } 90% { opacity: 1; transform: scale(1); filter: brightness(1.5); } 95% { filter: brightness(1); } 100% { opacity: 1; } }
+        .premium-scan { animation: premiumScan 5s ease-in-out infinite; }
       `}</style>
 
       {/* TOAST */}
@@ -114,9 +117,9 @@ export default function OralPage() {
           <a href="/" className="mb-4"><div className="w-10 h-10 bg-emerald-600 text-white rounded-xl flex items-center justify-center hover:scale-105 transition-transform"><Stethoscope size={20} strokeWidth={2.5} /></div></a>
           <div className="w-7 h-px bg-slate-200 mb-3"></div>
           <nav className="flex-1 flex flex-col items-center gap-0.5 w-full px-1.5">
-            {sidebarItems.map(item => (
-              <a key={item.id} href={item.href} className="w-full flex flex-col items-center justify-center gap-1 py-3 rounded-xl text-[11px] font-bold transition-all text-slate-900 hover:bg-emerald-50 hover:text-emerald-600 text-center group">
-                <item.icon size={21} strokeWidth={1.6} className="transition-transform duration-200 group-hover:scale-125" />
+            {sidebarItems.filter(item => !item.premium || !isPremium).map(item => (
+              <a key={item.id} href={item.href} className={`w-full flex flex-col items-center justify-center gap-1 py-3 rounded-xl text-[11px] font-bold transition-all text-center group ${item.premium ? 'text-amber-500 hover:bg-amber-50 hover:text-amber-600' : 'text-slate-900 hover:bg-emerald-50 hover:text-emerald-600'}`}>
+                <item.icon size={21} strokeWidth={1.6} className={`transition-transform duration-200 group-hover:scale-125 ${item.premium ? 'premium-scan' : ''}`} />
                 <span>{item.label}</span>
               </a>
             ))}

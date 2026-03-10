@@ -8,7 +8,7 @@ const menuItems = [
   { id: 'progression', label: 'Mes stats', icon: TrendingUp },
   { id: 'historique', label: 'Historique', icon: RotateCcw },
   { id: 'profil', label: 'Mon compte', icon: UserRound },
-  { id: 'abonnement', label: 'Mes offres', icon: BadgeCheck }
+  { id: 'abonnement', label: 'Devenir Premium', icon: BadgeCheck, premium: true }
 ]
 
 export default function Dashboard() {
@@ -65,6 +65,7 @@ export default function Dashboard() {
   }
 
   const firstName = user?.user_metadata?.first_name || user?.email?.split('@')[0] || 'Utilisateur'
+  const isPremium = false // TODO: brancher sur le statut premium réel
   const email = user?.email || ''
   const createdAt = new Date(user?.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
   const stats = { qcm: 0, score: '-', calculs: 0, redactions: 0 }
@@ -82,6 +83,10 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-slate-100 text-slate-900 flex" style={{fontFamily: "'DM Sans', 'Inter', system-ui, sans-serif"}}>
       <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+      <style>{`
+        @keyframes premiumScan { 0%, 80% { opacity: 1; } 85% { opacity: 0.4; transform: scale(1.15); } 90% { opacity: 1; transform: scale(1); filter: brightness(1.5); } 95% { filter: brightness(1); } 100% { opacity: 1; } }
+        .premium-scan { animation: premiumScan 5s ease-in-out infinite; }
+      `}</style>
       <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
 
       {sidebarOpen && <div className="fixed inset-0 bg-black/30 z-40 lg:hidden" onClick={() => setSidebarOpen(false)}></div>}
@@ -97,9 +102,9 @@ export default function Dashboard() {
           <div className="w-7 h-px bg-slate-200 mb-3"></div>
 
           <nav className="flex-1 flex flex-col items-center gap-0.5 w-full px-1.5">
-            {menuItems.map(item => (
-              <button key={item.id} onClick={() => navigateTo(item.id)} className={`w-full flex flex-col items-center justify-center gap-1 py-3 rounded-xl text-[11px] font-bold transition-all cursor-pointer text-center group ${page === item.id ? 'bg-red-50 text-red-600' : 'text-slate-900 hover:bg-red-50 hover:text-red-600'}`}>
-                <item.icon size={21} strokeWidth={1.6} className="transition-transform duration-200 group-hover:scale-125" />
+            {menuItems.filter(item => !item.premium || !isPremium).map(item => (
+              <button key={item.id} onClick={() => navigateTo(item.id)} className={`w-full flex flex-col items-center justify-center gap-1 py-3 rounded-xl text-[11px] font-bold transition-all cursor-pointer text-center group ${item.premium ? (page === item.id ? 'bg-amber-50 text-amber-600' : 'text-amber-500 hover:bg-amber-50 hover:text-amber-600') : (page === item.id ? 'bg-red-50 text-red-600' : 'text-slate-900 hover:bg-red-50 hover:text-red-600')}`}>
+                <item.icon size={21} strokeWidth={1.6} className={`transition-transform duration-200 group-hover:scale-125 ${item.premium ? 'premium-scan' : ''}`} />
                 <span>{item.label}</span>
               </button>
             ))}
