@@ -626,7 +626,7 @@ function DashboardContent() {
                                   {item.note != null ? (
                                     <span className={`text-sm font-black ${scoreNorm >= 15 ? 'text-emerald-600' : scoreNorm >= 10 ? 'text-amber-600' : 'text-red-600'}`}>{item.note}/{item.note_max}</span>
                                   ) : (
-                                    <span className="text-xs font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded-lg">Terminé</span>
+                                    <span className="text-sm font-black text-emerald-600">Terminé</span>
                                   )}
                                 </div>
                               </div>
