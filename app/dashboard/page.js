@@ -482,8 +482,8 @@ function DashboardContent() {
             // Stats
             const totalExercices = historique.length
             const notes = historique.filter(h => h.note != null && h.note_max)
-            const moyenne = notes.length > 0 ? (notes.reduce((sum, h) => sum + (h.note / h.note_max) * 20, 0) / notes.length).toFixed(1) : null
-            const meilleur = notes.length > 0 ? Math.max(...notes.map(h => (h.note / h.note_max) * 20)).toFixed(1) : null
+            const moyenne = notes.length > 0 ? parseFloat((notes.reduce((sum, h) => sum + (h.note / h.note_max) * 20, 0) / notes.length).toFixed(1)) : null
+            const meilleur = notes.length > 0 ? parseFloat(Math.max(...notes.map(h => (h.note / h.note_max) * 20)).toFixed(1)) : null
             const totalMinutes = historique.reduce((sum, h) => sum + (h.duration_minutes || 0), 0)
             const totalH = Math.floor(totalMinutes / 60)
             const totalM = totalMinutes % 60
