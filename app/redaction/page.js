@@ -126,7 +126,7 @@ export default function RedactionPage() {
         type: 'Rédaction',
         label: sujet.titre || 'Entraînement rédactionnel',
         note: data.correction.note,
-        note_max: data.correction.noteMax || 20,
+        note_max: data.correction.noteMax || 10,
         nb_questions: 1,
         duration_minutes: durationUsed || 1,
       })
@@ -265,7 +265,7 @@ export default function RedactionPage() {
                   <div className="flex items-center gap-6 mt-10 text-xs text-slate-400 font-medium">
                     <span className="flex items-center gap-1.5"><svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>30 min</span>
                     <span className="flex items-center gap-1.5"><svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>Rédaction libre</span>
-                    <span className="flex items-center gap-1.5"><svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="m9 12 2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>Note /20</span>
+                    <span className="flex items-center gap-1.5"><svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="m9 12 2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>Note /10</span>
                   </div>
                 </div>
               </div>
@@ -418,7 +418,7 @@ export default function RedactionPage() {
                 <p className="text-xs font-black text-slate-400 uppercase tracking-widest mb-3">Votre note</p>
                 <div className="flex items-baseline justify-center gap-1">
                   <span className="text-6xl font-black text-purple-600">{correction.note}</span>
-                  <span className="text-2xl font-black text-slate-300">/{correction.noteMax || 20}</span>
+                  <span className="text-2xl font-black text-slate-300">/{correction.noteMax || 10}</span>
                 </div>
                 <p className="text-slate-600 font-medium text-sm mt-4 max-w-lg mx-auto">{correction.appreciation}</p>
               </div>

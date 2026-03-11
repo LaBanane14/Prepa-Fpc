@@ -166,8 +166,8 @@ Sois juste mais bienveillant. Tiens compte du fait que le candidat n'avait que 3
 
 IMPORTANT : Réponds UNIQUEMENT en JSON valide avec cette structure :
 {
-  "note": 14,
-  "noteMax": 20,
+  "note": 7,
+  "noteMax": 10,
   "appreciation": "Appréciation générale en 2-3 phrases",
   "points_forts": ["point fort 1", "point fort 2", "..."],
   "points_ameliorer": ["point à améliorer 1", "point à améliorer 2", "..."],
