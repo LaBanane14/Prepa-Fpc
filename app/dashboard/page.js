@@ -559,13 +559,15 @@ function DashboardContent() {
                       const isSelected = selectedDay === day
                       const today = new Date()
                       const isToday = day === today.getDate() && calMonth === today.getMonth() && calYear === today.getFullYear()
+                      const dayOfWeek = (new Date(calYear, calMonth, day).getDay())
+                      const isWeekend = dayOfWeek === 0 || dayOfWeek === 6
 
                       return (
                         <button
                           key={day}
                           onClick={() => setSelectedDay(isSelected ? null : day)}
                           className={`aspect-square rounded-xl flex flex-col items-center justify-center gap-0.5 text-sm font-bold transition cursor-pointer relative
-                            ${isSelected ? 'bg-red-600 text-white' : isToday ? 'bg-red-50 text-red-600 border border-red-200' : hasExercises ? 'bg-slate-50 hover:bg-slate-100 text-slate-900' : 'text-slate-400 hover:bg-slate-50'}`}
+                            ${isSelected ? 'bg-red-600 text-white' : isToday ? 'bg-red-50 text-red-600 border border-red-200' : hasExercises ? 'bg-slate-50 hover:bg-slate-100 text-slate-900' : isWeekend ? 'bg-slate-100 text-slate-500 hover:bg-slate-200' : 'text-slate-400 hover:bg-slate-50'}`}
                         >
                           <span>{day}</span>
                           {hasExercises && !isSelected && (
