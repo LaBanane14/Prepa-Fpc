@@ -159,6 +159,10 @@ function DashboardContent() {
   }
   const weekData = getWeekData()
   const weekProgress = Math.min(100, (weekData.count / 5) * 100)
+
+  // Moyenne générale (ramenée sur 10)
+  const notesAll = historique.filter(h => h.note != null && h.note_max)
+  const moyenneGenerale = notesAll.length > 0 ? (notesAll.reduce((sum, h) => sum + (h.note / h.note_max) * 10, 0) / notesAll.length).toFixed(1) : null
   const categories = [
     { name: 'Calculs de dose', color: 'bg-red-500', progress: 0 },
     { name: 'Pourcentages', color: 'bg-purple-500', progress: 0 },
@@ -302,32 +306,41 @@ function DashboardContent() {
                 </a>
               </div>
 
-              {/* STREAK + OBJECTIF SEMAINE */}
-              <div className="grid sm:grid-cols-2 gap-4 mb-10">
+              {/* STREAK + MOYENNE + OBJECTIF SEMAINE */}
+              <div className="grid sm:grid-cols-3 gap-4 mb-10">
                 {/* Streak */}
-                <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-                  <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 relative shrink-0">
-                      <svg viewBox="0 0 32 40" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-                        <defs>
-                          <clipPath id="dropClip">
-                            <path d="M16 2 C16 2 4 18 4 26 C4 33.5 9.5 38 16 38 C22.5 38 28 33.5 28 26 C28 18 16 2 16 2Z"/>
-                          </clipPath>
-                        </defs>
-                        <path d="M16 2 C16 2 4 18 4 26 C4 33.5 9.5 38 16 38 C22.5 38 28 33.5 28 26 C28 18 16 2 16 2Z" fill="#fee2e2" stroke="#fca5a5" strokeWidth="1.2"/>
-                        <rect clipPath="url(#dropClip)" x="0" y={38 - Math.min(36, Math.max(0, streak * 5))} width="32" height={Math.min(36, Math.max(0, streak * 5))} fill={streak === 0 ? '#fecaca' : streak < 3 ? '#f87171' : streak < 7 ? '#ef4444' : '#dc2626'}/>
-                        <ellipse cx="11" cy="24" rx="2.5" ry="3" fill="white" opacity="0.25"/>
-                      </svg>
-                    </div>
-                    <div>
-                      <p className="text-3xl font-black text-slate-900">{streak} <span className="text-sm font-bold text-slate-400">jour(s) d'affilée</span></p>
-                      <p className="text-xs font-bold text-orange-500 mt-1">{streak === 0 ? 'Entraîne-toi aujourd\'hui pour lancer ta série !' : streak < 3 ? 'Bon début, continue comme ça !' : streak < 7 ? 'Belle série, ne lâche rien !' : 'Incroyable, tu es en feu !'}</p>
-                    </div>
+                <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-3">
+                  <div className="w-9 h-9 relative shrink-0">
+                    <svg viewBox="0 0 32 40" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                      <defs>
+                        <clipPath id="dropClip">
+                          <path d="M16 2 C16 2 4 18 4 26 C4 33.5 9.5 38 16 38 C22.5 38 28 33.5 28 26 C28 18 16 2 16 2Z"/>
+                        </clipPath>
+                      </defs>
+                      <path d="M16 2 C16 2 4 18 4 26 C4 33.5 9.5 38 16 38 C22.5 38 28 33.5 28 26 C28 18 16 2 16 2Z" fill="#fee2e2" stroke="#fca5a5" strokeWidth="1.2"/>
+                      <rect clipPath="url(#dropClip)" x="0" y={38 - Math.min(36, Math.max(0, streak * 5))} width="32" height={Math.min(36, Math.max(0, streak * 5))} fill={streak === 0 ? '#fecaca' : streak < 3 ? '#f87171' : streak < 7 ? '#ef4444' : '#dc2626'}/>
+                      <ellipse cx="11" cy="24" rx="2.5" ry="3" fill="white" opacity="0.25"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-2xl font-black text-slate-900">{streak} <span className="text-xs font-bold text-slate-400">jour(s) d'affilée</span></p>
+                    <p className="text-[10px] font-bold text-orange-500 mt-0.5">{streak === 0 ? 'Entraîne-toi pour lancer ta série !' : streak < 3 ? 'Bon début !' : streak < 7 ? 'Belle série !' : 'En feu !'}</p>
+                  </div>
+                </div>
+
+                {/* Ma moyenne */}
+                <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-3">
+                  <div className="w-9 h-9 bg-red-50 rounded-xl flex items-center justify-center shrink-0">
+                    <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                  </div>
+                  <div>
+                    <p className="text-2xl font-black text-slate-900">{moyenneGenerale || '—'}<span className="text-xs font-bold text-slate-400">/10</span></p>
+                    <p className="text-[10px] font-bold text-slate-400 mt-0.5">Ma moyenne générale</p>
                   </div>
                 </div>
 
                 {/* Objectif semaine */}
-                <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
                   <div className="flex items-center justify-between mb-3">
                     <p className="text-sm font-black text-slate-900">Objectif de la semaine</p>
                     <span className="text-xs font-black text-slate-400">{weekData.count}/5 exercices</span>
