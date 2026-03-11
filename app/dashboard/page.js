@@ -35,6 +35,16 @@ function DashboardContent() {
   const [newPassword, setNewPassword] = useState('')
   const [profileMsg, setProfileMsg] = useState('')
   const [profileSaving, setProfileSaving] = useState(false)
+  const [historique, setHistorique] = useState([])
+
+  async function fetchHistorique(userId) {
+    const { data } = await supabase
+      .from('historique')
+      .select('*')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false })
+    if (data) setHistorique(data)
+  }
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -42,6 +52,7 @@ function DashboardContent() {
       setUser(session.user)
       setNewFirstName(session.user?.user_metadata?.first_name || '')
       setNewLastName(session.user?.user_metadata?.last_name || '')
+      fetchHistorique(session.user.id)
       // Calcul trial
       const created = new Date(session.user.created_at)
       const now = new Date()
@@ -365,11 +376,9 @@ function DashboardContent() {
 
           {/* ============ MON HISTORIQUE ============ */}
           {page === 'historique' && (() => {
-            // TODO: remplacer par les vraies données depuis Supabase
-            const fakeHistory = []
-
-            const calMonth = window.__calMonth ?? 2
-            const calYear = window.__calYear ?? 2026
+            const now = new Date()
+            const calMonth = window.__calMonth ?? now.getMonth()
+            const calYear = window.__calYear ?? now.getFullYear()
             const selectedDay = window.__calDay ?? null
 
             const setCalMonth = (m) => { window.__calMonth = m; setPage('historique') }
@@ -382,14 +391,28 @@ function DashboardContent() {
             const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate()
             const firstDayOfWeek = (new Date(calYear, calMonth, 1).getDay() + 6) % 7
 
+            // Filtrer l'historique pour le mois affiché
+            const monthHistory = historique.filter(h => {
+              const d = new Date(h.created_at)
+              return d.getMonth() === calMonth && d.getFullYear() === calYear
+            }).map(h => {
+              const d = new Date(h.created_at)
+              return {
+                ...h,
+                day: d.getDate(),
+                time: `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`,
+              }
+            })
+
             const exercisesByDay = {}
-            fakeHistory.forEach(h => {
+            monthHistory.forEach(h => {
               if (!exercisesByDay[h.day]) exercisesByDay[h.day] = []
               exercisesByDay[h.day].push(h)
             })
 
             const getTypeColor = (type) => {
-              if (type === 'QCM') return 'red'
+              if (type === 'Maths') return 'red'
+              if (type === 'Rédaction') return 'purple'
               if (type === 'Oral') return 'emerald'
               return 'blue'
             }
@@ -398,6 +421,15 @@ function DashboardContent() {
               const items = exercisesByDay[day] || []
               return [...new Set(items.map(i => i.type))]
             }
+
+            // Stats
+            const totalExercices = historique.length
+            const notes = historique.filter(h => h.note != null && h.note_max)
+            const moyenne = notes.length > 0 ? (notes.reduce((sum, h) => sum + (h.note / h.note_max) * 20, 0) / notes.length).toFixed(1) : null
+            const meilleur = notes.length > 0 ? Math.max(...notes.map(h => (h.note / h.note_max) * 20)).toFixed(1) : null
+            const totalMinutes = historique.reduce((sum, h) => sum + (h.duration_minutes || 0), 0)
+            const totalH = Math.floor(totalMinutes / 60)
+            const totalM = totalMinutes % 60
 
             const prevMonth = () => {
               if (calMonth === 0) { setCalMonth(11); setCalYear(calYear - 1) }
@@ -420,19 +452,19 @@ function DashboardContent() {
               {/* Stats rapides */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
                 <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 text-center">
-                  <p className="text-2xl font-black text-slate-900">{fakeHistory.length}</p>
+                  <p className="text-2xl font-black text-slate-900">{totalExercices}</p>
                   <p className="text-xs font-bold text-slate-400 uppercase mt-1">Exercices</p>
                 </div>
                 <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 text-center">
-                  <p className="text-2xl font-black text-red-600">—<span className="text-sm">/20</span></p>
+                  <p className="text-2xl font-black text-red-600">{moyenne || '—'}<span className="text-sm">/20</span></p>
                   <p className="text-xs font-bold text-slate-400 uppercase mt-1">Moyenne</p>
                 </div>
                 <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 text-center">
-                  <p className="text-2xl font-black text-slate-900">—<span className="text-sm">/20</span></p>
+                  <p className="text-2xl font-black text-slate-900">{meilleur || '—'}<span className="text-sm">/20</span></p>
                   <p className="text-xs font-bold text-slate-400 uppercase mt-1">Meilleur score</p>
                 </div>
                 <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 text-center">
-                  <p className="text-2xl font-black text-slate-900">0h00</p>
+                  <p className="text-2xl font-black text-slate-900">{totalH}h{String(totalM).padStart(2, '0')}</p>
                   <p className="text-xs font-bold text-slate-400 uppercase mt-1">Temps total</p>
                 </div>
               </div>
@@ -468,7 +500,8 @@ function DashboardContent() {
                       const types = getTypesForDay(day)
                       const hasExercises = types.length > 0
                       const isSelected = selectedDay === day
-                      const isToday = day === 10 && calMonth === 2 && calYear === 2026
+                      const today = new Date()
+                      const isToday = day === today.getDate() && calMonth === today.getMonth() && calYear === today.getFullYear()
 
                       return (
                         <button
@@ -481,7 +514,7 @@ function DashboardContent() {
                           {hasExercises && !isSelected && (
                             <div className="flex gap-0.5">
                               {types.map(t => (
-                                <div key={t} className={`w-1.5 h-1.5 rounded-full ${t === 'QCM' ? 'bg-red-500' : t === 'Oral' ? 'bg-emerald-500' : 'bg-blue-500'}`}></div>
+                                <div key={t} className={`w-1.5 h-1.5 rounded-full ${t === 'Maths' ? 'bg-red-500' : t === 'Rédaction' ? 'bg-purple-500' : t === 'Oral' ? 'bg-emerald-500' : 'bg-blue-500'}`}></div>
                               ))}
                             </div>
                           )}
@@ -499,9 +532,9 @@ function DashboardContent() {
 
                   {/* Légende */}
                   <div className="flex items-center gap-4 mt-5 pt-4 border-t border-slate-100">
-                    <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-red-500"></div><span className="text-[10px] font-bold text-slate-400">QCM</span></div>
+                    <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-red-500"></div><span className="text-[10px] font-bold text-slate-400">Maths</span></div>
+                    <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-purple-500"></div><span className="text-[10px] font-bold text-slate-400">Rédaction</span></div>
                     <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-emerald-500"></div><span className="text-[10px] font-bold text-slate-400">Oral</span></div>
-                    <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-blue-500"></div><span className="text-[10px] font-bold text-slate-400">Examen</span></div>
                   </div>
                 </div>
 
@@ -514,20 +547,21 @@ function DashboardContent() {
                         <div className="space-y-3">
                           {dayItems.map(item => {
                             const color = getTypeColor(item.type)
+                            const scoreNorm = item.note != null && item.note_max ? (item.note / item.note_max) * 20 : null
                             return (
                               <div key={item.id} className="bg-white rounded-xl border border-slate-200 shadow-sm p-4 flex items-center gap-4 hover:shadow-md transition">
-                                <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${color === 'red' ? 'bg-red-100 text-red-600' : color === 'emerald' ? 'bg-emerald-100 text-emerald-600' : 'bg-blue-100 text-blue-600'}`}>
-                                  {item.type === 'QCM' && <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>}
+                                <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${color === 'red' ? 'bg-red-100 text-red-600' : color === 'purple' ? 'bg-purple-100 text-purple-600' : color === 'emerald' ? 'bg-emerald-100 text-emerald-600' : 'bg-blue-100 text-blue-600'}`}>
+                                  {item.type === 'Maths' && <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>}
+                                  {item.type === 'Rédaction' && <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>}
                                   {item.type === 'Oral' && <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg>}
-                                  {item.type === 'Examen' && <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>}
                                 </div>
                                 <div className="flex-1 min-w-0">
                                   <p className="font-bold text-sm text-slate-900 truncate">{item.label}</p>
-                                  <p className="text-xs text-slate-400 font-medium">{item.time} · {item.questions} questions · {item.duration}</p>
+                                  <p className="text-xs text-slate-400 font-medium">{item.time} · {item.nb_questions} questions · {item.duration_minutes} min</p>
                                 </div>
                                 <div className="text-right shrink-0">
-                                  {item.score ? (
-                                    <span className={`text-sm font-black ${parseInt(item.score) >= 15 ? 'text-emerald-600' : parseInt(item.score) >= 10 ? 'text-amber-600' : 'text-red-600'}`}>{item.score}</span>
+                                  {item.note != null ? (
+                                    <span className={`text-sm font-black ${scoreNorm >= 15 ? 'text-emerald-600' : scoreNorm >= 10 ? 'text-amber-600' : 'text-red-600'}`}>{item.note}/{item.note_max}</span>
                                   ) : (
                                     <span className="text-xs font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded-lg">Terminé</span>
                                   )}

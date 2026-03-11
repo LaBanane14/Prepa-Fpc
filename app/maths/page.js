@@ -120,6 +120,18 @@ export default function MathsPage() {
       const elapsed = Date.now() - startTime
       if (elapsed < 20000) await new Promise(r => setTimeout(r, 20000 - elapsed))
       setCorrection(data.correction)
+      // Sauvegarder dans l'historique
+      const totalQuestions = sujet.exercices.reduce((sum, ex) => sum + (ex.questions?.length || 0), 0)
+      const durationUsed = Math.round((30 * 60 - timeLeft) / 60)
+      await supabase.from('historique').insert({
+        user_id: user.id,
+        type: 'Maths',
+        label: sujet.titre || 'Entraînement mathématiques',
+        note: data.correction.note,
+        note_max: data.correction.noteMax || 10,
+        nb_questions: totalQuestions,
+        duration_minutes: durationUsed || 1,
+      })
       setStep('resultat')
     } catch (err) {
       setError('Erreur de connexion. Réessayez.')
