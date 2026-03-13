@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect, useRef } from 'react'
 import { supabase } from '../../lib/supabase'
-import { Home, TrendingUp, RotateCcw, UserRound, BadgeCheck, LogOut, Stethoscope } from 'lucide-react'
+import { Home, TrendingUp, RotateCcw, UserRound, BadgeCheck, LogOut, Stethoscope, Timer, PenLine, Sparkles, ClipboardCheck } from 'lucide-react'
 
 const sidebarItems = [
   { id: 'dashboard', label: 'Accueil', href: '/dashboard', icon: Home },
@@ -16,7 +16,9 @@ export default function RedactionPage() {
   const [authLoading, setAuthLoading] = useState(true)
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
-  const [step, setStep] = useState('accueil') // accueil, loading, epreuve, correcting, resultat
+  const [showInfoPopup, setShowInfoPopup] = useState(false)
+  const [dontShowAgain, setDontShowAgain] = useState(false)
+  const [step, setStep] = useState('loading')
   const [sujet, setSujet] = useState(null)
   const [redaction, setRedaction] = useState('')
   const [correction, setCorrection] = useState(null)
@@ -34,6 +36,13 @@ export default function RedactionPage() {
       if (!session) { window.location.href = '/auth'; return }
       setUser(session.user)
       setAuthLoading(false)
+      const skipPopup = localStorage.getItem('redaction_skip_info') === 'true'
+      if (skipPopup) {
+        genererSujet()
+      } else {
+        setShowInfoPopup(true)
+        setStep(null)
+      }
     })
   }, [])
 
@@ -75,6 +84,12 @@ export default function RedactionPage() {
 
   async function handleLogout() { await supabase.auth.signOut(); window.location.href = '/' }
 
+  function handleStartFromPopup() {
+    if (dontShowAgain) localStorage.setItem('redaction_skip_info', 'true')
+    setShowInfoPopup(false)
+    genererSujet()
+  }
+
   async function genererSujet() {
     setError('')
     setLoadingStep(0)
@@ -87,7 +102,7 @@ export default function RedactionPage() {
         body: JSON.stringify({ action: 'generer' })
       })
       const data = await res.json()
-      if (!res.ok || data.error) { setError(data.error || 'Erreur lors de la génération du sujet.'); setStep('accueil'); return }
+      if (!res.ok || data.error) { setError(data.error || 'Erreur lors de la génération du sujet.'); window.location.href = '/dashboard'; return }
       setSujet(data.sujet)
       setRedaction('')
       setTimeLeft(30 * 60)
@@ -95,7 +110,7 @@ export default function RedactionPage() {
       setTimerActive(true)
     } catch (err) {
       setError('Erreur de connexion. Réessayez.')
-      setStep('accueil')
+      window.location.href = '/dashboard'
     }
   }
 
@@ -138,7 +153,8 @@ export default function RedactionPage() {
   }
 
   function restart() {
-    setStep('accueil'); setSujet(null); setRedaction(''); setCorrection(null); setError(''); setLoadingStep(0); setTimeLeft(30 * 60); setTimerActive(false)
+    setSujet(null); setRedaction(''); setCorrection(null); setError(''); setLoadingStep(0); setTimeLeft(30 * 60); setTimerActive(false)
+    genererSujet()
   }
 
   const firstName = user?.user_metadata?.first_name || user?.email?.split('@')[0] || ''
@@ -198,75 +214,46 @@ export default function RedactionPage() {
 
         <main className="flex-grow w-full mx-auto px-4 py-4 sm:py-5">
 
-          {/* ===== ACCUEIL ===== */}
-          {step === 'accueil' && (
-            <div className="animate-fade-in">
-              <div className="bg-white border border-slate-200 rounded-2xl shadow-sm min-h-[calc(100vh-2.5rem)] flex flex-col lg:flex-row overflow-hidden">
+          {/* ===== POPUP INFO ===== */}
+          {showInfoPopup && (
+            <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4" onClick={() => { setShowInfoPopup(false); window.location.href = '/dashboard' }}>
+              <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full animate-fade-in overflow-hidden" onClick={e => e.stopPropagation()}>
 
-                {/* Panneau gauche */}
-                <div className="lg:w-[380px] bg-slate-900 p-8 sm:p-10 flex flex-col text-white shrink-0">
-                  <div className="flex items-center gap-3 mb-8">
-                    <div className="w-10 h-10 bg-purple-500/20 text-purple-400 rounded-xl flex items-center justify-center">
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
-                    </div>
-                    <h1 className="text-xl font-black">Entraînement rédactionnel</h1>
-                  </div>
+                <div className="bg-slate-900 px-6 py-5 relative">
+                  <button onClick={() => { setShowInfoPopup(false); window.location.href = '/dashboard' }} className="absolute top-3 right-3 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/15 text-white transition cursor-pointer">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                  </button>
+                  <h2 className="text-lg font-black text-white pr-8">Entraînement rédactionnel</h2>
+                  <p className="text-slate-400 text-sm font-medium mt-1">Avant de commencer, voici le déroulement de l'épreuve.</p>
+                </div>
 
-                  <p className="text-slate-400 font-medium text-sm leading-relaxed mb-8">Entraînez-vous à l'épreuve écrite du concours IFSI FPC. Un sujet original vous sera proposé avec un chronomètre de 30 minutes.</p>
-
-                  <div className="space-y-8 mb-8">
+                <div className="p-6">
+                  <div className="space-y-4 mb-6">
                     {[
-                      { label: 'Génération du sujet', sub: 'Analyse de texte, dissertation ou résumé', color: 'purple', icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M12 2v4"/><path d="m16.2 7.8 2.9-2.9"/><path d="M18 12h4"/><path d="m16.2 16.2 2.9 2.9"/><path d="M12 18v4"/><path d="m4.9 19.1 2.9-2.9"/><path d="M2 12h4"/><path d="m4.9 4.9 2.9 2.9"/></svg> },
-                      { label: 'Rédaction chronométrée', sub: '30 minutes, comme au concours', color: 'purple', icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> },
-                      { label: 'Correction détaillée par l\'IA', sub: 'Fautes, syntaxe, argumentation et note', color: 'purple', icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="m9 12 2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg> }
-                    ].map((s, i) => (
-                      <div key={i} className="flex items-start gap-4">
-                        <div className={`w-9 h-9 bg-purple-500/20 text-purple-400 rounded-lg flex items-center justify-center shrink-0`}>{s.icon}</div>
+                      { icon: <Timer size={18} strokeWidth={2} />, title: 'Chronomètre de 30 minutes', text: 'Le compte à rebours démarre dès la génération du sujet. À la fin du temps, votre rédaction est envoyée automatiquement.' },
+                      { icon: <PenLine size={18} strokeWidth={2} />, title: 'Rédaction libre', text: 'Analyse de texte, dissertation ou résumé — rédigez directement dans l\'éditeur intégré.' },
+                      { icon: <Sparkles size={18} strokeWidth={2} />, title: 'Sujet généré par l\'IA', text: 'Un sujet original basé sur les annales du concours IFSI est créé à chaque session.' },
+                      { icon: <ClipboardCheck size={18} strokeWidth={2} />, title: 'Correction détaillée et note /10', text: 'Orthographe, syntaxe, argumentation — chaque aspect est évalué avec des conseils personnalisés.' }
+                    ].map((item, i) => (
+                      <div key={i} className="flex items-start gap-3">
+                        <div className="w-9 h-9 bg-purple-50 text-purple-500 rounded-xl flex items-center justify-center shrink-0">{item.icon}</div>
                         <div>
-                          <h3 className="font-bold text-white text-sm">{s.label}</h3>
-                          <p className="text-slate-500 text-xs mt-0.5">{s.sub}</p>
+                          <p className="text-sm font-black text-slate-800">{item.title}</p>
+                          <p className="text-xs text-slate-500 leading-relaxed mt-0.5">{item.text}</p>
                         </div>
                       </div>
                     ))}
                   </div>
 
-                  <div className="mt-auto space-y-3">
-                    <div className="flex items-center gap-2 text-slate-500 text-xs">
-                      <svg className="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>
-                      <span>Sujets basés sur les annales du concours IFSI</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-slate-500 text-xs">
-                      <svg className="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M12 2v4"/><path d="m16.2 7.8 2.9-2.9"/><path d="M18 12h4"/></svg>
-                      <span>Correction intelligente et personnalisée</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Panneau droit */}
-                <div className="flex-1 p-8 sm:p-10 flex flex-col items-center justify-center">
-                  {error && (
-                    <div className="w-full max-w-md bg-red-50 border border-red-200 text-red-700 font-bold text-sm px-5 py-3 rounded-xl mb-6 flex items-center gap-2">
-                      <svg className="w-5 h-5 shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
-                      {error}
-                    </div>
-                  )}
-
-                  <div className="w-20 h-20 bg-purple-100 text-purple-600 rounded-2xl flex items-center justify-center mb-6">
-                    <svg className="w-10 h-10" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
-                  </div>
-                  <h2 className="text-2xl font-black text-slate-900 mb-2 text-center">Prêt(e) pour l'épreuve ?</h2>
-                  <p className="text-slate-500 font-medium text-sm text-center mb-8 max-w-sm">Un sujet original sera généré par l'IA. Vous aurez 30 minutes pour rédiger votre réponse, comme au concours.</p>
-
-                  <button onClick={genererSujet} className="bg-purple-600 hover:bg-purple-700 text-white font-bold px-8 py-4 rounded-xl transition shadow-lg shadow-purple-200/50 text-sm flex items-center gap-2 cursor-pointer">
+                  <button onClick={handleStartFromPopup} className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3.5 rounded-xl transition shadow-lg shadow-purple-200/50 text-sm flex items-center justify-center gap-2 cursor-pointer mb-4">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
                     Commencer l'épreuve
                   </button>
 
-                  <div className="flex items-center gap-6 mt-10 text-xs text-slate-400 font-medium">
-                    <span className="flex items-center gap-1.5"><svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>30 min</span>
-                    <span className="flex items-center gap-1.5"><svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>Rédaction libre</span>
-                    <span className="flex items-center gap-1.5"><svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="m9 12 2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>Note /10</span>
-                  </div>
+                  <label className="flex items-center gap-2 cursor-pointer justify-center">
+                    <input type="checkbox" checked={dontShowAgain} onChange={e => setDontShowAgain(e.target.checked)} className="w-4 h-4 rounded border-slate-300 text-purple-600 focus:ring-purple-500 cursor-pointer" />
+                    <span className="text-xs text-slate-400 font-medium">Ne plus afficher ce message</span>
+                  </label>
                 </div>
               </div>
             </div>

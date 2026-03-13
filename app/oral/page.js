@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect, useRef } from 'react'
 import { supabase } from '../../lib/supabase'
-import { Home, TrendingUp, RotateCcw, UserRound, BadgeCheck, LogOut, Stethoscope } from 'lucide-react'
+import { Home, TrendingUp, RotateCcw, UserRound, BadgeCheck, LogOut, Stethoscope, Upload, Sparkles, MessageCircleQuestion, Lightbulb } from 'lucide-react'
 
 const catColors = {
   'Parcours professionnel': { bg: 'bg-blue-50', text: 'text-blue-600', border: 'border-blue-200', badge: 'bg-blue-100 text-blue-700' },
@@ -31,6 +31,8 @@ export default function OralPage() {
   const [fileName, setFileName] = useState('')
   const [uploadSuccess, setUploadSuccess] = useState(false)
   const [loadingStep, setLoadingStep] = useState(0)
+  const [showInfoPopup, setShowInfoPopup] = useState(false)
+  const [dontShowAgain, setDontShowAgain] = useState(false)
   const [timeLeft, setTimeLeft] = useState(10 * 60)
   const [timerActive, setTimerActive] = useState(false)
   const timerRef = useRef(null)
@@ -40,6 +42,10 @@ export default function OralPage() {
       if (!session) { window.location.href = '/auth'; return }
       setUser(session.user)
       setAuthLoading(false)
+      const skipPopup = localStorage.getItem('oral_skip_info') === 'true'
+      if (!skipPopup) {
+        setShowInfoPopup(true)
+      }
     })
   }, [])
   useEffect(() => {
@@ -65,6 +71,11 @@ export default function OralPage() {
     }, 1000)
     return () => clearInterval(timerRef.current)
   }, [timerActive])
+
+  function handleStartFromPopup() {
+    if (dontShowAgain) localStorage.setItem('oral_skip_info', 'true')
+    setShowInfoPopup(false)
+  }
 
   async function handleLogout() { await supabase.auth.signOut(); window.location.href = '/' }
 
@@ -181,6 +192,51 @@ export default function OralPage() {
         </header>
 
         <main className="flex-grow w-full mx-auto px-4 py-4 sm:py-5">
+
+          {/* ===== POPUP INFO ===== */}
+          {showInfoPopup && (
+            <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4" onClick={handleStartFromPopup}>
+              <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full animate-fade-in overflow-hidden" onClick={e => e.stopPropagation()}>
+
+                <div className="bg-slate-900 px-6 py-5 relative">
+                  <button onClick={handleStartFromPopup} className="absolute top-3 right-3 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/15 text-white transition cursor-pointer">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                  </button>
+                  <h2 className="text-lg font-black text-white pr-8">Préparation à l'oral</h2>
+                  <p className="text-slate-400 text-sm font-medium mt-1">Voici comment se déroule la préparation.</p>
+                </div>
+
+                <div className="p-6">
+                  <div className="space-y-4 mb-6">
+                    {[
+                      { icon: <Upload size={18} strokeWidth={2} />, title: 'Importez votre CV en PDF', text: 'Téléchargez votre CV au format PDF (10 Mo max). Il sera analysé pour générer des questions personnalisées.' },
+                      { icon: <Sparkles size={18} strokeWidth={2} />, title: 'Analyse intelligente par l\'IA', text: 'Notre IA analyse votre parcours professionnel, vos formations et vos expériences.' },
+                      { icon: <MessageCircleQuestion size={18} strokeWidth={2} />, title: '10 questions personnalisées', text: 'Des questions identiques à celles du jury : parcours, motivation, connaissance du métier IDE.' },
+                      { icon: <Lightbulb size={18} strokeWidth={2} />, title: 'Conseils pour chaque question', text: 'Des pistes de réponse et conseils personnalisés pour préparer votre entretien.' }
+                    ].map((item, i) => (
+                      <div key={i} className="flex items-start gap-3">
+                        <div className="w-9 h-9 bg-emerald-50 text-emerald-500 rounded-xl flex items-center justify-center shrink-0">{item.icon}</div>
+                        <div>
+                          <p className="text-sm font-black text-slate-800">{item.title}</p>
+                          <p className="text-xs text-slate-500 leading-relaxed mt-0.5">{item.text}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <button onClick={handleStartFromPopup} className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-xl transition shadow-lg shadow-emerald-200/50 text-sm flex items-center justify-center gap-2 cursor-pointer mb-4">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+                    C'est parti !
+                  </button>
+
+                  <label className="flex items-center gap-2 cursor-pointer justify-center">
+                    <input type="checkbox" checked={dontShowAgain} onChange={e => setDontShowAgain(e.target.checked)} className="w-4 h-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer" />
+                    <span className="text-xs text-slate-400 font-medium">Ne plus afficher ce message</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* ===== UPLOAD ===== */}
           {step === 'upload' && (
