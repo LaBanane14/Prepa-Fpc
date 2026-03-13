@@ -241,25 +241,24 @@ export default function MathsPage() {
                   <button onClick={() => { setShowInfoPopup(false); window.location.href = '/dashboard' }} className="absolute top-3 right-3 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/15 text-white transition cursor-pointer">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                   </button>
-                  <div className="flex items-center gap-3 pr-8">
-                    <div className="w-10 h-10 bg-red-500/20 text-red-400 rounded-xl flex items-center justify-center">
-                      <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><text x="4" y="18" fontSize="16" fontWeight="900" fill="currentColor" stroke="none">%</text></svg>
-                    </div>
-                    <h2 className="text-lg font-black text-white">Entraînement mathématiques</h2>
-                  </div>
+                  <h2 className="text-lg font-black text-white pr-8">Entraînement mathématiques</h2>
+                  <p className="text-slate-400 text-sm font-medium mt-1">Avant de commencer, voici le déroulement de l'épreuve.</p>
                 </div>
 
                 <div className="p-6">
-                  <div className="space-y-3 mb-6">
+                  <div className="space-y-4 mb-6">
                     {[
-                      { icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>, text: 'Épreuve chronométrée de 30 minutes' },
-                      { icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>, text: 'Sans calculatrice, comme au concours' },
-                      { icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M12 2v4"/><path d="m16.2 7.8 2.9-2.9"/><path d="M18 12h4"/></svg>, text: 'Exercices variés générés par l\'IA (opérations, pourcentages, conversions, équations)' },
-                      { icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="m9 12 2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>, text: 'Correction détaillée avec note sur 10' }
+                      { emoji: '⏱', title: 'Chronomètre de 30 minutes', text: 'Le compte à rebours démarre dès la génération du sujet. À la fin du temps, vos réponses sont envoyées automatiquement.' },
+                      { emoji: '🚫', title: 'Sans calculatrice', text: 'Comme au concours IFSI, vous devez poser vos calculs à la main. Munissez-vous d\'un brouillon.' },
+                      { emoji: '🎲', title: 'Exercices générés par l\'IA', text: 'Opérations décimales, pourcentages, conversions d\'unités et équations — le sujet est différent à chaque fois.' },
+                      { emoji: '✅', title: 'Correction détaillée et note /10', text: 'Chaque réponse est corrigée avec la méthode de résolution complète pour progresser.' }
                     ].map((item, i) => (
                       <div key={i} className="flex items-start gap-3">
-                        <div className="w-8 h-8 bg-red-50 text-red-500 rounded-lg flex items-center justify-center shrink-0">{item.icon}</div>
-                        <p className="text-sm text-slate-600 font-medium pt-1">{item.text}</p>
+                        <span className="text-xl shrink-0 mt-0.5">{item.emoji}</span>
+                        <div>
+                          <p className="text-sm font-black text-slate-800">{item.title}</p>
+                          <p className="text-xs text-slate-500 leading-relaxed mt-0.5">{item.text}</p>
+                        </div>
                       </div>
                     ))}
                   </div>
