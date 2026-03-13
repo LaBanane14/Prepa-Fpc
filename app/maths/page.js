@@ -16,7 +16,9 @@ export default function MathsPage() {
   const [authLoading, setAuthLoading] = useState(true)
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
-  const [step, setStep] = useState('accueil') // accueil, loading, epreuve, correcting, resultat
+  const [showInfoPopup, setShowInfoPopup] = useState(false)
+  const [dontShowAgain, setDontShowAgain] = useState(false)
+  const [step, setStep] = useState('loading') // loading, epreuve, correcting, resultat
   const [sujet, setSujet] = useState(null)
   const [reponses, setReponses] = useState({})
   const [correction, setCorrection] = useState(null)
@@ -34,6 +36,13 @@ export default function MathsPage() {
       if (!session) { window.location.href = '/auth'; return }
       setUser(session.user)
       setAuthLoading(false)
+      const skipPopup = localStorage.getItem('maths_skip_info') === 'true'
+      if (skipPopup) {
+        genererSujet()
+      } else {
+        setShowInfoPopup(true)
+        setStep(null)
+      }
     })
   }, [])
 
@@ -75,6 +84,12 @@ export default function MathsPage() {
 
   async function handleLogout() { await supabase.auth.signOut(); window.location.href = '/' }
 
+  function handleStartFromPopup() {
+    if (dontShowAgain) localStorage.setItem('maths_skip_info', 'true')
+    setShowInfoPopup(false)
+    genererSujet()
+  }
+
   async function genererSujet() {
     setError('')
     setLoadingStep(0)
@@ -87,15 +102,15 @@ export default function MathsPage() {
         body: JSON.stringify({ action: 'generer' })
       })
       const data = await res.json()
-      if (!res.ok || data.error) { setError(data.error || 'Erreur lors de la génération du sujet.'); setStep('accueil'); return }
+      if (!res.ok || data.error) { setError(data.error || 'Erreur lors de la génération du sujet.'); window.location.href = '/dashboard'; return }
       setSujet(data.sujet)
       setReponses({})
       setTimeLeft(30 * 60)
       setStep('epreuve')
       setTimerActive(true)
     } catch (err) {
-      setError('Erreur de connexion. Réessayez.')
-      setStep('accueil')
+      setError('Erreur de connexion.')
+      window.location.href = '/dashboard'
     }
   }
 
@@ -140,7 +155,8 @@ export default function MathsPage() {
   }
 
   function restart() {
-    setStep('accueil'); setSujet(null); setReponses({}); setCorrection(null); setError(''); setLoadingStep(0); setTimeLeft(30 * 60); setTimerActive(false)
+    setSujet(null); setReponses({}); setCorrection(null); setError(''); setLoadingStep(0); setTimeLeft(30 * 60); setTimerActive(false)
+    genererSujet()
   }
 
   function updateReponse(id, value) {
@@ -216,58 +232,47 @@ export default function MathsPage() {
 
         <main className="flex-grow w-full mx-auto px-4 py-4 sm:py-5">
 
-          {/* ===== ACCUEIL ===== */}
-          {step === 'accueil' && (
-            <div className="animate-fade-in max-w-5xl mx-auto">
-              <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden relative">
+          {/* ===== POPUP INFO ===== */}
+          {showInfoPopup && (
+            <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4" onClick={() => { setShowInfoPopup(false); window.location.href = '/dashboard' }}>
+              <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full animate-fade-in overflow-hidden" onClick={e => e.stopPropagation()}>
 
-                {/* Croix fermeture */}
-                <a href="/dashboard" className="absolute top-4 right-4 z-10 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/15 text-white transition">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-                </a>
-
-                {/* Hero header */}
-                <div className="bg-slate-900 p-8 sm:p-10 relative overflow-hidden">
-                  <div className="absolute inset-0 opacity-[0.04]" style={{backgroundImage: 'radial-gradient(circle at 1px 1px, white 1px, transparent 0)', backgroundSize: '20px 20px'}}></div>
-                  <div className="relative">
-                    <div className="flex items-center gap-3 mb-4 pr-10">
-                      <div className="w-11 h-11 bg-red-500/20 text-red-400 rounded-xl flex items-center justify-center">
-                        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><text x="4" y="18" fontSize="16" fontWeight="900" fill="currentColor" stroke="none">%</text></svg>
-                      </div>
-                      <div>
-                        <h1 className="text-2xl font-black text-white">Entraînement mathématiques</h1>
-                        <p className="text-slate-400 font-medium text-sm">Épreuve chronométrée avec correction détaillée par l'IA</p>
-                      </div>
+                <div className="bg-slate-900 px-6 py-5 relative">
+                  <button onClick={() => { setShowInfoPopup(false); window.location.href = '/dashboard' }} className="absolute top-3 right-3 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/15 text-white transition cursor-pointer">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                  </button>
+                  <div className="flex items-center gap-3 pr-8">
+                    <div className="w-10 h-10 bg-red-500/20 text-red-400 rounded-xl flex items-center justify-center">
+                      <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><text x="4" y="18" fontSize="16" fontWeight="900" fill="currentColor" stroke="none">%</text></svg>
                     </div>
-                    <div className="flex flex-wrap items-center gap-3 mt-5">
-                      <span className="flex items-center gap-1.5 text-xs text-slate-400 font-medium"><svg className="w-3.5 h-3.5 text-red-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>30 minutes</span>
-                      <span className="w-1 h-1 bg-slate-600 rounded-full"></span>
-                      <span className="flex items-center gap-1.5 text-xs text-slate-400 font-medium"><svg className="w-3.5 h-3.5 text-red-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>Sans calculatrice</span>
-                      <span className="w-1 h-1 bg-slate-600 rounded-full"></span>
-                      <span className="flex items-center gap-1.5 text-xs text-slate-400 font-medium"><svg className="w-3.5 h-3.5 text-red-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="m9 12 2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>Note /10</span>
-                    </div>
+                    <h2 className="text-lg font-black text-white">Entraînement mathématiques</h2>
                   </div>
                 </div>
 
-                {/* Contenu */}
-                <div className="p-8 sm:p-10 flex flex-col items-center">
-                  {error && (
-                    <div className="w-full max-w-md bg-red-50 border border-red-200 text-red-700 font-bold text-sm px-5 py-3 rounded-xl mb-6 flex items-center gap-2">
-                      <svg className="w-5 h-5 shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
-                      {error}
-                    </div>
-                  )}
-
-                  <div className="w-20 h-20 bg-red-100 text-red-600 rounded-2xl flex items-center justify-center mb-6">
-                    <svg className="w-10 h-10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><text x="4" y="18" fontSize="16" fontWeight="900" fill="currentColor" stroke="none">%</text></svg>
+                <div className="p-6">
+                  <div className="space-y-3 mb-6">
+                    {[
+                      { icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>, text: 'Épreuve chronométrée de 30 minutes' },
+                      { icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>, text: 'Sans calculatrice, comme au concours' },
+                      { icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M12 2v4"/><path d="m16.2 7.8 2.9-2.9"/><path d="M18 12h4"/></svg>, text: 'Exercices variés générés par l\'IA (opérations, pourcentages, conversions, équations)' },
+                      { icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="m9 12 2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>, text: 'Correction détaillée avec note sur 10' }
+                    ].map((item, i) => (
+                      <div key={i} className="flex items-start gap-3">
+                        <div className="w-8 h-8 bg-red-50 text-red-500 rounded-lg flex items-center justify-center shrink-0">{item.icon}</div>
+                        <p className="text-sm text-slate-600 font-medium pt-1">{item.text}</p>
+                      </div>
+                    ))}
                   </div>
-                  <h2 className="text-2xl font-black text-slate-900 mb-2 text-center">Prêt(e) pour l'épreuve ?</h2>
-                  <p className="text-slate-500 font-medium text-sm text-center mb-8 max-w-sm">Des exercices de mathématiques seront générés par l'IA. Vous aurez 30 minutes pour répondre, sans calculatrice.</p>
 
-                  <button onClick={genererSujet} className="bg-red-600 hover:bg-red-700 text-white font-bold px-8 py-4 rounded-xl transition shadow-lg shadow-red-200/50 text-sm flex items-center gap-2 cursor-pointer">
+                  <button onClick={handleStartFromPopup} className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3.5 rounded-xl transition shadow-lg shadow-red-200/50 text-sm flex items-center justify-center gap-2 cursor-pointer mb-4">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
                     Commencer l'épreuve
                   </button>
+
+                  <label className="flex items-center gap-2 cursor-pointer justify-center">
+                    <input type="checkbox" checked={dontShowAgain} onChange={e => setDontShowAgain(e.target.checked)} className="w-4 h-4 rounded border-slate-300 text-red-600 focus:ring-red-500 cursor-pointer" />
+                    <span className="text-xs text-slate-400 font-medium">Ne plus afficher ce message</span>
+                  </label>
                 </div>
               </div>
             </div>
