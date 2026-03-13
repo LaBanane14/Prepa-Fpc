@@ -64,7 +64,7 @@ export default function ExamenPage() {
     if (step !== 'loading') return
     const interval = setInterval(() => {
       setLoadingStep(prev => prev < 4 ? prev + 1 : prev)
-    }, 4000)
+    }, 5000)
     return () => clearInterval(interval)
   }, [step])
 
@@ -74,7 +74,7 @@ export default function ExamenPage() {
     setCorrectingStep(0)
     const interval = setInterval(() => {
       setCorrectingStep(prev => prev < 5 ? prev + 1 : prev)
-    }, 4000)
+    }, 5000)
     return () => clearInterval(interval)
   }, [step])
 
@@ -113,6 +113,7 @@ export default function ExamenPage() {
     setStep('loading')
 
     try {
+      const startTime = Date.now()
       const [resMaths, resRedaction] = await Promise.all([
         fetch('/api/maths', {
           method: 'POST',
@@ -128,6 +129,8 @@ export default function ExamenPage() {
       const [dataMaths, dataRedaction] = await Promise.all([resMaths.json(), resRedaction.json()])
       if (!resMaths.ok || dataMaths.error) { setError(dataMaths.error || 'Erreur lors de la génération du sujet maths.'); window.location.href = '/dashboard'; return }
       if (!resRedaction.ok || dataRedaction.error) { setError(dataRedaction.error || 'Erreur lors de la génération du sujet rédaction.'); window.location.href = '/dashboard'; return }
+      const elapsed = Date.now() - startTime
+      if (elapsed < 25000) await new Promise(r => setTimeout(r, 25000 - elapsed))
       setSujetMaths(dataMaths.sujet)
       setSujetRedaction(dataRedaction.sujet)
       setReponses({})

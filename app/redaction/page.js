@@ -96,6 +96,7 @@ export default function RedactionPage() {
     setStep('loading')
 
     try {
+      const startTime = Date.now()
       const res = await fetch('/api/redaction', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -103,6 +104,8 @@ export default function RedactionPage() {
       })
       const data = await res.json()
       if (!res.ok || data.error) { setError(data.error || 'Erreur lors de la génération du sujet.'); window.location.href = '/dashboard'; return }
+      const elapsed = Date.now() - startTime
+      if (elapsed < 20000) await new Promise(r => setTimeout(r, 20000 - elapsed))
       setSujet(data.sujet)
       setRedaction('')
       setTimeLeft(30 * 60)

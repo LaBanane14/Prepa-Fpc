@@ -96,6 +96,7 @@ export default function MathsPage() {
     setStep('loading')
 
     try {
+      const startTime = Date.now()
       const res = await fetch('/api/maths', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -103,6 +104,8 @@ export default function MathsPage() {
       })
       const data = await res.json()
       if (!res.ok || data.error) { setError(data.error || 'Erreur lors de la génération du sujet.'); window.location.href = '/dashboard'; return }
+      const elapsed = Date.now() - startTime
+      if (elapsed < 20000) await new Promise(r => setTimeout(r, 20000 - elapsed))
       setSujet(data.sujet)
       setReponses({})
       setTimeLeft(30 * 60)
