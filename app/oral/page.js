@@ -240,107 +240,46 @@ export default function OralPage() {
 
           {/* ===== UPLOAD ===== */}
           {step === 'upload' && (
-            <div className="animate-fade-in">
-              <div className="bg-white border border-slate-200 rounded-2xl shadow-sm min-h-[calc(100vh-2.5rem)] flex flex-col lg:flex-row overflow-hidden">
+            <div className="animate-fade-in min-h-[calc(100vh-2.5rem)] flex items-center justify-center">
+              <div className="bg-white border border-slate-200 rounded-2xl shadow-sm max-w-2xl w-full p-6 sm:p-10">
 
-                {/* Panneau gauche : fond sombre */}
-                <div className="lg:w-[380px] bg-slate-900 p-8 sm:p-10 flex flex-col text-white shrink-0">
-                  <div className="flex items-center justify-between mb-8">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-emerald-500/20 text-emerald-400 rounded-xl flex items-center justify-center">
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
-                      </div>
-                      <h1 className="text-xl font-black">Préparation Oral</h1>
-                    </div>
+                {/* Top bar */}
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center gap-2">
+                    <svg className="w-4 h-4 text-amber-500 shrink-0" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    <span className="text-xs font-bold text-amber-600">En dessous de 8/20 = éliminatoire</span>
                   </div>
-
-                  <p className="text-slate-400 font-medium text-sm leading-relaxed mb-8">Analysez votre CV et préparez-vous avec 10 questions personnalisées, identiques à celles posées par le jury.</p>
-
-                  {/* Étapes verticales */}
-                  <div className="space-y-8 mb-8">
-                    {[
-                      { label: 'Importez votre CV', sub: 'Format PDF, 10 Mo max', color: 'emerald', icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> },
-                      { label: 'Analyse intelligente', sub: 'Notre IA analyse votre parcours', color: 'blue', icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v2m0 18v2m8.66-15.66-1.41 1.41M4.75 19.25l-1.41 1.41M23 12h-2M3 12H1m18.66 7.66-1.41-1.41M4.75 4.75 3.34 3.34"/></svg> },
-                      { label: '10 questions générées', sub: 'Parcours, motivation, métier IDE', color: 'purple', icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> },
-                      { label: 'Entraînez-vous', sub: 'Avec des conseils personnalisés', color: 'amber', icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg> }
-                    ].map((item, i) => (
-                      <div key={i} className="flex items-start gap-4">
-                        <div className="flex flex-col items-center">
-                          <div className={`w-10 h-10 bg-${item.color}-500/20 text-${item.color}-400 rounded-xl flex items-center justify-center shrink-0`}>
-                            {item.icon}
-                          </div>
-                          {i < 3 && <div className="w-px h-8 bg-slate-700 mt-1"></div>}
-                        </div>
-                        <div className="pt-1">
-                          <p className="text-sm font-bold text-white">{item.label}</p>
-                          <p className="text-xs text-slate-400 font-medium">{item.sub}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
+                  <a href="/dashboard" className="bg-slate-900 hover:bg-black text-white font-bold text-sm px-5 py-2.5 rounded-xl transition flex items-center gap-2">
+                    Quitter l'exercice
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                  </a>
                 </div>
 
-                {/* Panneau droit : upload */}
-                <div className="flex-1 flex flex-col p-6 sm:p-10">
-                  {/* Top bar */}
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-2">
-                      <svg className="w-4 h-4 text-amber-500 shrink-0" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-                      <span className="text-xs font-bold text-amber-600">En dessous de 8/20 = éliminatoire</span>
+                {/* Upload zone */}
+                {error && <div className="bg-red-50 border border-red-200 text-red-700 font-bold text-sm p-4 rounded-xl mb-6 text-center">{error}</div>}
+
+                <label className="block cursor-pointer mb-6">
+                  <div className="bg-gradient-to-br from-emerald-50 to-teal-50 border-2 border-dashed border-emerald-300 hover:border-emerald-500 rounded-3xl p-12 sm:p-16 text-center transition-all hover:shadow-lg hover:shadow-emerald-100 group">
+                    <div className="w-20 h-20 bg-white text-emerald-500 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-emerald-100 group-hover:scale-110 transition-transform">
+                      <svg className="w-10 h-10" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M12 18v-6"/><path d="m9 15 3-3 3 3"/></svg>
                     </div>
-                    <a href="/dashboard" className="hidden sm:flex bg-slate-900 hover:bg-black text-white font-bold text-sm px-5 py-2.5 rounded-xl transition items-center gap-2">
-                      Quitter l'exercice
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-                    </a>
+                    <p className="font-black text-slate-800 text-xl mb-2">Déposez votre CV ici</p>
+                    <p className="text-slate-500 font-medium mb-6">ou cliquez pour parcourir vos fichiers</p>
+                    <div className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-8 py-3 rounded-xl transition shadow-lg shadow-emerald-200">
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                      Importer mon CV
+                    </div>
+                    <p className="text-xs text-slate-400 mt-4">PDF uniquement — 10 Mo max</p>
                   </div>
+                  <input type="file" accept=".pdf,application/pdf" onChange={handleUpload} className="hidden" />
+                </label>
 
-                  {/* Info épreuve orale */}
-                  <div className="flex items-center gap-4 mb-6 bg-slate-50 border border-slate-200 rounded-xl p-3">
-                    <div className="flex items-center gap-2 text-sm text-slate-600 font-medium">
-                      <span className="w-6 h-6 bg-slate-200 text-slate-700 rounded-md flex items-center justify-center text-[10px] font-black shrink-0">20'</span>
-                      <span>Entretien</span>
-                    </div>
-                    <div className="w-px h-4 bg-slate-200"></div>
-                    <div className="flex items-center gap-2 text-sm text-slate-600 font-medium">
-                      <span className="w-6 h-6 bg-slate-200 text-slate-700 rounded-md flex items-center justify-center text-[10px] font-black shrink-0">10'</span>
-                      <span>Présentation</span>
-                    </div>
-                    <div className="w-px h-4 bg-slate-200"></div>
-                    <div className="flex items-center gap-2 text-sm text-slate-600 font-medium">
-                      <span className="w-6 h-6 bg-slate-200 text-slate-700 rounded-md flex items-center justify-center text-[10px] font-black shrink-0">10'</span>
-                      <span>Questions jury</span>
-                    </div>
+                {/* Pas de note */}
+                <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex items-center gap-3">
+                  <div className="w-8 h-8 bg-emerald-200 text-emerald-700 rounded-lg flex items-center justify-center shrink-0">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4 12 14.01l-3-3"/></svg>
                   </div>
-
-                  {/* Upload zone */}
-                  <div className="flex-grow flex flex-col justify-center">
-                    {error && <div className="bg-red-50 border border-red-200 text-red-700 font-bold text-sm p-4 rounded-xl mb-6 text-center">{error}</div>}
-
-                    <label className="block cursor-pointer mb-6">
-                      <div className="bg-gradient-to-br from-emerald-50 to-teal-50 border-2 border-dashed border-emerald-300 hover:border-emerald-500 rounded-3xl p-12 sm:p-16 text-center transition-all hover:shadow-lg hover:shadow-emerald-100 group">
-                        <div className="w-20 h-20 bg-white text-emerald-500 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-emerald-100 group-hover:scale-110 transition-transform">
-                          <svg className="w-10 h-10" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M12 18v-6"/><path d="m9 15 3-3 3 3"/></svg>
-                        </div>
-                        <p className="font-black text-slate-800 text-xl mb-2">Déposez votre CV ici</p>
-                        <p className="text-slate-500 font-medium mb-6">ou cliquez pour parcourir vos fichiers</p>
-                        <div className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-8 py-3 rounded-xl transition shadow-lg shadow-emerald-200">
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                          Importer mon CV
-                        </div>
-                        <p className="text-xs text-slate-400 mt-4">PDF uniquement — 10 Mo max</p>
-                      </div>
-                      <input type="file" accept=".pdf,application/pdf" onChange={handleUpload} className="hidden" />
-                    </label>
-
-                    {/* Pas de note */}
-                    <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex items-center gap-3">
-                      <div className="w-8 h-8 bg-emerald-200 text-emerald-700 rounded-lg flex items-center justify-center shrink-0">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4 12 14.01l-3-3"/></svg>
-                      </div>
-                      <p className="text-sm text-slate-700 font-medium"><strong className="text-slate-900">Pas de notation !</strong> Le but est seulement de vous préparer au mieux pour le jour J.</p>
-                    </div>
-                  </div>
+                  <p className="text-sm text-slate-700 font-medium"><strong className="text-slate-900">Pas de notation !</strong> Le but est seulement de vous préparer au mieux pour le jour J.</p>
                 </div>
 
               </div>
