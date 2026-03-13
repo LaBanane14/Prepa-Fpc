@@ -290,7 +290,7 @@ function DashboardContent() {
                   <p className="text-xs text-slate-500 flex-1">Analyse de texte, dissertations, culture sanitaire basée en partie sur les annales</p>
                   <span className="text-[10px] font-black text-purple-600 mt-2">Note /10</span>
                 </a>
-                <a href="/qcm" className="bg-white p-5 rounded-2xl border-2 border-yellow-500 shadow-sm hover:shadow-md transition group flex flex-col items-center text-center relative">
+                <a href="/examen" className="bg-white p-5 rounded-2xl border-2 border-yellow-500 shadow-sm hover:shadow-md transition group flex flex-col items-center text-center relative">
                   <span className="absolute top-2 right-2 text-[9px] font-black text-yellow-500 bg-yellow-50 px-1.5 py-0.5 rounded-md">1H</span>
                   <div className="w-11 h-11 bg-yellow-50 text-yellow-500 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></svg>
