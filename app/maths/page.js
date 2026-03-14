@@ -361,7 +361,7 @@ export default function MathsPage() {
                     {sujet.exercices?.map((ex, exIdx) => (
                       <div key={exIdx} className="bg-slate-200/60 border border-slate-300 rounded-2xl shadow-sm p-6">
                         <div className="flex items-center gap-3 mb-5">
-                          <span className="w-9 h-9 bg-red-600 text-white rounded-xl flex items-center justify-center font-black text-sm shadow-sm">{ex.numero}</span>
+                          <span className="w-9 h-9 bg-slate-900 text-white rounded-xl flex items-center justify-center font-black text-sm shadow-sm">{ex.numero}</span>
                           <h3 className="font-black text-slate-900 text-base sm:text-lg flex-1">{ex.titre}</h3>
                           <span className="text-sm font-black text-slate-400 shrink-0">/{ex.points}</span>
                         </div>
@@ -398,8 +398,7 @@ export default function MathsPage() {
 
                   {error && <p className="text-red-600 font-bold text-sm mt-4">{error}</p>}
 
-                  <div className="flex items-center justify-between mt-8 pb-4">
-                    <button onClick={restart} className="text-slate-500 hover:text-slate-700 font-bold text-sm transition cursor-pointer">Abandonner</button>
+                  <div className="flex items-center justify-end mt-8 pb-4">
                     <button onClick={handleSubmit} className="bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-3 rounded-xl transition shadow-lg shadow-red-200/50 text-sm flex items-center gap-2 cursor-pointer">
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="m9 12 2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
                       Soumettre mes réponses
