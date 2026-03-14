@@ -353,21 +353,21 @@ export default function MathsPage() {
 
                   <div className="space-y-8">
                     {sujet.exercices?.map((ex, exIdx) => (
-                      <div key={exIdx} className="bg-slate-50 border border-slate-200 rounded-2xl p-6 border-l-4 border-l-red-500">
+                      <div key={exIdx} className="bg-slate-900 rounded-2xl p-6">
                         <div className="flex items-center gap-3 mb-4">
-                          <span className="w-8 h-8 bg-red-100 text-red-700 rounded-lg flex items-center justify-center font-black text-sm">{ex.numero}</span>
-                          <h3 className="font-black text-slate-900 text-sm flex-1">{ex.titre}</h3>
+                          <span className="w-8 h-8 bg-white/15 text-white rounded-lg flex items-center justify-center font-black text-sm">{ex.numero}</span>
+                          <h3 className="font-black text-white text-sm flex-1">{ex.titre}</h3>
                           <span className="text-xs font-bold text-slate-400 uppercase">{ex.categorie} — {ex.points} pts</span>
                         </div>
 
                         {ex.enonce && (
-                          <div className="bg-red-50/60 border border-red-200/60 rounded-xl p-4 mb-5 flex items-start gap-3">
-                            <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center shrink-0 mt-0.5">
-                              <svg className="w-4 h-4 text-red-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                          <div className="bg-white/10 border border-white/10 rounded-xl p-4 mb-5 flex items-start gap-3">
+                            <div className="w-8 h-8 bg-white/15 rounded-lg flex items-center justify-center shrink-0 mt-0.5">
+                              <svg className="w-4 h-4 text-slate-300" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
                             </div>
                             <div>
-                              <p className="text-[10px] font-black text-red-400 uppercase tracking-widest mb-1">Énoncé</p>
-                              <p className="text-sm text-slate-700 leading-relaxed whitespace-pre-line">{ex.enonce}</p>
+                              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Énoncé</p>
+                              <p className="text-sm text-slate-300 leading-relaxed whitespace-pre-line">{ex.enonce}</p>
                             </div>
                           </div>
                         )}
