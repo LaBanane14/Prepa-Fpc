@@ -359,7 +359,7 @@ export default function MathsPage() {
 
                   <div className="space-y-8">
                     {sujet.exercices?.map((ex, exIdx) => (
-                      <div key={exIdx} className="bg-red-50 border border-red-200 rounded-2xl shadow-sm p-6">
+                      <div key={exIdx} className="bg-slate-50 border border-slate-200 rounded-2xl shadow-sm p-6">
                         <div className="flex items-center gap-3 mb-5">
                           <span className="w-9 h-9 bg-red-600 text-white rounded-xl flex items-center justify-center font-black text-sm shadow-sm">{ex.numero}</span>
                           <h3 className="font-black text-slate-900 text-base sm:text-lg flex-1">{ex.titre}</h3>
@@ -380,7 +380,7 @@ export default function MathsPage() {
                                 <p className="text-sm text-slate-800 font-semibold leading-relaxed whitespace-pre-line flex-1">{q.question}</p>
                                 <span className="text-xs font-bold text-slate-400 shrink-0 ml-2">{q.points} pt{q.points > 1 ? 's' : ''}</span>
                               </div>
-                              <div className="ml-9">
+                              <div className="ml-9 max-w-sm">
                                 <input
                                   type="text"
                                   className="w-full bg-red-50/50 border-2 border-red-200 rounded-xl px-4 py-3 text-sm text-slate-800 font-semibold focus:outline-none focus:ring-2 focus:ring-red-300 focus:border-red-400 focus:bg-white transition placeholder:text-slate-400 placeholder:font-normal"
