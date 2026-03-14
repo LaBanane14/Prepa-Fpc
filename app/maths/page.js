@@ -25,6 +25,8 @@ export default function MathsPage() {
   const [error, setError] = useState('')
   const [loadingStep, setLoadingStep] = useState(0)
   const [correctingStep, setCorrectingStep] = useState(0)
+  const [displayNote, setDisplayNote] = useState(0)
+  const [showNoteReveal, setShowNoteReveal] = useState(false)
 
   // Chrono
   const [timeLeft, setTimeLeft] = useState(30 * 60)
@@ -136,7 +138,7 @@ export default function MathsPage() {
       const data = await res.json()
       if (!res.ok || data.error) { setError(data.error || 'Erreur lors de la correction.'); setStep('epreuve'); setTimerActive(false); return }
       const elapsed = Date.now() - startTime
-      if (elapsed < 20000) await new Promise(r => setTimeout(r, 20000 - elapsed))
+      if (elapsed < 12000) await new Promise(r => setTimeout(r, 12000 - elapsed))
       setCorrection(data.correction)
       // Sauvegarder dans l'historique
       const totalQuestions = sujet.exercices.reduce((sum, ex) => sum + (ex.questions?.length || 0), 0)
@@ -150,7 +152,26 @@ export default function MathsPage() {
         nb_questions: totalQuestions,
         duration_minutes: durationUsed || 1,
       })
-      setStep('resultat')
+      // Animation de la note qui monte
+      setShowNoteReveal(true)
+      setDisplayNote(0)
+      const finalNote = data.correction.note
+      const noteMax = data.correction.noteMax || 10
+      const steps = 30
+      const stepDuration = 2000 / steps
+      let currentStep = 0
+      const noteInterval = setInterval(() => {
+        currentStep++
+        const progress = currentStep / steps
+        const eased = 1 - Math.pow(1 - progress, 3)
+        setDisplayNote(Math.round(eased * finalNote * 10) / 10)
+        if (currentStep >= steps) {
+          clearInterval(noteInterval)
+          setDisplayNote(finalNote)
+          setTimeout(() => { setShowNoteReveal(false); setStep('resultat') }, 1500)
+        }
+      }, stepDuration)
+
     } catch (err) {
       setError('Erreur de connexion. Réessayez.')
       setStep('epreuve')
@@ -412,25 +433,40 @@ export default function MathsPage() {
           {/* ===== CORRECTING ===== */}
           {step === 'correcting' && (
             <div className="animate-fade-in min-h-[calc(100vh-2.5rem)] flex items-center justify-center">
-              <div className="bg-white border border-slate-200 rounded-2xl shadow-sm max-w-xl w-full flex flex-col items-center justify-center py-12 px-8">
-                <div className="w-24 h-24 bg-gradient-to-br from-red-500 to-rose-500 shadow-xl shadow-red-200 mb-8" style={{animation: 'morph 4s ease-in-out infinite'}}></div>
-                <h2 className="text-xl font-black text-slate-900 mb-2">Correction en cours...</h2>
-                <p className="text-slate-500 font-medium text-sm text-center mb-8">Notre IA analyse vos réponses en détail.</p>
-                <div className="w-full max-w-md space-y-3">
-                  {[
-                    { label: 'Lecture de vos réponses' },
-                    { label: 'Vérification des calculs' },
-                    { label: 'Rédaction des explications' },
-                    { label: 'Attribution de la note' }
-                  ].map((ls, i) => (
-                    <div key={i} className={`flex items-center gap-3 p-3 rounded-xl transition-all duration-500 ${i <= correctingStep ? 'bg-red-50 border border-red-200' : 'bg-slate-50 border border-slate-100 opacity-40'}`}>
-                      <span className={`font-bold text-sm flex-grow ${i <= correctingStep ? 'text-red-700' : 'text-slate-400'}`}>{ls.label}</span>
-                      {i < correctingStep && <svg className="w-5 h-5 text-red-500 shrink-0" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg>}
-                      {i === correctingStep && <div className="w-4 h-4 border-2 border-red-600 border-t-transparent rounded-full animate-spin shrink-0"></div>}
-                      <span className="text-xs font-bold text-slate-400">{i + 1}/4</span>
+              <div className="bg-white border border-slate-200 rounded-2xl shadow-sm max-w-xl w-full flex flex-col items-center justify-center py-16 px-8">
+                {!showNoteReveal ? (
+                  <>
+                    <div className="w-24 h-24 bg-gradient-to-br from-red-500 to-rose-500 shadow-xl shadow-red-200 mb-8" style={{animation: 'morph 4s ease-in-out infinite'}}></div>
+                    <h2 className="text-xl font-black text-slate-900 mb-2">Correction en cours...</h2>
+                    <p className="text-slate-500 font-medium text-sm text-center mb-8">Notre IA analyse vos réponses en détail.</p>
+                    <div className="w-full max-w-md space-y-3">
+                      {[
+                        { label: 'Lecture de vos réponses' },
+                        { label: 'Vérification des calculs' },
+                        { label: 'Rédaction des explications' },
+                        { label: 'Attribution de la note' }
+                      ].map((ls, i) => (
+                        <div key={i} className={`flex items-center gap-3 p-3 rounded-xl transition-all duration-500 ${i <= correctingStep ? 'bg-red-50 border border-red-200' : 'bg-slate-50 border border-slate-100 opacity-40'}`}>
+                          <span className={`font-bold text-sm flex-grow ${i <= correctingStep ? 'text-red-700' : 'text-slate-400'}`}>{ls.label}</span>
+                          {i < correctingStep && <svg className="w-5 h-5 text-red-500 shrink-0" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg>}
+                          {i === correctingStep && <div className="w-4 h-4 border-2 border-red-600 border-t-transparent rounded-full animate-spin shrink-0"></div>}
+                          <span className="text-xs font-bold text-slate-400">{i + 1}/4</span>
+                        </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
+                  </>
+                ) : (
+                  <>
+                    <p className="text-xs font-black text-slate-400 uppercase tracking-widest mb-6">Votre note</p>
+                    <div className="flex items-baseline justify-center gap-1 mb-6">
+                      <span className="text-8xl sm:text-9xl font-black text-red-600 tabular-nums transition-all">{displayNote}</span>
+                      <span className="text-3xl sm:text-4xl font-black text-slate-300">/{correction?.noteMax || 10}</span>
+                    </div>
+                    <div className="w-16 h-1 bg-red-200 rounded-full overflow-hidden">
+                      <div className="h-full bg-red-500 rounded-full animate-pulse"></div>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           )}
