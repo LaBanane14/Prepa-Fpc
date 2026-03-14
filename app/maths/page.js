@@ -335,8 +335,11 @@ export default function MathsPage() {
                   </div>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-red-600 text-white">
+                      <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-white/15 text-red-400">
                         Mathématiques
+                      </span>
+                      <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-white/15 text-red-400">
+                        Sans calculatrice
                       </span>
                       {sujet.source === 'annale' ? (
                         <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-white/15 text-white">
@@ -347,9 +350,6 @@ export default function MathsPage() {
                           Sujet créé par nos soins
                         </span>
                       )}
-                      <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-red-600 text-white">
-                        Sans calculatrice
-                      </span>
                     </div>
                     <p className="text-xs text-slate-400 font-bold uppercase tracking-wider">Note sur {sujet.noteMax || 10} points — Durée : 30 minutes</p>
                   </div>
@@ -362,10 +362,8 @@ export default function MathsPage() {
                       <div key={exIdx} className="bg-red-50 border border-red-200 rounded-2xl shadow-sm p-6">
                         <div className="flex items-center gap-3 mb-5">
                           <span className="w-9 h-9 bg-red-600 text-white rounded-xl flex items-center justify-center font-black text-sm shadow-sm">{ex.numero}</span>
-                          <div className="flex-1">
-                            <h3 className="font-black text-slate-900 text-sm">{ex.titre}</h3>
-                            <span className="text-xs font-bold text-slate-400">{ex.categorie} — {ex.points} pts</span>
-                          </div>
+                          <h3 className="font-black text-slate-900 text-base sm:text-lg flex-1">{ex.titre}</h3>
+                          <span className="text-sm font-black text-slate-400 shrink-0">/{ex.points}</span>
                         </div>
 
                         {ex.enonce && (
