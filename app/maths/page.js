@@ -312,41 +312,43 @@ export default function MathsPage() {
               <div className="bg-white border border-slate-200 rounded-2xl shadow-sm min-h-[calc(100vh-2.5rem)] flex flex-col">
 
                 {/* Barre du haut : chrono */}
-                <div className="bg-slate-900 rounded-t-2xl px-6 py-4 flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-white/15 text-white">
-                      Mathématiques
-                    </span>
-                    {sujet.source === 'annale' ? (
-                      <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-white/15 text-white">
-                        Annale {sujet.ville} {sujet.annee}
-                      </span>
-                    ) : (
-                      <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-white/15 text-white">
-                        Sujet créé par nos soins
-                      </span>
-                    )}
-                    <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-white/10 text-slate-300">
-                      Sans calculatrice
-                    </span>
+                <div className="bg-slate-900 rounded-t-2xl px-6 py-4">
+                  <div className="mb-3">
+                    <h2 className="text-lg font-black text-white mb-1">{sujet.titre}</h2>
+                    <p className="text-xs text-slate-400 font-bold uppercase tracking-wider">Note sur {sujet.noteMax || 10} points — Durée : 30 minutes — Sans calculatrice</p>
                   </div>
-                  <div className="flex items-center gap-4">
-                    <div className={`flex items-center gap-3 ${isUrgent ? 'pulse-urgent' : ''}`}>
-                      <div className="w-32 h-2 bg-white/15 rounded-full overflow-hidden hidden sm:block">
-                        <div className={`h-full rounded-full transition-all duration-1000 ${isUrgent ? 'bg-red-500' : 'bg-red-400'}`} style={{width: `${timePercent}%`}}></div>
-                      </div>
-                      <div className={`flex items-center gap-1.5 font-black text-lg tabular-nums ${isUrgent ? 'text-red-400' : 'text-white'}`}>
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-                        {String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}
-                      </div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-white/15 text-white">
+                        Mathématiques
+                      </span>
+                      {sujet.source === 'annale' ? (
+                        <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-white/15 text-white">
+                          Annale {sujet.ville} {sujet.annee}
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-white/15 text-white">
+                          Sujet créé par nos soins
+                        </span>
+                      )}
+                      <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-white/10 text-slate-300">
+                        Sans calculatrice
+                      </span>
                     </div>
-                    <a href="/dashboard" className="bg-white/15 hover:bg-white/25 text-white font-bold text-sm px-5 py-2.5 rounded-xl transition flex items-center gap-2">
-                      Quitter l'exercice
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-                    </a>
-                    <div className="mt-3">
-                      <h2 className="text-lg font-black text-white mb-1">{sujet.titre}</h2>
-                      <p className="text-xs text-slate-400 font-bold uppercase tracking-wider">Note sur {sujet.noteMax || 10} points — Durée : 30 minutes — Sans calculatrice</p>
+                    <div className="flex items-center gap-4">
+                      <div className={`flex items-center gap-3 ${isUrgent ? 'pulse-urgent' : ''}`}>
+                        <div className="w-32 h-2 bg-white/15 rounded-full overflow-hidden hidden sm:block">
+                          <div className={`h-full rounded-full transition-all duration-1000 ${isUrgent ? 'bg-red-500' : 'bg-red-400'}`} style={{width: `${timePercent}%`}}></div>
+                        </div>
+                        <div className={`flex items-center gap-1.5 font-black text-lg tabular-nums ${isUrgent ? 'text-red-400' : 'text-white'}`}>
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                          {String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}
+                        </div>
+                      </div>
+                      <a href="/dashboard" className="bg-white/15 hover:bg-white/25 text-white font-bold text-sm px-5 py-2.5 rounded-xl transition flex items-center gap-2">
+                        Quitter l'exercice
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                      </a>
                     </div>
                   </div>
                 </div>
