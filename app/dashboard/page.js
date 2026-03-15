@@ -367,8 +367,16 @@ function DashboardContent() {
                   </div>
                 </div>
 
-                {/* Objectif semaine ou mois */}
-                {!weekGoalReached ? (
+                {/* Objectif semaine / mois / badge */}
+                {monthData.count >= 20 ? (
+                  <div className="bg-slate-900 p-5 rounded-2xl shadow-sm flex flex-col items-center justify-center text-center">
+                    <div className="w-12 h-12 bg-amber-400 rounded-full flex items-center justify-center mb-3">
+                      <svg className="w-6 h-6 text-slate-900" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg>
+                    </div>
+                    <p className="text-sm font-black text-white">Félicitations pour votre rigueur de travail !</p>
+                    <p className="text-xs text-slate-400 font-bold mt-1">{monthData.count} exercices ce mois-ci</p>
+                  </div>
+                ) : !weekGoalReached ? (
                   <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
                     <div className="flex items-center justify-between mb-3">
                       <p className="text-sm font-black text-slate-900">Objectif de la semaine</p>
@@ -399,11 +407,6 @@ function DashboardContent() {
                     <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3 text-center">
                       <p className="text-sm font-bold text-emerald-700">Continue comme ça, c'est très bien !</p>
                     </div>
-                    {monthData.count >= 20 && (
-                      <div className="mt-3 bg-amber-50 border border-amber-200 rounded-xl p-3 text-center">
-                        <p className="text-sm font-bold text-amber-700">Objectif du mois atteint, bravo !</p>
-                      </div>
-                    )}
                   </div>
                 )}
               </div>
