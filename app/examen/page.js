@@ -523,7 +523,7 @@ export default function ExamenPage() {
                     <div>
                       <h2 className="text-xl sm:text-2xl font-black text-white">{(sujetRedaction.titre?.includes(' — ') ? sujetRedaction.titre.split(' — ')[0] : sujetRedaction.titre?.includes(' - ') ? sujetRedaction.titre.split(' - ')[0] : sujetRedaction.titre)}</h2>
                       {(sujetRedaction.titre?.includes(' — ') || sujetRedaction.titre?.includes(' - ')) && (
-                        <p className="text-sm text-slate-400 font-semibold mt-1">{sujetRedaction.titre.includes(' — ') ? sujetRedaction.titre.split(' — ').slice(1).join(' — ') : sujetRedaction.titre.split(' - ').slice(1).join(' - ')}</p>
+                        <p className="text-xl sm:text-2xl text-slate-400 font-black mt-1">{sujetRedaction.titre.includes(' — ') ? sujetRedaction.titre.split(' — ').slice(1).join(' — ') : sujetRedaction.titre.split(' - ').slice(1).join(' - ')}</p>
                       )}
                     </div>
                     <div className="flex items-center gap-4 shrink-0 ml-4">

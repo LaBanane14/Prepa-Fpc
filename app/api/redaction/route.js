@@ -169,6 +169,8 @@ Corrige cette copie en analysant :
 
 Sois juste mais bienveillant. Tiens compte du fait que le candidat n'avait que 30 minutes.
 
+IMPORTANT : La note DOIT être sur 10 points (noteMax = 10). Quel que soit le barème du sujet, ramène toujours la note finale sur 10.
+
 IMPORTANT : Réponds UNIQUEMENT en JSON valide avec cette structure :
 {
   "note": 7,

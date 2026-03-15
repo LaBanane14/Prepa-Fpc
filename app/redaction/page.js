@@ -314,7 +314,7 @@ export default function RedactionPage() {
                     <div>
                       <h2 className="text-xl sm:text-2xl font-black text-white">{(sujet.titre?.includes(' — ') ? sujet.titre.split(' — ')[0] : sujet.titre?.includes(' - ') ? sujet.titre.split(' - ')[0] : sujet.titre)}</h2>
                       {(sujet.titre?.includes(' — ') || sujet.titre?.includes(' - ')) && (
-                        <p className="text-sm text-slate-400 font-semibold mt-1">{sujet.titre.includes(' — ') ? sujet.titre.split(' — ').slice(1).join(' — ') : sujet.titre.split(' - ').slice(1).join(' - ')}</p>
+                        <p className="text-xl sm:text-2xl text-slate-400 font-black mt-1">{sujet.titre.includes(' — ') ? sujet.titre.split(' — ').slice(1).join(' — ') : sujet.titre.split(' - ').slice(1).join(' - ')}</p>
                       )}
                     </div>
                     <div className="flex items-center gap-4 shrink-0 ml-4">
