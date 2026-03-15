@@ -469,7 +469,7 @@ export default function RedactionPage() {
                   <span className="text-sm font-bold">Temps : {Math.round((30 * 60 - timeLeft) / 60)} min</span>
                 </div>
                 {correction.appreciation && (
-                  <p className="text-slate-400 font-medium text-sm mt-4 max-w-lg mx-auto">{correction.appreciation}</p>
+                  <p className="text-white font-medium text-sm mt-4 max-w-lg mx-auto">{correction.appreciation}</p>
                 )}
               </div>
 
