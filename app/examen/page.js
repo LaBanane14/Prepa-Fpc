@@ -331,7 +331,7 @@ export default function ExamenPage() {
                     ))}
                   </div>
 
-                  <button onClick={handleStartFromPopup} className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3.5 rounded-xl transition shadow-lg shadow-yellow-200/50 text-sm flex items-center justify-center gap-2 cursor-pointer mb-4">
+                  <button onClick={handleStartFromPopup} className="w-full bg-yellow-500 hover:bg-yellow-600 text-slate-900 font-bold py-3.5 rounded-xl transition shadow-lg shadow-yellow-200/50 text-sm flex items-center justify-center gap-2 cursor-pointer mb-4">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
                     Commencer l'examen blanc
                   </button>
@@ -499,13 +499,13 @@ export default function ExamenPage() {
                     <svg className="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg>
                   </div>
                   <svg className="w-5 h-5 text-slate-300" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
-                  <div className="flex items-center gap-2 px-4 py-2 bg-purple-50 border border-purple-200 rounded-xl">
-                    <span className="w-6 h-6 bg-purple-100 text-purple-600 rounded-md flex items-center justify-center font-bold text-xs">2</span>
-                    <span className="text-sm font-bold text-purple-700">Rédaction</span>
+                  <div className="flex items-center gap-2 px-4 py-2 bg-yellow-50 border border-yellow-300 rounded-xl">
+                    <span className="w-6 h-6 bg-yellow-100 text-yellow-600 rounded-md flex items-center justify-center font-bold text-xs">2</span>
+                    <span className="text-sm font-bold text-yellow-700">Rédaction</span>
                   </div>
                 </div>
 
-                <button onClick={startRedaction} className="bg-purple-600 hover:bg-purple-700 text-white font-bold px-8 py-3.5 rounded-xl transition shadow-lg shadow-purple-200/50 text-sm flex items-center gap-2 cursor-pointer">
+                <button onClick={startRedaction} className="bg-yellow-500 hover:bg-yellow-600 text-slate-900 font-bold px-8 py-3.5 rounded-xl transition shadow-lg shadow-yellow-200/50 text-sm flex items-center gap-2 cursor-pointer">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
                   Commencer la rédaction
                 </button>
@@ -530,10 +530,10 @@ export default function ExamenPage() {
                     <div className="flex items-center gap-4 shrink-0 ml-4">
                       <div className={`flex items-center gap-3 ${isUrgent ? 'pulse-urgent' : ''}`}>
                         <div className="w-32 h-2 bg-white/15 rounded-full overflow-hidden hidden sm:block">
-                          <div className={`h-full rounded-full transition-all duration-1000 ${isUrgent ? 'bg-red-500' : 'bg-purple-400'}`} style={{width: `${timePercent}%`}}></div>
+                          <div className={`h-full rounded-full transition-all duration-1000 ${isUrgent ? 'bg-red-500' : 'bg-yellow-400'}`} style={{width: `${timePercent}%`}}></div>
                         </div>
                         <div className={`flex items-center gap-2 font-black text-lg tabular-nums ${isUrgent ? 'text-red-400' : 'text-white'}`}>
-                          <svg className="w-8 h-6 text-purple-400 heartbeat-anim" viewBox="0 0 80 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{strokeDasharray: 200, strokeDashoffset: 0}}><polyline points="0,12 15,12 20,12 25,2 30,22 35,6 40,18 45,12 50,12 55,12 60,12 65,8 68,16 70,12 80,12"/></svg>
+                          <svg className="w-8 h-6 text-yellow-300 heartbeat-anim" viewBox="0 0 80 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{strokeDasharray: 200, strokeDashoffset: 0}}><polyline points="0,12 15,12 20,12 25,2 30,22 35,6 40,18 45,12 50,12 55,12 60,12 65,8 68,16 70,12 80,12"/></svg>
                           {String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}
                         </div>
                       </div>
@@ -548,7 +548,7 @@ export default function ExamenPage() {
                       <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-yellow-500/20 text-yellow-300">
                         Partie 2/2
                       </span>
-                      <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-white/15 text-purple-400">
+                      <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-white/15 text-yellow-300">
                         {sujetRedaction.type === 'analyse' ? 'Analyse de texte' : sujetRedaction.type === 'dissertation' ? 'Dissertation' : 'Questions'}
                       </span>
                       {sujetRedaction.source === 'annale' ? (
@@ -562,16 +562,16 @@ export default function ExamenPage() {
                       )}
                     </div>
                     <div className="flex items-center gap-4 relative">
-                      <button onClick={() => setShowBareme(!showBareme)} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-purple-600 hover:bg-purple-700 text-white transition cursor-pointer">
+                      <button onClick={() => setShowBareme(!showBareme)} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-yellow-500 hover:bg-yellow-600 text-slate-900 transition cursor-pointer">
                         <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M12 9v4"/><path d="M12 17h.01"/><circle cx="12" cy="12" r="10"/></svg>
                         Barème de notation
                       </button>
                       {showBareme && (
-                        <div className="absolute top-full right-0 mt-2 bg-purple-50 border border-purple-200 rounded-xl shadow-xl p-4 z-50 w-80 animate-fade-in">
-                          <button onClick={() => setShowBareme(false)} className="absolute top-2 right-2 w-6 h-6 flex items-center justify-center rounded-md hover:bg-purple-200 text-purple-500 transition cursor-pointer">
+                        <div className="absolute top-full right-0 mt-2 bg-yellow-50 border border-yellow-300 rounded-xl shadow-xl p-4 z-50 w-80 animate-fade-in">
+                          <button onClick={() => setShowBareme(false)} className="absolute top-2 right-2 w-6 h-6 flex items-center justify-center rounded-md hover:bg-yellow-200 text-yellow-500 transition cursor-pointer">
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                           </button>
-                          <p className="text-xs text-purple-800 leading-relaxed whitespace-pre-line pr-6">{sujetRedaction.bareme}</p>
+                          <p className="text-xs text-yellow-800 leading-relaxed whitespace-pre-line pr-6">{sujetRedaction.bareme}</p>
                         </div>
                       )}
                       <p className="text-xs text-slate-400 font-bold uppercase tracking-wider">Durée : 30 minutes</p>
@@ -589,12 +589,12 @@ export default function ExamenPage() {
                       </div>
                     )}
 
-                    <div className="bg-purple-50 border border-purple-200 rounded-xl p-5">
-                      <h3 className="font-black text-purple-900 text-sm mb-2 flex items-center gap-2">
+                    <div className="bg-yellow-50 border border-yellow-300 rounded-xl p-5">
+                      <h3 className="font-black text-yellow-900 text-sm mb-2 flex items-center gap-2">
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
                         Consigne
                       </h3>
-                      <p className="text-sm text-purple-800 leading-relaxed whitespace-pre-line" dangerouslySetInnerHTML={{__html: sujetRedaction.consigne?.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}}></p>
+                      <p className="text-sm text-yellow-800 leading-relaxed whitespace-pre-line" dangerouslySetInnerHTML={{__html: sujetRedaction.consigne?.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}}></p>
                     </div>
                   </div>
 
@@ -605,7 +605,7 @@ export default function ExamenPage() {
                       <span className="text-xs text-slate-400 font-bold">{redaction.length} caractères</span>
                     </div>
                     <textarea
-                      className="flex-1 w-full bg-slate-50 border border-slate-200 rounded-xl p-5 text-sm text-slate-800 leading-relaxed resize-none focus:outline-none focus:ring-2 focus:ring-purple-300 focus:border-purple-400 transition min-h-[400px]"
+                      className="flex-1 w-full bg-slate-50 border border-slate-200 rounded-xl p-5 text-sm text-slate-800 leading-relaxed resize-none focus:outline-none focus:ring-2 focus:ring-yellow-300 focus:border-yellow-400 transition min-h-[400px]"
                       placeholder="Rédigez votre réponse ici..."
                       value={redaction}
                       onChange={(e) => setRedaction(e.target.value)}
@@ -613,7 +613,7 @@ export default function ExamenPage() {
                     {error && <p className="text-red-600 font-bold text-sm mt-3">{error}</p>}
                     <div className="flex items-center justify-between mt-5">
                       <a href="/dashboard" className="text-slate-500 hover:text-slate-700 font-bold text-sm transition cursor-pointer">Abandonner l'examen</a>
-                      <button onClick={() => handleSubmitRedaction(false)} className="bg-purple-600 hover:bg-purple-700 text-white font-bold px-6 py-3 rounded-xl transition shadow-lg shadow-purple-200/50 text-sm flex items-center gap-2 cursor-pointer">
+                      <button onClick={() => handleSubmitRedaction(false)} className="bg-yellow-500 hover:bg-yellow-600 text-slate-900 font-bold px-6 py-3 rounded-xl transition shadow-lg shadow-yellow-200/50 text-sm flex items-center gap-2 cursor-pointer">
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="m9 12 2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
                         Soumettre et voir les résultats
                       </button>
@@ -681,8 +681,8 @@ export default function ExamenPage() {
                     <span className="text-sm font-bold text-slate-600">Maths : <span className="text-red-600">{correctionMaths.note}/{correctionMaths.noteMax || 10}</span></span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="w-3 h-3 bg-purple-500 rounded-full"></span>
-                    <span className="text-sm font-bold text-slate-600">Rédaction : <span className="text-purple-600">{correctionRedaction.note}/{correctionRedaction.noteMax || 10}</span></span>
+                    <span className="w-3 h-3 bg-yellow-500 rounded-full"></span>
+                    <span className="text-sm font-bold text-slate-600">Rédaction : <span className="text-yellow-600">{correctionRedaction.note}/{correctionRedaction.noteMax || 10}</span></span>
                   </div>
                 </div>
               </div>
@@ -772,7 +772,7 @@ export default function ExamenPage() {
               {/* ===== SECTION RÉDACTION ===== */}
               <div className="mb-8">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-8 h-8 bg-purple-100 text-purple-600 rounded-lg flex items-center justify-center">
+                  <div className="w-8 h-8 bg-yellow-100 text-yellow-600 rounded-lg flex items-center justify-center">
                     <PenLine size={16} strokeWidth={2} />
                   </div>
                   <h2 className="text-lg font-black text-slate-900">Rédaction — {correctionRedaction.note}/{correctionRedaction.noteMax || 10}</h2>
@@ -828,18 +828,18 @@ export default function ExamenPage() {
                   </div>
                 )}
 
-                <div className="bg-purple-50 border border-purple-200 rounded-2xl p-6">
-                  <h3 className="font-black text-purple-800 text-sm mb-2 flex items-center gap-2">
+                <div className="bg-yellow-50 border border-yellow-300 rounded-2xl p-6">
+                  <h3 className="font-black text-yellow-800 text-sm mb-2 flex items-center gap-2">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M12 2v4"/><path d="m16.2 7.8 2.9-2.9"/><path d="M18 12h4"/></svg>
                     Conseil rédaction
                   </h3>
-                  <p className="text-purple-700 text-sm leading-relaxed">{correctionRedaction.conseil}</p>
+                  <p className="text-yellow-700 text-sm leading-relaxed">{correctionRedaction.conseil}</p>
                 </div>
               </div>
 
               {/* Actions */}
               <div className="flex items-center justify-center gap-4 pb-8">
-                <button onClick={restart} className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold px-6 py-3 rounded-xl transition shadow-lg shadow-yellow-200/50 text-sm flex items-center gap-2 cursor-pointer">
+                <button onClick={restart} className="bg-yellow-500 hover:bg-yellow-600 text-slate-900 font-bold px-6 py-3 rounded-xl transition shadow-lg shadow-yellow-200/50 text-sm flex items-center gap-2 cursor-pointer">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
                   Nouvel examen blanc
                 </button>
