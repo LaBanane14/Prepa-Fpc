@@ -117,6 +117,7 @@ Dans les deux cas :
 - Le format peut être : une analyse de texte avec questions, une dissertation/réflexion argumentée, ou une réponse à une ou plusieurs questions sur un thème sanitaire et social
 - Le candidat dispose de 30 MINUTES seulement, adapte donc la quantité de travail demandé en conséquence (pas plus de 2-3 questions, ou 1 sujet de dissertation court)
 - Si le sujet comporte un texte source, il doit faire entre 150 et 300 mots
+- IMPORTANT : Le sujet est noté sur 10 points (PAS sur 20). Adapte le barème en conséquence pour que le total fasse 10 points.
 - Précise dans le barème qu'un retrait de 0,25 point par faute d'orthographe est appliqué
 
 IMPORTANT : Réponds UNIQUEMENT en JSON valide avec cette structure :
@@ -190,6 +191,11 @@ IMPORTANT : Réponds UNIQUEMENT en JSON valide avec cette structure :
         return NextResponse.json({ error: 'Erreur de format. Réessayez.' }, { status: 500 })
       }
       const correction = JSON.parse(jsonMatch[0])
+      // Forcer la note sur 10 si Gemini a noté sur autre chose
+      if (correction.noteMax && correction.noteMax !== 10) {
+        correction.note = Math.round((correction.note / correction.noteMax) * 10 * 10) / 10
+        correction.noteMax = 10
+      }
       return NextResponse.json({ correction })
     }
 

@@ -313,9 +313,9 @@ export default function RedactionPage() {
                 <div className="bg-slate-900 rounded-t-2xl px-6 py-5">
                   <div className="flex items-start justify-between mb-4">
                     <div>
-                      <h2 className="text-xl sm:text-2xl font-black text-white">{(sujet.titre?.includes(' — ') ? sujet.titre.split(' — ')[0] : sujet.titre?.includes(' - ') ? sujet.titre.split(' - ')[0] : sujet.titre)}</h2>
-                      {(sujet.titre?.includes(' — ') || sujet.titre?.includes(' - ')) && (
-                        <p className="text-xl sm:text-2xl text-slate-400 font-black mt-1">{sujet.titre.includes(' — ') ? sujet.titre.split(' — ').slice(1).join(' — ') : sujet.titre.split(' - ').slice(1).join(' - ')}</p>
+                      <h2 className="text-xl sm:text-2xl font-black text-white">{sujet.titre?.split(/\s[—–\-]\s/)[0]}</h2>
+                      {sujet.titre && /\s[—–\-]\s/.test(sujet.titre) && (
+                        <p className="text-xl sm:text-2xl text-slate-400 font-black mt-1">{sujet.titre.split(/\s[—–\-]\s/).slice(1).join(' — ')}</p>
                       )}
                     </div>
                     <div className="flex items-center gap-4 shrink-0 ml-4">
@@ -355,8 +355,11 @@ export default function RedactionPage() {
                         Barème de notation
                       </button>
                       {showBareme && (
-                        <div className="absolute top-full right-0 mt-2 bg-white rounded-xl shadow-xl border border-slate-200 p-4 z-50 w-80 animate-fade-in">
-                          <p className="text-xs text-slate-700 leading-relaxed whitespace-pre-line">{sujet.bareme}</p>
+                        <div className="absolute top-full right-0 mt-2 bg-purple-50 border border-purple-200 rounded-xl shadow-xl p-4 z-50 w-80 animate-fade-in">
+                          <button onClick={() => setShowBareme(false)} className="absolute top-2 right-2 w-6 h-6 flex items-center justify-center rounded-md hover:bg-purple-200 text-purple-500 transition cursor-pointer">
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                          </button>
+                          <p className="text-xs text-purple-800 leading-relaxed whitespace-pre-line pr-6">{sujet.bareme}</p>
                         </div>
                       )}
                       <p className="text-xs text-slate-400 font-bold uppercase tracking-wider">Durée : 30 minutes</p>
