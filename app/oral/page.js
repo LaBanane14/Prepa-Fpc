@@ -251,11 +251,7 @@ export default function OralPage() {
               <div className="bg-white border border-slate-200 rounded-2xl shadow-sm max-w-2xl w-full p-6 sm:p-10">
 
                 {/* Top bar */}
-                <div className="flex items-center justify-between mb-6">
-                  <div className="flex items-center gap-2">
-                    <svg className="w-4 h-4 text-amber-500 shrink-0" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-                    <span className="text-xs font-bold text-amber-600">En dessous de 8/20 = éliminatoire</span>
-                  </div>
+                <div className="flex items-center justify-end mb-6">
                   <a href="/dashboard" className="bg-slate-900 hover:bg-black text-white font-bold text-sm px-5 py-2.5 rounded-xl transition flex items-center gap-2">
                     Quitter l'exercice
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
@@ -282,11 +278,9 @@ export default function OralPage() {
                 </label>
 
                 {/* Pas de note */}
-                <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex items-center gap-3">
-                  <div className="w-8 h-8 bg-emerald-200 text-emerald-700 rounded-lg flex items-center justify-center shrink-0">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4 12 14.01l-3-3"/></svg>
-                  </div>
-                  <p className="text-sm text-slate-700 font-medium"><strong className="text-slate-900">Pas de notation !</strong> Le but est seulement de vous préparer au mieux pour le jour J.</p>
+                <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start gap-3">
+                  <svg className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M12 9v4"/><path d="M12 17h.01"/><circle cx="12" cy="12" r="10"/></svg>
+                  <p className="text-sm text-amber-800 font-medium"><strong>Pas de notation !</strong> Le but est seulement de vous préparer au mieux pour le jour J.</p>
                 </div>
 
               </div>
