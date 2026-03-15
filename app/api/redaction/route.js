@@ -94,6 +94,9 @@ export async function POST(request) {
 
     // === GÉNÉRER UN SUJET ===
     if (action === 'generer') {
+      // 2 fois sur 5 : forcer une dissertation
+      const forceDissertation = Math.random() < 0.4
+
       const prompt = `Tu es un examinateur du concours IFSI FPC (Formation Professionnelle Continue) pour l'épreuve écrite de sous-admissibilité.
 
 Le document PDF ci-joint contient des annales réelles du concours IFSI FPC des dernières années. Tu dois t'en servir comme base principale.
@@ -105,6 +108,8 @@ Reprends un sujet tel quel ou très proche d'un sujet présent dans les annales 
 
 OPTION 2 — SUJET ORIGINAL INSPIRÉ DES ANNALES :
 Crée un sujet original en t'inspirant des thèmes, du format et du niveau de difficulté des annales du PDF. Le sujet doit être réaliste et cohérent avec ce qui est demandé au concours.
+
+${forceDissertation ? `CONSIGNE OBLIGATOIRE : Pour cette génération, tu DOIS créer un sujet de type "dissertation" (réflexion argumentée). Pas d'analyse de texte ni de questions. Le candidat doit rédiger une argumentation structurée sur un thème sanitaire et social lié au métier d'infirmier.` : ''}
 
 Dans les deux cas :
 - Le sujet s'adresse à des aides-soignants ou auxiliaires de puériculture qui veulent devenir infirmiers

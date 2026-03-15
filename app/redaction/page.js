@@ -311,7 +311,12 @@ export default function RedactionPage() {
                 {/* Barre du haut : chrono */}
                 <div className="bg-slate-900 rounded-t-2xl px-6 py-5">
                   <div className="flex items-start justify-between mb-4">
-                    <h2 className="text-xl sm:text-2xl font-black text-white">{sujet.titre?.includes(' - ') ? sujet.titre.split(' - ').reverse().join(' - ') : sujet.titre}</h2>
+                    <div>
+                      <h2 className="text-xl sm:text-2xl font-black text-white">{(sujet.titre?.includes(' — ') ? sujet.titre.split(' — ')[0] : sujet.titre?.includes(' - ') ? sujet.titre.split(' - ')[0] : sujet.titre)}</h2>
+                      {(sujet.titre?.includes(' — ') || sujet.titre?.includes(' - ')) && (
+                        <p className="text-sm text-slate-400 font-semibold mt-1">{sujet.titre.includes(' — ') ? sujet.titre.split(' — ').slice(1).join(' — ') : sujet.titre.split(' - ').slice(1).join(' - ')}</p>
+                      )}
+                    </div>
                     <div className="flex items-center gap-4 shrink-0 ml-4">
                       <div className={`flex items-center gap-3 ${isUrgent ? 'pulse-urgent' : ''}`}>
                         <div className="w-32 h-2 bg-white/15 rounded-full overflow-hidden hidden sm:block">
@@ -365,7 +370,7 @@ export default function RedactionPage() {
                       <p className="text-sm text-purple-800 leading-relaxed whitespace-pre-line">{sujet.consigne}</p>
                       {sujet.bareme && (
                         <div className="mt-4 pt-4 border-t border-purple-200">
-                          <p className="text-xs text-purple-700 font-semibold leading-relaxed whitespace-pre-line">{sujet.bareme}</p>
+                          <p className="text-xs text-purple-700 font-semibold leading-relaxed whitespace-pre-line">{sujet.bareme?.replace(/[—\-–]?\s*[Dd]urée[^.—\-–\n]*/g, '').replace(/\s{2,}/g, ' ').trim()}</p>
                         </div>
                       )}
                     </div>

@@ -379,7 +379,7 @@ export default function ExamenPage() {
                 {/* Barre du haut */}
                 <div className="bg-slate-900 rounded-t-2xl px-6 py-5">
                   <div className="flex items-start justify-between mb-4">
-                    <h2 className="text-xl sm:text-2xl font-black text-white">{sujetMaths.titre?.includes(' - ') ? sujetMaths.titre.split(' - ').reverse().join(' - ') : sujetMaths.titre}</h2>
+                    <h2 className="text-xl sm:text-2xl font-black text-white">{sujetMaths.titre}</h2>
                     <div className="flex items-center gap-4 shrink-0 ml-4">
                       <div className={`flex items-center gap-3 ${isUrgent ? 'pulse-urgent' : ''}`}>
                         <div className="w-32 h-2 bg-white/15 rounded-full overflow-hidden hidden sm:block">
@@ -520,7 +520,12 @@ export default function ExamenPage() {
                 {/* Barre du haut */}
                 <div className="bg-slate-900 rounded-t-2xl px-6 py-5">
                   <div className="flex items-start justify-between mb-4">
-                    <h2 className="text-xl sm:text-2xl font-black text-white">{sujetRedaction.titre?.includes(' - ') ? sujetRedaction.titre.split(' - ').reverse().join(' - ') : sujetRedaction.titre}</h2>
+                    <div>
+                      <h2 className="text-xl sm:text-2xl font-black text-white">{(sujetRedaction.titre?.includes(' — ') ? sujetRedaction.titre.split(' — ')[0] : sujetRedaction.titre?.includes(' - ') ? sujetRedaction.titre.split(' - ')[0] : sujetRedaction.titre)}</h2>
+                      {(sujetRedaction.titre?.includes(' — ') || sujetRedaction.titre?.includes(' - ')) && (
+                        <p className="text-sm text-slate-400 font-semibold mt-1">{sujetRedaction.titre.includes(' — ') ? sujetRedaction.titre.split(' — ').slice(1).join(' — ') : sujetRedaction.titre.split(' - ').slice(1).join(' - ')}</p>
+                      )}
+                    </div>
                     <div className="flex items-center gap-4 shrink-0 ml-4">
                       <div className={`flex items-center gap-3 ${isUrgent ? 'pulse-urgent' : ''}`}>
                         <div className="w-32 h-2 bg-white/15 rounded-full overflow-hidden hidden sm:block">
@@ -577,7 +582,7 @@ export default function ExamenPage() {
                       <p className="text-sm text-purple-800 leading-relaxed whitespace-pre-line">{sujetRedaction.consigne}</p>
                       {sujetRedaction.bareme && (
                         <div className="mt-4 pt-4 border-t border-purple-200">
-                          <p className="text-xs text-purple-700 font-semibold leading-relaxed whitespace-pre-line">{sujetRedaction.bareme}</p>
+                          <p className="text-xs text-purple-700 font-semibold leading-relaxed whitespace-pre-line">{sujetRedaction.bareme?.replace(/[—\-–]?\s*[Dd]urée[^.—\-–\n]*/g, '').replace(/\s{2,}/g, ' ').trim()}</p>
                         </div>
                       )}
                     </div>
