@@ -25,8 +25,6 @@ export default function MathsPage() {
   const [error, setError] = useState('')
   const [loadingStep, setLoadingStep] = useState(0)
   const [correctingStep, setCorrectingStep] = useState(0)
-  const [displayNote, setDisplayNote] = useState(0)
-  const [showNoteReveal, setShowNoteReveal] = useState(false)
 
   // Chrono
   const [timeLeft, setTimeLeft] = useState(30 * 60)
@@ -138,7 +136,7 @@ export default function MathsPage() {
       const data = await res.json()
       if (!res.ok || data.error) { setError(data.error || 'Erreur lors de la correction.'); setStep('epreuve'); setTimerActive(false); return }
       const elapsed = Date.now() - startTime
-      if (elapsed < 12000) await new Promise(r => setTimeout(r, 12000 - elapsed))
+      if (elapsed < 20000) await new Promise(r => setTimeout(r, 20000 - elapsed))
       setCorrection(data.correction)
       // Sauvegarder dans l'historique
       const totalQuestions = sujet.exercices.reduce((sum, ex) => sum + (ex.questions?.length || 0), 0)
@@ -152,26 +150,7 @@ export default function MathsPage() {
         nb_questions: totalQuestions,
         duration_minutes: durationUsed || 1,
       })
-      // Animation de la note qui monte
-      setShowNoteReveal(true)
-      setDisplayNote(0)
-      const finalNote = data.correction.note
-      const noteMax = data.correction.noteMax || 10
-      const steps = 30
-      const stepDuration = 2000 / steps
-      let currentStep = 0
-      const noteInterval = setInterval(() => {
-        currentStep++
-        const progress = currentStep / steps
-        const eased = 1 - Math.pow(1 - progress, 3)
-        setDisplayNote(Math.round(eased * finalNote * 10) / 10)
-        if (currentStep >= steps) {
-          clearInterval(noteInterval)
-          setDisplayNote(finalNote)
-          setTimeout(() => { setShowNoteReveal(false); setStep('resultat') }, 1500)
-        }
-      }, stepDuration)
-
+      setStep('resultat')
     } catch (err) {
       setError('Erreur de connexion. Réessayez.')
       setStep('epreuve')
@@ -221,6 +200,19 @@ export default function MathsPage() {
         @keyframes heartbeat-line { 0% { stroke-dashoffset: 200; } 100% { stroke-dashoffset: 0; } }
         .heartbeat-anim { animation: heartbeat-line 1.5s linear infinite; }
         @keyframes morph { 0%, 100% { border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; } 33% { border-radius: 70% 30% 50% 50% / 30% 30% 70% 70%; } 66% { border-radius: 100% 60% 60% 100% / 100% 100% 60% 60%; } }
+        .gooey-loader { width: 180px; height: 180px; position: relative; filter: url('#goo'); animation: goo-spin 4s ease-in-out infinite alternate; margin: 0 auto; }
+        .goo-drop { position: absolute; top: 50%; left: 50%; background: #dc2626; border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; transform: translate(-50%, -50%); }
+        .goo-yin, .goo-yang { width: 70px; height: 70px; }
+        .goo-yin { animation: goo-move-yin 2.5s ease-in-out infinite, goo-morph 3.5s ease-in-out infinite; }
+        .goo-yang { animation: goo-move-yang 2.5s ease-in-out infinite, goo-morph 3.5s ease-in-out infinite reverse; }
+        @keyframes goo-spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes goo-morph { 0%, 100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; } 50% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; } }
+        @keyframes goo-move-yin { 0%, 100% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-50%, calc(-50% - 50px)) scale(0.9); } }
+        @keyframes goo-move-yang { 0%, 100% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-50%, calc(-50% + 50px)) scale(0.9); } }
+        .loading-dot { display: inline-block; width: 4px; height: 4px; background-color: currentColor; border-radius: 50%; margin: 0 2px; animation: dot-blink 1.4s infinite; opacity: 0; }
+        .loading-dot:nth-child(2) { animation-delay: 0.2s; }
+        .loading-dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes dot-blink { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
       `}</style>
 
       {sidebarOpen && <div className="fixed inset-0 bg-black/30 z-40 lg:hidden" onClick={() => setSidebarOpen(false)}></div>}
@@ -433,40 +425,29 @@ export default function MathsPage() {
           {/* ===== CORRECTING ===== */}
           {step === 'correcting' && (
             <div className="animate-fade-in min-h-[calc(100vh-2.5rem)] flex items-center justify-center">
-              <div className="bg-white border border-slate-200 rounded-2xl shadow-sm max-w-xl w-full flex flex-col items-center justify-center py-16 px-8">
-                {!showNoteReveal ? (
-                  <>
-                    <div className="w-24 h-24 bg-gradient-to-br from-red-500 to-rose-500 shadow-xl shadow-red-200 mb-8" style={{animation: 'morph 4s ease-in-out infinite'}}></div>
-                    <h2 className="text-xl font-black text-slate-900 mb-2">Correction en cours...</h2>
-                    <p className="text-slate-500 font-medium text-sm text-center mb-8">Notre IA analyse vos réponses en détail.</p>
-                    <div className="w-full max-w-md space-y-3">
-                      {[
-                        { label: 'Lecture de vos réponses' },
-                        { label: 'Vérification des calculs' },
-                        { label: 'Rédaction des explications' },
-                        { label: 'Attribution de la note' }
-                      ].map((ls, i) => (
-                        <div key={i} className={`flex items-center gap-3 p-3 rounded-xl transition-all duration-500 ${i <= correctingStep ? 'bg-red-50 border border-red-200' : 'bg-slate-50 border border-slate-100 opacity-40'}`}>
-                          <span className={`font-bold text-sm flex-grow ${i <= correctingStep ? 'text-red-700' : 'text-slate-400'}`}>{ls.label}</span>
-                          {i < correctingStep && <svg className="w-5 h-5 text-red-500 shrink-0" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg>}
-                          {i === correctingStep && <div className="w-4 h-4 border-2 border-red-600 border-t-transparent rounded-full animate-spin shrink-0"></div>}
-                          <span className="text-xs font-bold text-slate-400">{i + 1}/4</span>
-                        </div>
-                      ))}
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <p className="text-xs font-black text-slate-400 uppercase tracking-widest mb-6">Votre note</p>
-                    <div className="flex items-baseline justify-center gap-1 mb-6">
-                      <span className="text-8xl sm:text-9xl font-black text-red-600 tabular-nums transition-all">{displayNote}</span>
-                      <span className="text-3xl sm:text-4xl font-black text-slate-300">/{correction?.noteMax || 10}</span>
-                    </div>
-                    <div className="w-16 h-1 bg-red-200 rounded-full overflow-hidden">
-                      <div className="h-full bg-red-500 rounded-full animate-pulse"></div>
-                    </div>
-                  </>
-                )}
+              <svg style={{width:0,height:0,position:'absolute'}}>
+                <defs>
+                  <filter id="goo" x="-50%" y="-50%" width="200%" height="200%">
+                    <feGaussianBlur in="SourceGraphic" stdDeviation="12" result="blur" />
+                    <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" result="goo" />
+                    <feBlend in="SourceGraphic" in2="goo" />
+                  </filter>
+                </defs>
+              </svg>
+              <div className="bg-white/70 backdrop-blur-lg border border-white/50 rounded-3xl shadow-xl max-w-sm w-full flex flex-col items-center justify-center py-14 px-8">
+                <div className="gooey-loader mb-8">
+                  <div className="goo-drop goo-yin"></div>
+                  <div className="goo-drop goo-yang"></div>
+                </div>
+                <h2 className="text-lg font-medium text-slate-800 tracking-wide mb-2">Correction des résultats</h2>
+                <p className="text-sm text-slate-500 font-light flex items-center justify-center">
+                  Veuillez patienter un instant
+                  <span className="inline-flex ml-1 items-center">
+                    <span className="loading-dot"></span>
+                    <span className="loading-dot"></span>
+                    <span className="loading-dot"></span>
+                  </span>
+                </p>
               </div>
             </div>
           )}
