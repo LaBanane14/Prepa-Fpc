@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react'
 import { supabase } from '../../lib/supabase'
-import { Home, TrendingUp, RotateCcw, UserRound, BadgeCheck, LogOut, Stethoscope } from 'lucide-react'
+import { Home, TrendingUp, RotateCcw, UserRound, BadgeCheck, LogOut, Stethoscope, Target, BookOpen, Sparkles, ClipboardCheck } from 'lucide-react'
 
 const sidebarItems = [
   { id: 'dashboard', label: 'Accueil', href: '/dashboard', icon: Home },
@@ -54,6 +54,8 @@ export default function SpecifiquePage() {
   const [authLoading, setAuthLoading] = useState(true)
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
+  const [showInfoPopup, setShowInfoPopup] = useState(false)
+  const [dontShowAgain, setDontShowAgain] = useState(false)
   const [step, setStep] = useState('choix') // choix, loading, epreuve, correcting, resultat
   const [selectedFamille, setSelectedFamille] = useState(null)
   const [sujet, setSujet] = useState(null)
@@ -68,6 +70,10 @@ export default function SpecifiquePage() {
       if (!session) { window.location.href = '/auth'; return }
       setUser(session.user)
       setAuthLoading(false)
+      const skipPopup = localStorage.getItem('specifique_skip_info') === 'true'
+      if (!skipPopup) {
+        setShowInfoPopup(true)
+      }
     })
   }, [])
 
@@ -207,6 +213,51 @@ export default function SpecifiquePage() {
         </header>
 
         <main className="flex-grow w-full mx-auto px-4 py-4 sm:py-5">
+
+          {/* ===== POPUP INFO ===== */}
+          {showInfoPopup && (
+            <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4" onClick={() => { setShowInfoPopup(false); window.location.href = '/dashboard' }}>
+              <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full animate-fade-in overflow-hidden" onClick={e => e.stopPropagation()}>
+
+                <div className="bg-slate-900 px-6 py-5 relative">
+                  <button onClick={() => { setShowInfoPopup(false); window.location.href = '/dashboard' }} className="absolute top-3 right-3 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/15 text-white transition cursor-pointer">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                  </button>
+                  <h2 className="text-lg font-black text-white pr-8">Entraînement spécifique</h2>
+                  <p className="text-slate-400 text-sm font-medium mt-1">Avant de commencer, voici le déroulement de l'épreuve.</p>
+                </div>
+
+                <div className="p-6">
+                  <div className="space-y-4 mb-6">
+                    {[
+                      { icon: <Target size={18} strokeWidth={2} />, title: 'Choisissez votre famille', text: 'Opérations, pourcentages, conversions ou équations : travaillez vos points faibles.' },
+                      { icon: <BookOpen size={18} strokeWidth={2} />, title: '5-6 questions par session', text: 'Des exercices ciblés, sans calculatrice, pour progresser efficacement.' },
+                      { icon: <Sparkles size={18} strokeWidth={2} />, title: 'Exercices générés par notre IA', text: 'Des exercices originaux basés sur les annales du concours FPC à chaque session.' },
+                      { icon: <ClipboardCheck size={18} strokeWidth={2} />, title: 'Correction détaillée', text: 'Chaque réponse est corrigée avec une explication pas à pas pour comprendre la méthode.' }
+                    ].map((item, i) => (
+                      <div key={i} className="flex items-start gap-3">
+                        <div className="w-9 h-9 bg-blue-50 text-blue-500 rounded-xl flex items-center justify-center shrink-0">{item.icon}</div>
+                        <div>
+                          <p className="text-sm font-black text-slate-800">{item.title}</p>
+                          <p className="text-xs text-slate-500 leading-relaxed mt-0.5">{item.text}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <button onClick={() => { if (dontShowAgain) localStorage.setItem('specifique_skip_info', 'true'); setShowInfoPopup(false) }} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl transition shadow-lg shadow-blue-200/50 text-sm flex items-center justify-center gap-2 cursor-pointer mb-4">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+                    C'est parti !
+                  </button>
+
+                  <label className="flex items-center gap-2 cursor-pointer justify-center">
+                    <input type="checkbox" checked={dontShowAgain} onChange={e => setDontShowAgain(e.target.checked)} className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer" />
+                    <span className="text-xs text-slate-400 font-medium">Ne plus afficher ce message</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* ===== CHOIX FAMILLE ===== */}
           {step === 'choix' && (
