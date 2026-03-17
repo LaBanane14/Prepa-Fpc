@@ -67,6 +67,10 @@ export default function SpecifiquePage() {
   const [current, setCurrent] = useState(0)
   const [reponses, setReponses] = useState({})
 
+  // Corrections inline par question
+  const [corrections, setCorrections] = useState({})
+  const [validatingId, setValidatingId] = useState(null)
+
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (!session) { window.location.href = '/auth'; return }
@@ -112,37 +116,78 @@ export default function SpecifiquePage() {
     if (current > 0) setCurrent(current - 1)
   }
 
-  async function handleSubmitAll() {
+  async function handleValidateOne(question) {
+    if (corrections[question.id] || validatingId) return
+    setValidatingId(question.id)
     setError('')
-    setStep('correcting')
 
     try {
       const res = await fetch('/api/specifique', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'corriger', exercices: sujet.questions, reponses })
+        body: JSON.stringify({ action: 'corriger', exercices: [question], reponses: { [question.id]: reponses[question.id] || '' } })
       })
       const data = await res.json()
-      if (!res.ok || data.error) { setError(data.error || 'Erreur lors de la correction.'); setStep('epreuve'); return }
-      setCorrection(data.correction)
-      await supabase.from('historique').insert({
-        user_id: user.id,
-        type: 'Spécifique',
-        label: selectedFamille.titre,
-        note: data.correction.note,
-        note_max: data.correction.noteMax,
-        nb_questions: sujet.questions.length,
-        duration_minutes: null,
-      })
-      setStep('resultat')
+      if (!res.ok || data.error) { setError(data.error || 'Erreur lors de la correction.'); setValidatingId(null); return }
+      const cr = data.correction.corrections?.[0]
+      if (cr) setCorrections(prev => ({ ...prev, [question.id]: cr }))
+      setValidatingId(null)
     } catch (err) {
       setError('Erreur de connexion. Réessayez.')
-      setStep('epreuve')
+      setValidatingId(null)
     }
   }
 
+  async function handleSubmitAll() {
+    // Validate remaining unanswered questions
+    const uncorrected = sujet.questions.filter(q => !corrections[q.id])
+    if (uncorrected.length > 0) {
+      setError('')
+      setStep('correcting')
+      try {
+        const uncorrectedReponses = {}
+        uncorrected.forEach(q => { uncorrectedReponses[q.id] = reponses[q.id] || '' })
+        const res = await fetch('/api/specifique', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'corriger', exercices: uncorrected, reponses: uncorrectedReponses })
+        })
+        const data = await res.json()
+        if (!res.ok || data.error) { setError(data.error || 'Erreur lors de la correction.'); setStep('epreuve'); return }
+        const newCorrections = { ...corrections }
+        data.correction.corrections?.forEach(cr => { newCorrections[cr.id] = cr })
+        setCorrections(newCorrections)
+        finalizeResults(newCorrections)
+      } catch (err) {
+        setError('Erreur de connexion. Réessayez.')
+        setStep('epreuve')
+      }
+    } else {
+      finalizeResults(corrections)
+    }
+  }
+
+  async function finalizeResults(allCorrections) {
+    const corrArray = sujet.questions.map(q => allCorrections[q.id]).filter(Boolean)
+    const note = corrArray.filter(cr => cr.correct === true).length
+    const noteMax = sujet.questions.length
+    const appreciation = note >= noteMax * 0.8 ? 'Excellent travail ! Vous maîtrisez bien ce domaine.' : note >= noteMax * 0.5 ? 'Bon travail, mais quelques points restent à consolider.' : 'Continuez à vous entraîner, la persévérance paie !'
+    const finalCorrection = { note, noteMax, appreciation, corrections: corrArray }
+    setCorrection(finalCorrection)
+    await supabase.from('historique').insert({
+      user_id: user.id,
+      type: 'Spécifique',
+      label: selectedFamille.titre,
+      note,
+      note_max: noteMax,
+      nb_questions: sujet.questions.length,
+      duration_minutes: null,
+    })
+    setStep('resultat')
+  }
+
   function restart() {
-    setStep('choix'); setSujet(null); setReponses({}); setError(''); setLoadingFamille(null); setSelectedFamille(null); setCurrent(0); setCorrection(null)
+    setStep('choix'); setSujet(null); setReponses({}); setError(''); setLoadingFamille(null); setSelectedFamille(null); setCurrent(0); setCorrection(null); setCorrections({}); setValidatingId(null)
   }
 
   function retryFamille() {
@@ -305,14 +350,53 @@ export default function SpecifiquePage() {
                 {/* Question + input */}
                 <div className="p-4 sm:p-6 flex-grow">
                   <h2 className="text-base sm:text-lg font-bold text-slate-900 mb-5 leading-relaxed">{data.question}</h2>
-                  <input
-                    type="text"
-                    className={`w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3.5 text-sm text-slate-800 font-medium focus:outline-none focus:ring-2 ${c.ring} transition placeholder:text-slate-400`}
-                    placeholder="Votre réponse..."
-                    value={reponses[data.id] || ''}
-                    onChange={(e) => setReponses(prev => ({ ...prev, [data.id]: e.target.value }))}
-                    onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); if (current < sujet.questions.length - 1) goNext() } }}
-                  />
+                  <div className="flex gap-3 items-center">
+                    <input
+                      type="text"
+                      className={`flex-grow bg-slate-50 border border-slate-200 rounded-xl px-4 py-3.5 text-sm text-slate-800 font-medium focus:outline-none focus:ring-2 ${c.ring} transition placeholder:text-slate-400 ${corrections[data.id] ? 'opacity-60 cursor-not-allowed' : ''}`}
+                      placeholder="Votre réponse..."
+                      value={reponses[data.id] || ''}
+                      onChange={(e) => !corrections[data.id] && setReponses(prev => ({ ...prev, [data.id]: e.target.value }))}
+                      onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); if (!corrections[data.id] && reponses[data.id]?.trim()) handleValidateOne(data); else if (corrections[data.id] && current < sujet.questions.length - 1) goNext() } }}
+                      disabled={!!corrections[data.id]}
+                    />
+                    {!corrections[data.id] && (
+                      <button
+                        onClick={() => handleValidateOne(data)}
+                        disabled={!reponses[data.id]?.trim() || validatingId === data.id}
+                        className={`shrink-0 bg-gradient-to-r ${c.gradient} text-white font-bold py-3.5 px-5 rounded-xl transition shadow-md text-sm flex items-center gap-2 ${!reponses[data.id]?.trim() || validatingId === data.id ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:shadow-lg'}`}
+                      >
+                        {validatingId === data.id ? (
+                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                        ) : (
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg>
+                        )}
+                        Valider
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Correction inline */}
+                  {corrections[data.id] && (
+                    <div className={`mt-4 rounded-xl overflow-hidden border ${corrections[data.id].correct === true ? 'border-green-200' : 'border-red-200'}`}>
+                      <div className={`px-4 py-2.5 flex items-center gap-2 ${corrections[data.id].correct === true ? 'bg-green-500' : 'bg-red-500'}`}>
+                        {corrections[data.id].correct === true ? (
+                          <>
+                            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg>
+                            <span className="text-white font-bold text-sm">Bonne réponse !</span>
+                          </>
+                        ) : (
+                          <>
+                            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                            <span className="text-white font-bold text-sm">Incorrect — Réponse attendue : {corrections[data.id].reponse_attendue}</span>
+                          </>
+                        )}
+                      </div>
+                      <div className={`px-4 py-3 ${corrections[data.id].correct === true ? 'bg-green-50' : 'bg-red-50'}`}>
+                        <div className="text-sm text-slate-700 leading-relaxed font-medium" dangerouslySetInnerHTML={{__html: corrections[data.id].explication}}></div>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 {/* Actions */}
@@ -328,8 +412,8 @@ export default function SpecifiquePage() {
                       Question suivante <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14m-7-7 7 7-7 7"/></svg>
                     </button>
                   ) : (
-                    <button onClick={handleSubmitAll} className={`flex-grow bg-gradient-to-r ${c.gradient} text-white font-bold py-3 px-4 rounded-xl transition shadow-lg flex items-center justify-center gap-2 text-sm sm:text-base cursor-pointer`}>
-                      Soumettre ({answeredCount}/{sujet.questions.length})
+                    <button onClick={handleSubmitAll} disabled={Object.keys(corrections).length === 0} className={`flex-grow bg-gradient-to-r ${c.gradient} text-white font-bold py-3 px-4 rounded-xl transition shadow-lg flex items-center justify-center gap-2 text-sm sm:text-base ${Object.keys(corrections).length === 0 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}>
+                      Terminer ({Object.keys(corrections).length}/{sujet.questions.length})
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg>
                     </button>
                   )}
@@ -340,7 +424,7 @@ export default function SpecifiquePage() {
             {/* Navigation rapide */}
             <div className="flex flex-wrap justify-center gap-2 mt-5">
               {sujet.questions.map((q, i) => (
-                <button key={i} onClick={() => setCurrent(i)} className={`w-8 h-8 rounded-lg font-bold text-xs transition cursor-pointer ${i === current ? 'bg-slate-900 text-white' : reponses[q.id]?.trim() ? `${c.iconBg} ${c.text}` : 'bg-white border border-slate-200 text-slate-400 hover:bg-slate-50'}`}>
+                <button key={i} onClick={() => setCurrent(i)} className={`w-8 h-8 rounded-lg font-bold text-xs transition cursor-pointer ${i === current ? 'bg-slate-900 text-white' : corrections[q.id]?.correct === true ? 'bg-green-500 text-white' : corrections[q.id] ? 'bg-red-500 text-white' : reponses[q.id]?.trim() ? `${c.iconBg} ${c.text}` : 'bg-white border border-slate-200 text-slate-400 hover:bg-slate-50'}`}>
                   {i + 1}
                 </button>
               ))}
