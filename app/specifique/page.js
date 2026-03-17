@@ -1,7 +1,15 @@
 'use client'
 import { useState, useEffect } from 'react'
 import { supabase } from '../../lib/supabase'
-import { Target, BookOpen, Sparkles, ClipboardCheck } from 'lucide-react'
+import { Home, TrendingUp, RotateCcw, UserRound, BadgeCheck, LogOut, Stethoscope, Target, BookOpen, Sparkles, ClipboardCheck } from 'lucide-react'
+
+const sidebarItems = [
+  { id: 'dashboard', label: 'Accueil', href: '/dashboard', icon: Home },
+  { id: 'progression', label: 'Mes stats', href: '/dashboard?tab=progression', icon: TrendingUp },
+  { id: 'historique', label: 'Historique', href: '/dashboard?tab=historique', icon: RotateCcw },
+  { id: 'profil', label: 'Compte', href: '/dashboard?tab=profil', icon: UserRound },
+  { id: 'abonnement', label: 'Devenir Premium', href: '/dashboard?tab=abonnement', icon: BadgeCheck, premium: true }
+]
 
 const familles = [
   {
@@ -45,6 +53,7 @@ export default function SpecifiquePage() {
   const [user, setUser] = useState(null)
   const [authLoading, setAuthLoading] = useState(true)
 
+  const [sidebarOpen, setSidebarOpen] = useState(false)
   const [showInfoPopup, setShowInfoPopup] = useState(false)
   const [dontShowAgain, setDontShowAgain] = useState(false)
   const [step, setStep] = useState('choix') // null, choix, epreuve, correcting, resultat
@@ -141,6 +150,10 @@ export default function SpecifiquePage() {
     else restart()
   }
 
+  async function handleLogout() { await supabase.auth.signOut(); window.location.href = '/' }
+
+  const firstName = user?.user_metadata?.first_name || user?.email?.split('@')[0] || ''
+  const isPremium = false
   const c = selectedFamille ? colorMap[selectedFamille.color] : colorMap.blue
   const data = sujet?.questions?.[current]
   const progress = sujet ? ((current + 1) / sujet.questions.length) * 100 : 0
@@ -149,16 +162,49 @@ export default function SpecifiquePage() {
   if (authLoading) return <div className="min-h-screen bg-slate-50 flex items-center justify-center"><div className="animate-spin w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full"></div></div>
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col" style={{backgroundImage: 'radial-gradient(#cbd5e1 1px, transparent 1px)', backgroundSize: '24px 24px'}}>
+    <div className="min-h-screen bg-slate-100 text-slate-900 flex" style={{backgroundImage: 'radial-gradient(#3b82f6 1px, transparent 1px)', backgroundSize: '24px 24px'}}>
+      <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
       <style>{`
         .animate-fade-in { animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes premiumScan { 0%, 80% { opacity: 1; } 85% { opacity: 0.4; transform: scale(1.15); } 90% { opacity: 1; transform: scale(1); filter: brightness(1.5); } 95% { filter: brightness(1); } 100% { opacity: 1; } }
+        .premium-scan { animation: premiumScan 5s ease-in-out infinite; }
       `}</style>
 
-      <div className="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
-        <div className="absolute top-[-10%] left-[-5%] w-[500px] h-[500px] bg-blue-200/40 rounded-full mix-blend-multiply blur-3xl"></div>
-        <div className="absolute bottom-[-10%] right-[-5%] w-[500px] h-[500px] bg-rose-200/40 rounded-full mix-blend-multiply blur-3xl"></div>
+      {sidebarOpen && <div className="fixed inset-0 bg-black/30 z-40 lg:hidden" onClick={() => setSidebarOpen(false)}></div>}
+
+      {/* SIDEBAR */}
+      <div className={`fixed inset-y-0 left-0 z-50 flex items-center pl-3 py-5 transition-transform duration-300 lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
+        <aside className="w-[72px] bg-white rounded-2xl shadow-lg shadow-slate-200/60 border border-slate-200/60 flex flex-col items-center py-5 h-[calc(100vh-2.5rem)]" style={{fontFamily: "'Nunito', sans-serif"}}>
+          <a href="/" className="mb-4"><div className="w-10 h-10 bg-blue-600 text-white rounded-xl flex items-center justify-center hover:scale-105 transition-transform"><Stethoscope size={20} strokeWidth={2.5} /></div></a>
+          <div className="w-7 h-px bg-slate-200 mb-3"></div>
+          <nav className="flex-1 flex flex-col items-center gap-0.5 w-full px-1.5">
+            {sidebarItems.filter(item => !item.premium || !isPremium).map(item => (
+              <a key={item.id} href={item.href} className={`w-full flex flex-col items-center justify-center gap-1 py-3 rounded-xl text-[11px] font-bold transition-all text-center group ${item.premium ? 'text-amber-500 hover:bg-amber-50 hover:text-amber-600' : 'text-slate-900 hover:bg-blue-50 hover:text-blue-600'}`}>
+                <item.icon size={21} strokeWidth={1.6} className={`transition-transform duration-200 group-hover:scale-125 ${item.premium ? 'premium-scan' : ''}`} />
+                <span>{item.label}</span>
+              </a>
+            ))}
+          </nav>
+          <div className="flex flex-col items-center gap-2 mt-auto pt-3">
+            <div className="w-7 h-px bg-slate-200 mb-1"></div>
+            <a href="/dashboard?tab=profil" className="w-9 h-9 rounded-full bg-slate-100 text-slate-700 hover:bg-slate-200 flex items-center justify-center font-bold text-xs transition">{firstName.charAt(0).toUpperCase()}</a>
+            <button onClick={handleLogout} className="text-slate-900 hover:text-red-500 transition cursor-pointer p-1">
+              <LogOut size={16} strokeWidth={1.8} />
+            </button>
+          </div>
+        </aside>
       </div>
+
+      {/* MAIN */}
+      <div className="flex-1 flex flex-col min-h-screen lg:pl-[90px]">
+        <header className="lg:hidden h-14 bg-white border-b border-slate-200 px-4 flex items-center justify-between shrink-0 sticky top-0 z-30">
+          <button onClick={() => setSidebarOpen(true)} className="text-slate-700 p-2 rounded-lg hover:bg-slate-100 transition"><svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+          <span className="font-black text-lg text-slate-900">Prépa <span className="text-red-600">FPC</span></span>
+          <div className="w-8 h-8 rounded-full bg-slate-100 text-slate-700 flex items-center justify-center font-bold text-xs">{firstName.charAt(0).toUpperCase()}</div>
+        </header>
+
+        <main className="flex-grow w-full mx-auto px-4 py-4 sm:py-5">
 
       {/* ===== POPUP INFO ===== */}
       {showInfoPopup && (
@@ -239,7 +285,7 @@ export default function SpecifiquePage() {
 
       {/* ===== ÉPREUVE ===== */}
       {step === 'epreuve' && sujet && data && selectedFamille && (
-        <main className="flex-grow w-full max-w-3xl mx-auto px-4 py-4 sm:py-6">
+        <div className="flex-grow w-full max-w-3xl mx-auto py-4 sm:py-6">
           <div className="w-full max-w-2xl mx-auto relative mt-2 sm:mt-4">
             <a href="/dashboard" className="absolute -top-2 -right-2 sm:-top-3 sm:-right-3 z-20 w-9 h-9 sm:w-10 sm:h-10 bg-slate-900 hover:bg-black text-white rounded-full flex items-center justify-center transition shadow-lg">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
@@ -300,12 +346,12 @@ export default function SpecifiquePage() {
               ))}
             </div>
           </div>
-        </main>
+        </div>
       )}
 
       {/* ===== CORRECTING ===== */}
       {step === 'correcting' && selectedFamille && (
-        <div className="min-h-screen flex items-center justify-center px-4">
+        <div className="flex-grow flex items-center justify-center px-4">
           <div className="flex flex-col items-center gap-4">
             <div className={`w-10 h-10 ${c.text} rounded-full animate-spin`} style={{borderWidth: '3px', borderStyle: 'solid', borderColor: 'currentColor', borderTopColor: 'transparent'}}></div>
             <p className="text-slate-600 font-bold text-sm">Correction en cours...</p>
@@ -315,7 +361,7 @@ export default function SpecifiquePage() {
 
       {/* ===== RÉSULTATS ===== */}
       {step === 'resultat' && correction && selectedFamille && (
-        <main className="flex-grow flex items-center justify-center px-4 py-8 sm:py-12">
+        <div className="flex-grow flex items-center justify-center py-8 sm:py-12">
           <div className="max-w-3xl w-full bg-white rounded-2xl sm:rounded-[2.5rem] shadow-2xl p-6 sm:p-10 border border-slate-100 relative overflow-hidden">
 
             <div className="absolute top-[-20%] left-[-10%] w-64 h-64 bg-slate-100 rounded-full blur-3xl opacity-60 pointer-events-none"></div>
@@ -381,8 +427,11 @@ export default function SpecifiquePage() {
               </div>
             </div>
           </div>
-        </main>
+        </div>
       )}
+
+        </main>
+      </div>
     </div>
   )
 }
