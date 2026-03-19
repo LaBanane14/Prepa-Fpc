@@ -89,6 +89,7 @@ export default function SpecifiquePage() {
   // Question par question
   const [current, setCurrent] = useState(0)
   const [reponses, setReponses] = useState({})
+  const [validated, setValidated] = useState({})
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -109,6 +110,7 @@ export default function SpecifiquePage() {
     setError('')
     setSujet({ questions: [] })
     setReponses({})
+    setValidated({})
     setCurrent(0)
     setStreamingDone(false)
 
@@ -174,6 +176,14 @@ export default function SpecifiquePage() {
     }
   }
 
+  function validateCurrent() {
+    if (!data) return
+    const userAnswer = (reponses[data.id] || '').trim().toLowerCase().replace(/\s/g, '').replace(',', '.')
+    const expected = String(data.reponse).trim().toLowerCase().replace(/\s/g, '').replace(',', '.')
+    const isCorrect = userAnswer === expected
+    setValidated(prev => ({ ...prev, [data.id]: { correct: isCorrect, reponse_attendue: data.reponse, explication: data.explication || '' } }))
+  }
+
   function goNext() {
     if (sujet && current < sujet.questions.length - 1) setCurrent(current + 1)
   }
@@ -212,7 +222,7 @@ export default function SpecifiquePage() {
   }
 
   function restart() {
-    setStep('choix'); setSujet(null); setReponses({}); setError(''); setLoadingFamille(null); setSelectedFamille(null); setCurrent(0); setCorrection(null)
+    setStep('choix'); setSujet(null); setReponses({}); setValidated({}); setError(''); setLoadingFamille(null); setSelectedFamille(null); setCurrent(0); setCorrection(null)
   }
 
   function retryFamille() {
@@ -466,17 +476,45 @@ export default function SpecifiquePage() {
                   </div>
                 </div>
 
-                {/* Question + input */}
+                {/* Question + input + résultat */}
                 <div className="p-4 sm:p-6 flex-grow">
                   <h2 className="text-base sm:text-lg font-bold text-slate-900 mb-5 leading-relaxed">{data.question}</h2>
                   <input
                     type="text"
-                    className={`w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3.5 text-sm text-slate-800 font-medium focus:outline-none focus:ring-2 ${c.ring} transition placeholder:text-slate-400`}
+                    className={`w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3.5 text-sm text-slate-800 font-medium focus:outline-none focus:ring-2 ${c.ring} transition placeholder:text-slate-400 ${validated[data.id] ? 'opacity-60 pointer-events-none' : ''}`}
                     placeholder="Votre réponse..."
                     value={reponses[data.id] || ''}
                     onChange={(e) => setReponses(prev => ({ ...prev, [data.id]: e.target.value }))}
-                    onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); if (current < sujet.questions.length - 1) goNext() } }}
+                    onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); if (!validated[data.id]) validateCurrent(); else if (current < sujet.questions.length - 1) goNext() } }}
+                    disabled={!!validated[data.id]}
                   />
+
+                  {/* Résultat après validation */}
+                  {validated[data.id] && (
+                    <div className={`mt-4 p-4 rounded-xl border ${validated[data.id].correct ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}`}>
+                      <div className="flex items-center gap-2 mb-2">
+                        {validated[data.id].correct ? (
+                          <><div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center"><svg className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg></div><span className="text-green-700 font-black text-sm">Bonne réponse !</span></>
+                        ) : (
+                          <><div className="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center"><svg className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></div><span className="text-red-700 font-black text-sm">Mauvaise réponse</span></>
+                        )}
+                      </div>
+                      {!validated[data.id].correct && (
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-xs font-bold text-red-600">Votre réponse : {reponses[data.id] || '(vide)'}</span>
+                        </div>
+                      )}
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className="text-xs font-bold px-2.5 py-1 rounded-lg bg-green-100 text-green-700">Réponse attendue : {validated[data.id].reponse_attendue}</span>
+                      </div>
+                      {validated[data.id].explication && (
+                        <div className="bg-white/70 rounded-lg p-3 border border-slate-200">
+                          <p className="text-xs font-black text-slate-500 uppercase tracking-wider mb-1.5">Détail du calcul</p>
+                          <p className="text-sm text-slate-700 leading-relaxed font-medium whitespace-pre-line">{validated[data.id].explication.replace(/\s*\|\s*/g, '\n')}</p>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
 
                 {/* Actions */}
@@ -487,7 +525,11 @@ export default function SpecifiquePage() {
                       <span className="hidden sm:inline">Précédent</span>
                     </button>
                   )}
-                  {current < sujet.questions.length - 1 ? (
+                  {!validated[data.id] ? (
+                    <button onClick={validateCurrent} className={`flex-grow bg-gradient-to-r ${c.gradient} text-white font-bold py-3 px-4 rounded-xl transition shadow-lg flex items-center justify-center gap-2 text-sm sm:text-base cursor-pointer`}>
+                      Valider <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg>
+                    </button>
+                  ) : current < sujet.questions.length - 1 ? (
                     <button onClick={goNext} className="flex-grow bg-slate-900 text-white font-bold py-3 px-4 rounded-xl transition-colors hover:bg-black flex items-center justify-center gap-2 text-sm sm:text-base shadow-md cursor-pointer">
                       Question suivante <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14m-7-7 7 7-7 7"/></svg>
                     </button>
@@ -498,7 +540,7 @@ export default function SpecifiquePage() {
                     </div>
                   ) : (
                     <button onClick={handleSubmitAll} className={`flex-grow bg-gradient-to-r ${c.gradient} text-white font-bold py-3 px-4 rounded-xl transition shadow-lg flex items-center justify-center gap-2 text-sm sm:text-base cursor-pointer`}>
-                      Soumettre ({answeredCount}/{sujet.questions.length})
+                      Voir mes résultats ({Object.keys(validated).length}/{sujet.questions.length})
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg>
                     </button>
                   )}

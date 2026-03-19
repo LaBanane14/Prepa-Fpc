@@ -78,7 +78,8 @@ IMPORTANT : Réponds UNIQUEMENT en JSON valide avec cette structure exacte :
     {
       "id": 1,
       "question": "L'énoncé de la question",
-      "reponse": "La réponse attendue (courte)"
+      "reponse": "La réponse attendue (courte, un nombre)",
+      "explication": "Explication DÉTAILLÉE étape par étape du calcul. Montre chaque opération intermédiaire. Ex: Étape 1 : On identifie... | Étape 2 : On calcule 200 × 0.15 = 30 | Étape 3 : 200 - 30 = 170 | Résultat : 170€"
     }
   ]
 }`
@@ -296,7 +297,7 @@ export async function POST(request) {
 
                   // Extraire les questions complètes — regex souple sur l'ordre des champs
                   const cleaned = fullText.replace(/```json/g, '').replace(/```/g, '')
-                  const blocks = cleaned.match(/\{[^{}]*"id"\s*:\s*\d+[^{}]*"question"\s*:[^{}]*"reponse"\s*:[^{}]*\}/g) || []
+                  const blocks = cleaned.match(/\{[^{}]*"id"\s*:\s*\d+[^{}]*"question"\s*:[^{}]*"reponse"\s*:[^{}]*"explication"\s*:[^{}]*\}/g) || []
 
                   for (let bi = sentQuestions; bi < blocks.length; bi++) {
                     try {
