@@ -15,7 +15,7 @@ const familles = [
   {
     id: 'operations',
     titre: 'Produit en croix',
-    description: 'Règle de trois, proportionnalité, calculs de doses et problèmes concrets.',
+    description: 'Calculs de doses, débits de perfusion, recettes, approvisionnement — la proportionnalité du concours FPC.',
     icon: Sigma,
     color: 'blue',
     textColor: 'text-blue-600',
@@ -26,8 +26,8 @@ const familles = [
   },
   {
     id: 'pourcentages',
-    titre: 'Pourcentages et proportionnalité',
-    description: 'Pourcentages, augmentations, remises et problèmes de proportionnalité.',
+    titre: 'Pourcentages',
+    description: 'Augmentations, remises, TVA, taux d\'intérêt, contextes santé — tous les types de pourcentages du concours.',
     icon: Percent,
     color: 'blue',
     textColor: 'text-sky-600',
@@ -38,8 +38,8 @@ const familles = [
   },
   {
     id: 'conversions',
-    titre: 'Conversions d\'unités',
-    description: 'Heures, masses, volumes, surfaces : maîtrisez les tableaux de conversion.',
+    titre: 'Conversions & opérations',
+    description: 'Masses (µg, mg, g), volumes, durées, fractions, IMC et opérations avec décimaux.',
     icon: ArrowLeftRight,
     color: 'blue',
     textColor: 'text-indigo-600',
@@ -51,7 +51,7 @@ const familles = [
   {
     id: 'equations',
     titre: 'Équations et problèmes',
-    description: 'Mise en équation et résolution de problèmes concrets de logique.',
+    description: 'Problèmes d\'âges, moyennes, vitesse, répartitions, achats — les classiques du concours FPC.',
     icon: Equal,
     color: 'blue',
     textColor: 'text-violet-600',
