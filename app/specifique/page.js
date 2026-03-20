@@ -419,33 +419,38 @@ export default function SpecifiquePage() {
       {step === 'loading' && selectedFamille && (() => {
         const fillColor = colorMap[selectedFamille.id]?.dropColor || '#3b82f6'
         return (
-        <div className="fixed inset-0 z-40 lg:pl-[90px] flex items-center justify-center bg-slate-100/90 backdrop-blur-sm">
+        <div className={`fixed inset-0 z-40 lg:pl-[90px] flex flex-col ${colorMap[selectedFamille.id]?.wrapper || 'bg-slate-100/60'}`}>
           <style>{`
             @keyframes dropFill { 0% { transform: translateY(100%); } 100% { transform: translateY(0%); } }
             @keyframes dropPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
           `}</style>
-          <div className="flex flex-col items-center gap-5">
-            <div style={{animation: 'dropPulse 2s ease-in-out infinite'}}>
-              <svg width="80" height="100" viewBox="0 0 64 80">
-                <defs>
-                  <clipPath id="dropClipLoad">
-                    <path d="M32 2 C32 2 8 36 8 52 C8 66 18 76 32 76 C46 76 56 66 56 52 C56 36 32 2 32 2Z" />
-                  </clipPath>
-                </defs>
-                {/* Contour de la goutte */}
-                <path d="M32 2 C32 2 8 36 8 52 C8 66 18 76 32 76 C46 76 56 66 56 52 C56 36 32 2 32 2Z" fill="none" stroke={fillColor} strokeWidth="2.5" strokeOpacity="0.3" />
-                {/* Remplissage animé */}
-                <g clipPath="url(#dropClipLoad)">
-                  <rect x="0" y="0" width="64" height="80" fill={fillColor} fillOpacity="0.7" style={{animation: 'dropFill 10s ease-in-out forwards'}} />
-                </g>
-                {/* Reflet */}
-                <ellipse cx="24" cy="42" rx="6" ry="10" fill="white" fillOpacity="0.25" transform="rotate(-15 24 42)" />
-              </svg>
-            </div>
-            <div className="text-center">
-              <h2 className="text-xl sm:text-2xl font-black text-slate-800 tracking-tight mb-2" style={{fontFamily: "'Nunito', sans-serif"}}>Entraînement spécifique <span className={colorMap[selectedFamille.id]?.text || 'text-blue-500'}>— {selectedFamille.titre}</span></h2>
-              <p className="text-slate-500 font-bold text-sm">Génération des exercices...</p>
-              <p className="text-slate-400 font-medium text-sm mt-1" style={{animation: 'fadeIn 0.5s ease-out 8s forwards', opacity: 0}}>Encore quelques secondes</p>
+          <div className="relative flex items-center justify-center p-4 pt-6 sm:pt-8 shrink-0">
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-black text-slate-800 tracking-tight text-center" style={{fontFamily: "'Nunito', sans-serif"}}>Entraînement spécifique <span className={colorMap[selectedFamille.id]?.text || 'text-blue-500'}>— {selectedFamille.titre}</span></h1>
+            <a href="/dashboard" className="absolute right-4 bg-slate-900 hover:bg-black text-white font-bold text-sm px-5 py-2.5 rounded-xl transition flex items-center gap-2 shadow-lg shrink-0">
+              Quitter l&apos;exercice
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </a>
+          </div>
+          <div className="flex-1 flex items-center justify-center">
+            <div className="flex flex-col items-center gap-5">
+              <div style={{animation: 'dropPulse 2s ease-in-out infinite'}}>
+                <svg width="80" height="100" viewBox="0 0 64 80">
+                  <defs>
+                    <clipPath id="dropClipLoad">
+                      <path d="M32 2 C32 2 8 36 8 52 C8 66 18 76 32 76 C46 76 56 66 56 52 C56 36 32 2 32 2Z" />
+                    </clipPath>
+                  </defs>
+                  <path d="M32 2 C32 2 8 36 8 52 C8 66 18 76 32 76 C46 76 56 66 56 52 C56 36 32 2 32 2Z" fill="none" stroke={fillColor} strokeWidth="2.5" strokeOpacity="0.3" />
+                  <g clipPath="url(#dropClipLoad)">
+                    <rect x="0" y="0" width="64" height="80" fill={fillColor} fillOpacity="0.7" style={{animation: 'dropFill 10s ease-in-out forwards'}} />
+                  </g>
+                  <ellipse cx="24" cy="42" rx="6" ry="10" fill="white" fillOpacity="0.25" transform="rotate(-15 24 42)" />
+                </svg>
+              </div>
+              <div className="text-center">
+                <p className="text-slate-500 font-bold text-sm">Génération des exercices...</p>
+                <p className="text-slate-400 font-medium text-sm mt-1" style={{animation: 'fadeIn 0.5s ease-out 8s forwards', opacity: 0}}>Encore quelques secondes</p>
+              </div>
             </div>
           </div>
         </div>
