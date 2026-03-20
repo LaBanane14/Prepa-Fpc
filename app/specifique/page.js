@@ -422,7 +422,7 @@ export default function SpecifiquePage() {
         return (
         <div className="fixed inset-0 z-40 lg:pl-[90px] flex items-center justify-center bg-slate-100/90 backdrop-blur-sm">
           <style>{`
-            @keyframes dropFill { 0% { y: 80; height: 0; } 50% { y: 10; height: 70; } 100% { y: 80; height: 0; } }
+            @keyframes dropFill { 0% { y: 80; height: 0; } 100% { y: 2; height: 78; } }
             @keyframes dropPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
           `}</style>
           <div className="flex flex-col items-center gap-5">
@@ -436,7 +436,7 @@ export default function SpecifiquePage() {
                 {/* Contour de la goutte */}
                 <path d="M32 2 C32 2 8 36 8 52 C8 66 18 76 32 76 C46 76 56 66 56 52 C56 36 32 2 32 2Z" fill="none" stroke={fillColor} strokeWidth="2.5" strokeOpacity="0.3" />
                 {/* Remplissage animé */}
-                <rect clipPath="url(#dropClipLoad)" x="0" width="64" fill={fillColor} fillOpacity="0.7" style={{animation: 'dropFill 2.5s ease-in-out infinite'}} />
+                <rect clipPath="url(#dropClipLoad)" x="0" width="64" fill={fillColor} fillOpacity="0.7" style={{animation: 'dropFill 10s ease-in-out forwards'}} />
                 {/* Reflet */}
                 <ellipse cx="24" cy="42" rx="6" ry="10" fill="white" fillOpacity="0.25" transform="rotate(-15 24 42)" />
               </svg>
@@ -453,8 +453,8 @@ export default function SpecifiquePage() {
       {/* ===== ÉPREUVE ===== */}
       {step === 'epreuve' && sujet && data && selectedFamille && (
         <div className={`fixed inset-0 z-40 lg:pl-[90px] ${c.wrapper} overflow-y-auto flex flex-col`}>
-          <div className="relative flex items-center justify-center p-4 shrink-0">
-            <h1 className="text-lg sm:text-xl font-black text-slate-800 tracking-tight text-center" style={{fontFamily: "'Nunito', sans-serif"}}>Entraînement spécifique <span className={c.text}>— {selectedFamille.titre}</span></h1>
+          <div className="relative flex items-center justify-center p-4 pt-6 sm:pt-8 shrink-0">
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-black text-slate-800 tracking-tight text-center" style={{fontFamily: "'Nunito', sans-serif"}}>Entraînement spécifique <span className={c.text}>— {selectedFamille.titre}</span></h1>
             <a href="/dashboard" className="absolute right-4 bg-slate-900 hover:bg-black text-white font-bold text-sm px-5 py-2.5 rounded-xl transition flex items-center gap-2 shadow-lg shrink-0">
               Quitter l&apos;exercice
               <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
