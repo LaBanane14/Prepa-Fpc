@@ -144,9 +144,9 @@ export default function SpecifiquePage() {
     // Extraire uniquement la partie numérique des réponses
     const normalize = (val) => {
       let s = String(val).trim().replace(/,/g, '.').replace(/\s/g, '')
-      // Extraire le premier nombre (entier ou décimal, potentiellement négatif)
-      const match = s.match(/-?\d+\.?\d*/)
-      return match ? parseFloat(match[0]) : NaN
+      // Extraire le dernier nombre (le résultat final si l'élève écrit son raisonnement)
+      const matches = s.match(/-?\d+\.?\d*/g)
+      return matches ? parseFloat(matches[matches.length - 1]) : NaN
     }
     const userNum = normalize(reponses[data.id] || '')
     const expectedNum = normalize(data.reponse)
@@ -418,10 +418,15 @@ export default function SpecifiquePage() {
       {/* ===== LOADING ===== */}
       {step === 'loading' && selectedFamille && (
         <div className="fixed inset-0 z-40 lg:pl-[90px] flex items-center justify-center bg-slate-100/90 backdrop-blur-sm">
-          <div className="flex flex-col items-center gap-4">
-            <div className={`w-12 h-12 ${colorMap[selectedFamille.id]?.text || 'text-blue-600'} rounded-full animate-spin`} style={{borderWidth: '4px', borderStyle: 'solid', borderColor: 'currentColor', borderTopColor: 'transparent'}}></div>
-            <p className="text-slate-700 font-black text-base">Génération des exercices...</p>
-            <p className="text-slate-400 font-medium text-sm">Encore quelques secondes</p>
+          <div className="flex flex-col items-center gap-5">
+            <div className="relative w-14 h-14">
+              <div className="absolute inset-0 rounded-full border-4 border-slate-200"></div>
+              <div className={`absolute inset-0 rounded-full border-4 border-transparent ${colorMap[selectedFamille.id]?.text === 'text-sky-600' ? 'border-t-sky-500' : colorMap[selectedFamille.id]?.text === 'text-blue-600' ? 'border-t-blue-600' : colorMap[selectedFamille.id]?.text === 'text-purple-600' ? 'border-t-purple-600' : 'border-t-fuchsia-600'}`} style={{animation: 'spin 1s cubic-bezier(0.4, 0, 0.2, 1) infinite'}}></div>
+            </div>
+            <div className="text-center">
+              <p className="text-slate-700 font-black text-base">Génération des exercices...</p>
+              <p className="text-slate-400 font-medium text-sm mt-1">Encore quelques secondes</p>
+            </div>
           </div>
         </div>
       )}
@@ -429,8 +434,9 @@ export default function SpecifiquePage() {
       {/* ===== ÉPREUVE ===== */}
       {step === 'epreuve' && sujet && data && selectedFamille && (
         <div className={`fixed inset-0 z-40 lg:pl-[90px] ${c.wrapper} overflow-y-auto`}>
-          <div className="flex items-center justify-end p-4">
-            <a href="/dashboard" className="bg-slate-900 hover:bg-black text-white font-bold text-sm px-5 py-2.5 rounded-xl transition flex items-center gap-2 shadow-lg">
+          <div className="flex items-center justify-between p-4">
+            <h1 className="text-lg sm:text-xl font-black text-slate-800 tracking-tight" style={{fontFamily: "'Nunito', sans-serif"}}>Entraînement spécifique <span className={c.text}>— {selectedFamille.titre}</span></h1>
+            <a href="/dashboard" className="bg-slate-900 hover:bg-black text-white font-bold text-sm px-5 py-2.5 rounded-xl transition flex items-center gap-2 shadow-lg shrink-0 ml-4">
               Quitter l&apos;exercice
               <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
             </a>
