@@ -4,6 +4,7 @@ import { join } from 'path'
 import { BASE_SYSTEM } from '@/lib/prompts/base-maths'
 import { SYSTEM_EXAMEN_MATHS, PROMPT_EXAMEN_MATHS } from '@/lib/prompts/examen-maths'
 import { checkAuth } from '@/lib/auth-check'
+import { checkRateLimit } from '@/lib/rate-limit'
 
 const apiKey = process.env.GEMINI_API_KEY
 
@@ -45,6 +46,7 @@ export async function POST(request) {
   try {
     const user = await checkAuth()
     if (!user) return NextResponse.json({ error: 'Non autorisé.' }, { status: 401 })
+    if (!checkRateLimit(user.id)) return NextResponse.json({ error: 'Trop de requêtes. Réessayez dans quelques secondes.' }, { status: 429 })
 
     if (!apiKey) {
       return NextResponse.json({ error: 'Clé API Gemini manquante.' }, { status: 500 })

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { readFileSync } from 'fs'
 import { join } from 'path'
 import { checkAuth } from '@/lib/auth-check'
+import { checkRateLimit } from '@/lib/rate-limit'
 import { BASE_SYSTEM, FORMAT_SORTIE } from '@/lib/prompts/base-maths'
 import { SYSTEM_POURCENTAGES, PROMPT_POURCENTAGES } from '@/lib/prompts/famille-pourcentages'
 import { SYSTEM_PROPORTIONNALITE, PROMPT_PROPORTIONNALITE } from '@/lib/prompts/famille-proportionnalite'
@@ -30,6 +31,7 @@ export async function POST(request) {
   try {
     const user = await checkAuth()
     if (!user) return NextResponse.json({ error: 'Non autorisé.' }, { status: 401 })
+    if (!checkRateLimit(user.id)) return NextResponse.json({ error: 'Trop de requêtes. Réessayez dans quelques secondes.' }, { status: 429 })
 
     if (!apiKey) {
       return NextResponse.json({ error: 'Clé API Gemini manquante.' }, { status: 500 })
