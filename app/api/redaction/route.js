@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server'
-import { checkAuth } from '@/lib/auth-check'
 import { checkRateLimit } from '@/lib/rate-limit'
 import { BASE_REDACTION, FORMAT_SORTIE_REDACTION } from '@/lib/prompts/base-redaction'
 import { SYSTEM_CLASSIQUE, PROMPT_CLASSIQUE } from '@/lib/prompts/format-classique'
@@ -49,9 +48,8 @@ async function callGemini(prompt) {
 
 export async function POST(request) {
   try {
-    const user = await checkAuth()
-    if (!user) return NextResponse.json({ error: 'Non autorisé.' }, { status: 401 })
-    if (!checkRateLimit(user.id)) return NextResponse.json({ error: 'Trop de requêtes. Réessayez dans quelques secondes.' }, { status: 429 })
+    const ip = request.headers.get('x-forwarded-for') || 'unknown'
+    if (!checkRateLimit(ip)) return NextResponse.json({ error: 'Trop de requêtes. Réessayez dans quelques secondes.' }, { status: 429 })
 
     if (!apiKey) {
       return NextResponse.json({ error: 'Clé API Gemini manquante.' }, { status: 500 })
