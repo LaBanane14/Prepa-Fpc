@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { checkAuth } from '@/lib/auth-check'
 import { BASE_ORAL, FORMAT_SORTIE_ORAL } from '@/lib/prompts/base-oral'
 import { SYSTEM_ORAL, PROMPT_ORAL } from '@/lib/prompts/simulation-oral'
 
@@ -14,6 +15,9 @@ const categoryMap = {
 
 export async function POST(request) {
   try {
+    const user = await checkAuth()
+    if (!user) return NextResponse.json({ error: 'Non autorisé.' }, { status: 401 })
+
     if (!apiKey) {
       return NextResponse.json({ error: 'Clé API Gemini manquante.' }, { status: 500 })
     }

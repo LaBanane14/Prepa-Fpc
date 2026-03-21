@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { checkAuth } from '@/lib/auth-check'
 import { BASE_REDACTION, FORMAT_SORTIE_REDACTION } from '@/lib/prompts/base-redaction'
 import { SYSTEM_CLASSIQUE, PROMPT_CLASSIQUE } from '@/lib/prompts/format-classique'
 import { SYSTEM_MINI_TEXTE, PROMPT_MINI_TEXTE } from '@/lib/prompts/format-mini-texte'
@@ -47,6 +48,9 @@ async function callGemini(prompt) {
 
 export async function POST(request) {
   try {
+    const user = await checkAuth()
+    if (!user) return NextResponse.json({ error: 'Non autorisé.' }, { status: 401 })
+
     if (!apiKey) {
       return NextResponse.json({ error: 'Clé API Gemini manquante.' }, { status: 500 })
     }
