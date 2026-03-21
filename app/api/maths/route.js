@@ -1,10 +1,11 @@
 import { NextResponse } from 'next/server'
 import { readFileSync } from 'fs'
 import { join } from 'path'
+import { BASE_SYSTEM } from '@/lib/prompts/base-maths'
+import { SYSTEM_EXAMEN_MATHS, PROMPT_EXAMEN_MATHS } from '@/lib/prompts/examen-maths'
 
 const apiKey = process.env.GEMINI_API_KEY
 
-// Charger le PDF des annales maths au démarrage
 let annalesBase64 = null
 try {
   const pdfPath = join(process.cwd(), 'data', 'annales-maths.pdf')
@@ -12,47 +13,6 @@ try {
   annalesBase64 = pdfBuffer.toString('base64')
 } catch (e) {
   console.error('Impossible de charger le PDF des annales maths:', e.message)
-}
-
-async function callGeminiWithPdf(prompt) {
-  const parts = []
-
-  if (annalesBase64) {
-    parts.push({
-      inlineData: {
-        mimeType: 'application/pdf',
-        data: annalesBase64
-      }
-    })
-  }
-
-  parts.push({ text: prompt })
-
-  const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{ parts }],
-        generationConfig: { temperature: 0.8, maxOutputTokens: 8000, responseMimeType: "application/json" }
-      })
-    }
-  )
-
-  if (!response.ok) {
-    const errorText = await response.text()
-    console.error('Gemini API error:', response.status, errorText)
-    throw new Error(`Erreur API Gemini (${response.status})`)
-  }
-
-  const data = await response.json()
-  const allText = data.candidates?.[0]?.content?.parts
-    ?.map(p => p.text || '')
-    .join('\n') || ''
-
-  if (!allText) throw new Error('Réponse vide de Gemini')
-  return allText.replace(/```json/g, '').replace(/```/g, '').trim()
 }
 
 async function callGemini(prompt) {
@@ -63,7 +23,7 @@ async function callGemini(prompt) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: { temperature: 0.7, maxOutputTokens: 8000, responseMimeType: "application/json" }
+        generationConfig: { temperature: 0.7, topP: 0.95, maxOutputTokens: 8000, responseMimeType: 'application/json' }
       })
     }
   )
@@ -75,10 +35,7 @@ async function callGemini(prompt) {
   }
 
   const data = await response.json()
-  const allText = data.candidates?.[0]?.content?.parts
-    ?.map(p => p.text || '')
-    .join('\n') || ''
-
+  const allText = data.candidates?.[0]?.content?.parts?.map(p => p.text || '').join('\n') || ''
   if (!allText) throw new Error('Réponse vide de Gemini')
   return allText.replace(/```json/g, '').replace(/```/g, '').trim()
 }
@@ -92,128 +49,72 @@ export async function POST(request) {
     const body = await request.json()
     const { action, exercices, reponses } = body
 
-    // === GÉNÉRER DES EXERCICES ===
+    // === GÉNÉRER UN SUJET ===
     if (action === 'generer') {
-      // Choix côté serveur : 1 chance sur 4 annale, 3 chances sur 4 original
-      const useAnnale = Math.random() < 0.25
+      const systemInstruction = BASE_SYSTEM + '\n\n' + SYSTEM_EXAMEN_MATHS
 
-      const promptAnnale = `Tu es un examinateur du concours IFSI FPC (Formation Professionnelle Continue) pour l'épreuve de mathématiques.
-
-Le document PDF ci-joint contient des annales réelles du concours IFSI FPC des dernières années. Tu dois t'en servir comme base exclusive.
-
-MISSION :
-Reprends un sujet tel quel ou très proche d'un sujet présent dans les annales du PDF. Reproduis fidèlement les exercices et les questions tels qu'ils apparaissent dans le document d'origine.
-
-RÈGLES IMPORTANTES :
-- Le candidat dispose de 30 MINUTES, SANS CALCULATRICE.
-- La note totale est sur 10 points.
-- Le format attendu est QUESTION-RÉPONSE (pas de QCM), le candidat devra écrire sa propre réponse.
-- Chaque question doit avoir une réponse numérique ou textuelle courte attendue.
-
-FORMAT DE SORTIE :
-Tu dois répondre UNIQUEMENT au format JSON strict, sans aucun texte avant ou après, en respectant scrupuleusement cette structure :
-
-{
-  "source": "annale",
-  "titre": "Titre du sujet (ex: Annale Marseille 2024)",
-  "annee": "Année de l'annale",
-  "ville": "Ville d'origine",
-  "duree": "30 minutes",
-  "calculatrice": false,
-  "noteMax": 10,
-  "exercices": [
-    {
-      "numero": 1,
-      "titre": "Titre de l'exercice",
-      "enonce": "Énoncé global de l'exercice (si applicable)",
-      "categorie": "operations/pourcentages/conversions/equations",
-      "points": 3,
-      "questions": [
-        {
-          "id": "1a",
-          "question": "Texte de la question",
-          "points": 1.5,
-          "reponse": "La réponse correcte attendue"
-        }
-      ]
-    }
-  ]
-}`
-
-      const promptOriginal = `Tu es un examinateur du concours IFSI FPC (Formation Professionnelle Continue) pour l'épreuve de mathématiques.
-
-Le document PDF ci-joint contient des annales réelles du concours IFSI FPC. Tu dois t'en servir comme modèle pour comprendre les thèmes, le format et le niveau de difficulté attendus.
-
-MISSION :
-Crée un sujet ORIGINAL INÉDIT en t'inspirant fidèlement des annales fournies. Le sujet doit être réaliste, cohérent avec ce qui est demandé au concours, et adapté au niveau d'un aide-soignant, auxiliaire de puériculture ou personne en reconversion professionnelle.
-
-RÈGLES IMPORTANTES :
-- Le candidat dispose de 30 MINUTES, SANS CALCULATRICE.
-- La note totale est sur 10 points.
-- Génère entre 2 et 4 exercices pour un total de 6 à 8 questions/items.
-- RÉPARTITION : Génère 4 à 5 questions portant sur les opérations sur les décimaux. Répartis les 2 à 3 questions restantes sur les pourcentages/proportionnalité, conversions d'unités ou équations/problèmes simples.
-- Le format attendu est QUESTION-RÉPONSE (pas de QCM).
-- Chaque question doit avoir une réponse numérique ou textuelle courte.
-- Les calculs doivent être faisables à la main de tête (pas de nombres trop complexes).
-
-FORMAT DE SORTIE :
-Tu dois répondre UNIQUEMENT au format JSON strict, sans aucun texte avant ou après, en respectant scrupuleusement cette structure :
-
-{
-  "source": "original",
-  "titre": "Sujet Original Type Concours FPC",
-  "annee": null,
-  "ville": null,
-  "duree": "30 minutes",
-  "calculatrice": false,
-  "noteMax": 10,
-  "exercices": [
-    {
-      "numero": 1,
-      "titre": "Titre de l'exercice",
-      "enonce": "Énoncé global de l'exercice",
-      "categorie": "operations/pourcentages/conversions/equations",
-      "points": 3,
-      "questions": [
-        {
-          "id": "1a",
-          "question": "Texte de la question",
-          "points": 1.5,
-          "reponse": "La réponse correcte attendue et détaillée"
-        }
-      ]
-    }
-  ]
-}`
-
-      const prompt = useAnnale ? promptAnnale : promptOriginal
-      const raw = await callGeminiWithPdf(prompt)
-      const jsonMatch = raw.match(/\{[\s\S]*\}/)
-      if (!jsonMatch) {
-        return NextResponse.json({ error: 'Erreur de format. Réessayez.' }, { status: 500 })
+      // Construire les parts (PDF annales + prompt)
+      const parts = []
+      if (annalesBase64) {
+        parts.push({ inlineData: { mimeType: 'application/pdf', data: annalesBase64 } })
       }
-      const sujetData = JSON.parse(jsonMatch[0])
-      // Normaliser le sujet
-      sujetData.source = sujetData.source || (useAnnale ? 'annale' : 'original')
-      sujetData.titre = sujetData.titre || 'Épreuve de Mathématiques'
-      sujetData.duree = sujetData.duree || '30 minutes'
-      sujetData.calculatrice = false
-      sujetData.noteMax = 10
-      sujetData.annee = sujetData.annee || null
-      sujetData.ville = sujetData.ville || null
-      sujetData.exercices = (sujetData.exercices || []).map((ex, idx) => ({
-        numero: ex.numero || idx + 1,
-        titre: ex.titre || `Exercice ${idx + 1}`,
-        enonce: ex.enonce || '',
-        categorie: ex.categorie || 'operations',
-        points: ex.points || 0,
-        questions: (ex.questions || []).map((q, qIdx) => ({
-          id: q.id || `${idx + 1}${String.fromCharCode(97 + qIdx)}`,
-          question: q.question || '',
-          points: q.points || 0,
-          reponse: q.reponse || ''
+      parts.push({ text: PROMPT_EXAMEN_MATHS })
+
+      const geminiResponse = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            system_instruction: { parts: [{ text: systemInstruction }] },
+            contents: [{ parts }],
+            generationConfig: { temperature: 0.85, topP: 0.95, maxOutputTokens: 12000, responseMimeType: 'application/json' }
+          })
+        }
+      )
+
+      if (!geminiResponse.ok) {
+        const errorText = await geminiResponse.text()
+        console.error('Gemini error:', errorText)
+        return NextResponse.json({ error: 'Erreur Gemini' }, { status: 500 })
+      }
+
+      const geminiData = await geminiResponse.json()
+      const text = geminiData.candidates?.[0]?.content?.parts?.[0]?.text
+      if (!text) return NextResponse.json({ error: 'Réponse Gemini vide' }, { status: 500 })
+
+      let raw
+      try {
+        raw = JSON.parse(text)
+      } catch {
+        const cleaned = text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim()
+        raw = JSON.parse(cleaned)
+      }
+
+      // Mapper vers le format attendu par le front (numero→id, enonce→question)
+      const sujetData = {
+        source: raw.type === 'examen_blanc' ? 'original' : (raw.source || 'original'),
+        titre: raw.theme || 'Épreuve de Mathématiques',
+        annee: null,
+        ville: null,
+        duree: '30 minutes',
+        calculatrice: false,
+        noteMax: raw.total_points || 10,
+        exercices: (raw.exercices || []).map((ex, idx) => ({
+          numero: ex.numero || idx + 1,
+          titre: ex.titre || `Exercice ${idx + 1}`,
+          enonce: ex.consigne || ex.enonce || '',
+          categorie: ex.questions?.[0]?.famille || 'operations',
+          points: ex.questions?.reduce((sum, q) => sum + (q.points || 0), 0) || 0,
+          questions: (ex.questions || []).map((q, qIdx) => ({
+            id: q.numero || `${idx + 1}${String.fromCharCode(97 + qIdx)}`,
+            question: q.enonce || q.question || '',
+            points: q.points || 0,
+            reponse: q.reponse || ''
+          }))
         }))
-      }))
+      }
+
       return NextResponse.json({ sujet: sujetData })
     }
 
@@ -247,7 +148,7 @@ RÈGLE IMPORTANTE POUR "reponse_attendue" :
 - Si la réponse du candidat est INCORRECTE ou PARTIELLE : mets le détail des calculs menant au résultat (ex: "1500 / 500 × 5 = 15 ml").
 
 FORMAT DE SORTIE :
-Tu dois répondre UNIQUEMENT au format JSON strict, sans aucun texte avant ou après, en respectant scrupuleusement cette structure :
+Tu dois répondre UNIQUEMENT au format JSON strict :
 
 {
   "note": 7.5,
@@ -262,7 +163,7 @@ Tu dois répondre UNIQUEMENT au format JSON strict, sans aucun texte avant ou ap
       "correct": "true, false, ou partiel",
       "points_obtenus": 1.5,
       "points_max": 1.5,
-      "explication": "Explication pédagogique de la correction et de l'attribution des points"
+      "explication": "Explication pédagogique de la correction"
     }
   ],
   "points_forts": ["Point fort 1", "Point fort 2"],
@@ -276,7 +177,6 @@ Tu dois répondre UNIQUEMENT au format JSON strict, sans aucun texte avant ou ap
         return NextResponse.json({ error: 'Erreur de format. Réessayez.' }, { status: 500 })
       }
       const correction = JSON.parse(jsonMatch[0])
-      // Normaliser la correction
       correction.note = typeof correction.note === 'number' ? correction.note : 0
       correction.noteMax = 10
       correction.appreciation = correction.appreciation || ''
