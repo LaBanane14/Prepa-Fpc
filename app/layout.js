@@ -139,6 +139,8 @@ export default function RootLayout({ children }) {
             }
           ]
         })}} />
+        {/* Console analytics maison (data centralisée multi-sites) */}
+        <Script src="https://analytics-hub-gamma.vercel.app/tracker.js" data-site="prj_TB7RoDx1hEwM9VmDg9LJ829eEEMf" strategy="afterInteractive" />
         <Script async src="https://www.googletagmanager.com/gtag/js?id=G-W24Z96D93P" strategy="afterInteractive" />
         <Script id="gtag-init" strategy="afterInteractive">{`
           window.dataLayer = window.dataLayer || [];
