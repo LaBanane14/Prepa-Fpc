@@ -472,7 +472,7 @@ function ScreenCard({ s, w = 230, h = 460 }) {
 }
 
 const FAQ_DATA = [
-  { q: "Puis-je passer le concours FPC sans le baccalauréat ?", a: "Oui ! La voie FPC (Formation Professionnelle Continue) est justement conçue pour cela. Aucun diplôme n'est exigé : il vous suffit d'avoir 18 ans et de justifier de 3 années de cotisation à un régime de protection sociale à la date d'inscription aux épreuves, quel que soit votre domaine d'activité." },
+  { q: "Puis-je passer le concours FPC sans le baccalauréat ?", a: "Oui, c'est toujours possible — mais les règles ont changé. Depuis l'arrêté du 20 février 2026, l'accès à la formation demande le baccalauréat, une équivalence ou une dispense. Sans le bac, vous pouvez obtenir cette dispense grâce à la VAPP (validation des acquis), un dispositif pensé pour les adultes ayant interrompu leurs études depuis au moins 2 ans et âgés d'au moins 20 ans. L'ancienne règle des 3 ans de cotisation a disparu du nouveau texte. <a href='/blog/epreuves-selection-concours-fpc-2027'>Notre article sur la réforme 2027</a> détaille tout." },
   { q: "La plateforme est-elle adaptée si je suis nul(le) en maths ?", a: "Absolument ! C'est même pour vous qu'elle a été pensée. L'entraînement spécifique reprend les bases étape par étape : produits en croix, conversions, pourcentages, calculs de doses. Chaque exercice est suivi d'une correction détaillée qui explique la méthode simplement. Vous progressez sans pression : ce module n'est pas noté." },
   { q: "Y a-t-il une période d'essai gratuite ?", a: "Oui, vous bénéficiez de 7 jours d'essai gratuit dès votre inscription, sans carte bancaire. Pendant cette période, vous accédez à toute la plateforme : entraînements de mathématiques, sujets de rédaction, examens blancs et préparation à l'oral." },
   { q: "Combien de temps faut-il pour se préparer au concours ?", a: "Nous conseillons de démarrer vos révisions 3 à 6 mois avant les épreuves, à raison de 2 à 4 heures par semaine. La plateforme s'adapte à votre emploi du temps : sur mobile, tablette ou ordinateur, que vous ayez 15 minutes dans les transports ou une heure de libre le week-end." },
@@ -486,10 +486,10 @@ export default function MaquettePage() {
   const [activeFaq, setActiveFaq] = useState(null)
   // Frise d'éligibilité : les 4 étapes du métier actuel jusqu'à l'IFSI
   const ETAPES = [
-    { titre: 'Être âgé de plus de 18 ans', desc: 'Avec ou sans diplôme, quel que soit votre parcours.', couleur: '#64748b', fond: '#f1f5f9',
+    { titre: 'Avoir 17 ans ou plus', desc: 'Au 31 décembre de l’année d’entrée en formation.', couleur: '#64748b', fond: '#f1f5f9',
       icone: <><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></> },
-    { titre: '3 ans de cotisation', desc: 'À temps plein, tous secteurs confondus. C’est tout.', couleur: '#64748b', fond: '#f1f5f9',
-      icone: <><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/><path d="m9 16 2 2 4-4"/></> },
+    { titre: 'Le bac ou une dispense', desc: 'Baccalauréat, équivalence, ou dispense via la VAPP si vous ne l’avez pas.', couleur: '#64748b', fond: '#f1f5f9',
+      icone: <><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="m9 15 2 2 4-4"/></> },
     { titre: 'Le concours FPC', desc: 'Un écrit (maths + rédaction) et un oral. Nous sommes là pour que vous le réussissiez.', couleur: '#64748b', fond: '#f1f5f9', enCours: true,
       icone: <><rect width="8" height="4" x="8" y="2" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></> },
     { titre: 'L’IFSI', desc: 'Intégrez un IFSI grâce à l’obtention du concours et devenez infirmier(ère).', couleur: '#64748b', fond: '#f1f5f9',
