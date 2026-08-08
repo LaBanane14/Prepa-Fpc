@@ -24,7 +24,7 @@ export default function ExamenPage() {
   const [step, setStep] = useState('loading')
   const [error, setError] = useState('')
   const [showBareme, setShowBareme] = useState(false)
-  const [loadingStep, setLoadingStep] = useState(0)
+  const [loadingProgress, setLoadingProgress] = useState(0)
   const [correctingStep, setCorrectingStep] = useState(0)
 
   // Maths state
@@ -70,13 +70,18 @@ export default function ExamenPage() {
     })
   }, [])
 
-  // Loading animation
+  // Progression du chargement — asymptotique : rapide au début, ralentit vers 99 %
   useEffect(() => {
-    if (step !== 'loading') return
-    const interval = setInterval(() => {
-      setLoadingStep(prev => prev < 4 ? prev + 1 : prev)
-    }, 3000)
-    return () => clearInterval(interval)
+    if (step !== 'loading') { setLoadingProgress(0); return }
+    const t0 = performance.now()
+    let raf
+    const tick = (now) => {
+      const t = (now - t0) / 1000
+      setLoadingProgress(99 * (1 - Math.exp(-Math.pow(t, 1.5) / 18)))
+      raf = requestAnimationFrame(tick)
+    }
+    raf = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(raf)
   }, [step])
 
   // Correcting animation
@@ -121,7 +126,7 @@ export default function ExamenPage() {
   // currentUser en paramètre : au premier chargement (skip popup), le state `user` n'est pas encore rempli
   async function genererSujets(currentUser = user) {
     setError('')
-    setLoadingStep(0)
+    setLoadingProgress(0)
     setStep('loading')
 
     try {
@@ -236,7 +241,7 @@ export default function ExamenPage() {
   function restart() {
     setSujetMaths(null); setSujetRedaction(null); setReponses({}); setRedaction('')
     setCorrectionMaths(null); setCorrectionRedaction(null); setError('')
-    setLoadingStep(0); setTimeLeft(30 * 60); setTimerActive(false)
+    setLoadingProgress(0); setTimeLeft(30 * 60); setTimerActive(false)
     setMathsTimeUsed(0); setRedactionTimeUsed(0)
     genererSujets()
   }
@@ -369,32 +374,102 @@ export default function ExamenPage() {
             </div>
           )}
 
-          {/* ===== LOADING ===== */}
-          {step === 'loading' && (
-            <div className="animate-fade-in min-h-full lg:h-[calc(100vh-2.5rem)] flex items-center justify-center">
-              <div className="bg-white border border-slate-200 rounded-2xl shadow-sm max-w-md sm:max-w-xl w-full flex flex-col items-center justify-center py-8 sm:py-12 px-4 sm:px-8" style={{fontFamily: "'Nunito', sans-serif"}}>
-                <div className="w-16 h-16 sm:w-24 sm:h-24 bg-gradient-to-br from-yellow-400 to-amber-500 shadow-xl shadow-yellow-200 mb-6 sm:mb-8" style={{animation: 'morph 4s ease-in-out infinite'}}></div>
-                <h2 className="text-lg sm:text-xl font-black text-slate-900 mb-2 text-center">Préparation de l'examen blanc...</h2>
-                <p className="text-slate-500 font-medium text-xs sm:text-sm text-center mb-6 sm:mb-8">Nous générons les deux épreuves simultanément.</p>
-                <div className="w-full max-w-md space-y-3">
-                  {[
-                    { label: 'Analyse des annales' },
-                    { label: 'Génération du sujet de mathématiques' },
-                    { label: 'Génération du sujet de rédaction' },
-                    { label: 'Calibrage de la difficulté' },
-                    { label: 'Mise en forme des épreuves' }
-                  ].map((ls, i) => (
-                    <div key={i} className={`flex items-center gap-3 p-3 rounded-xl transition-all duration-500 ${i <= loadingStep ? 'bg-yellow-50 border border-yellow-200' : 'bg-slate-50 border border-slate-100 opacity-40'}`}>
-                      <span className={`font-bold text-sm flex-grow ${i <= loadingStep ? 'text-yellow-700' : 'text-slate-400'}`}>{ls.label}</span>
-                      {i < loadingStep && <svg className="w-5 h-5 text-yellow-500 shrink-0" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg>}
-                      {i === loadingStep && <div className="w-4 h-4 border-2 border-yellow-500 border-t-transparent rounded-full animate-spin shrink-0"></div>}
-                      <span className="text-xs font-bold text-slate-400">{i + 1}/5</span>
+          {/* ===== LOADING (LoaderArc) ===== */}
+          {step === 'loading' && (() => {
+            const STEPS = [
+              { label: 'Analyse des annales', desc: 'Lecture des sujets récents du concours FPC pour coller aux épreuves réelles.', at: 0 },
+              { label: 'Génération du sujet de mathématiques', desc: 'Calculs de doses, pourcentages, conversions et équations répartis dans le sujet.', at: 20 },
+              { label: 'Génération du sujet de rédaction', desc: 'Un sujet de culture sanitaire et sociale rédigé comme au concours.', at: 45 },
+              { label: 'Calibrage de la difficulté', desc: 'Le niveau des deux épreuves est ajusté aux attentes du concours.', at: 70 },
+              { label: 'Mise en forme des épreuves', desc: 'Finalisation du sujet et préparation de la correction détaillée.', at: 88 },
+            ]
+            const r = 92
+            const circ = 2 * Math.PI * r
+            const arcOffset = circ - (loadingProgress / 100) * circ
+            const stepIdx = STEPS.reduce((a, s, i) => loadingProgress >= s.at ? i : a, 0)
+            return (
+              <div className="animate-fade-in min-h-full lg:h-[calc(100vh-2.5rem)] flex items-center justify-center" style={{fontFamily: "'Nunito', sans-serif", '--tc-main': '#ca8a04', '--tc-bright': '#facc15', '--tc-tint': '#fef9c3', '--tc-soft-2': 'rgba(234,179,8,0.08)'}}>
+                <style>{`
+                  .la-page { padding: 8px; position: relative; width: 100%; }
+                  .la-frame { background: white; border-radius: 20px; border: 1px solid #e2e8f0; padding: 20px 16px 18px; max-width: 880px; margin: 0 auto; width: 100%; position: relative; overflow: hidden; box-sizing: border-box; }
+                  @media (min-width: 640px) { .la-frame { padding: 48px 48px 40px; border-radius: 28px; } }
+                  .la-frame::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at top right, var(--tc-soft-2), transparent 60%); pointer-events: none; }
+                  .la-frame > * { position: relative; }
+                  .lf-head { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+                  @media (min-width: 640px) { .lf-head { gap: 16px; margin-bottom: 28px; } }
+                  .lf-icon-chip { width: 44px; height: 44px; border-radius: 12px; background: var(--tc-tint); color: var(--tc-main); display: grid; place-items: center; flex-shrink: 0; }
+                  @media (min-width: 640px) { .lf-icon-chip { width: 56px; height: 56px; border-radius: 16px; } }
+                  .lf-head-text { flex: 1; min-width: 0; }
+                  .lf-head-text h2 { margin: 0; font-size: 11px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--tc-main); }
+                  .lf-head-text h1 { margin: 2px 0 0; font-size: 18px; font-weight: 900; letter-spacing: -0.02em; color: #0f172a; }
+                  @media (min-width: 640px) { .lf-head-text h1 { font-size: 24px; } }
+                  .lf-title { font-size: 24px; font-weight: 900; letter-spacing: -0.025em; margin: 6px 0 8px; line-height: 1.1; color: #0f172a; }
+                  @media (min-width: 640px) { .lf-title { font-size: 42px; margin: 8px 0 12px; line-height: 1.05; } }
+                  .lf-title em { font-style: normal; background: linear-gradient(135deg, var(--tc-main) 0%, var(--tc-bright) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+                  .lf-sub { font-size: 13px; line-height: 1.5; color: #64748b; margin: 0 0 20px; max-width: 540px; font-weight: 600; }
+                  @media (min-width: 640px) { .lf-sub { font-size: 15px; line-height: 1.55; margin: 0 0 32px; } }
+                  .anim-arc { display: flex; align-items: center; justify-content: center; gap: 20px; padding: 8px 0 4px; flex-wrap: wrap; }
+                  @media (min-width: 640px) { .anim-arc { gap: 56px; padding: 16px 0 8px; } }
+                  .arc-wrap { position: relative; width: 180px; height: 180px; flex-shrink: 0; }
+                  @media (min-width: 640px) { .arc-wrap { width: 220px; height: 220px; } }
+                  .arc-svg { transform: rotate(-90deg); width: 100%; height: 100%; }
+                  .arc-track { stroke: #f1f5f9; stroke-width: 10; fill: none; }
+                  .arc-fill { stroke: var(--tc-main); stroke-width: 10; fill: none; stroke-linecap: round; }
+                  .arc-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; }
+                  .arc-icon { width: 36px; height: 36px; border-radius: 12px; background: var(--tc-tint); color: var(--tc-main); display: grid; place-items: center; margin-bottom: 2px; }
+                  @media (min-width: 640px) { .arc-icon { width: 44px; height: 44px; border-radius: 14px; margin-bottom: 4px; } }
+                  .arc-percent { font-size: 28px; font-weight: 900; letter-spacing: -0.03em; color: #0f172a; line-height: 1; font-variant-numeric: tabular-nums; }
+                  @media (min-width: 640px) { .arc-percent { font-size: 36px; } }
+                  .arc-count { font-size: 10px; font-weight: 700; color: #94a3b8; letter-spacing: 0.06em; text-transform: uppercase; }
+                  @media (min-width: 640px) { .arc-count { font-size: 12px; letter-spacing: 0.08em; } }
+                  .arc-count b { color: var(--tc-main); }
+                  .arc-side { flex: 1; min-width: 0; max-width: 320px; text-align: center; }
+                  @media (min-width: 640px) { .arc-side { min-width: 220px; text-align: left; } }
+                  .arc-step-num { font-size: 10px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--tc-main); margin-bottom: 4px; display: inline-flex; align-items: center; gap: 6px; }
+                  .arc-step-num::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--tc-main); }
+                  .arc-side h3 { margin: 0 0 6px; font-size: 15px; font-weight: 800; letter-spacing: -0.02em; color: #0f172a; }
+                  @media (min-width: 640px) { .arc-side h3 { font-size: 18px; margin: 0 0 8px; } }
+                  .arc-side p { margin: 0; font-size: 12px; line-height: 1.5; color: #64748b; }
+                  @media (min-width: 640px) { .arc-side p { font-size: 14px; line-height: 1.55; } }
+                `}</style>
+                <div className="la-page">
+                  <div className="la-frame">
+                    <div className="lf-head">
+                      <div className="lf-icon-chip"><GraduationCap size={26} strokeWidth={1.8} /></div>
+                      <div className="lf-head-text">
+                        <h2>Concours FPC — conditions réelles</h2>
+                        <h1>Examen blanc</h1>
+                      </div>
+                      <a href="/dashboard" className="ml-auto shrink-0 bg-slate-900 hover:bg-black text-white font-bold text-sm px-3 py-2.5 sm:px-5 rounded-xl transition flex items-center gap-2">
+                        <span className="hidden sm:inline">Quitter l'exercice</span>
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                      </a>
                     </div>
-                  ))}
+                    <h2 className="lf-title">Votre examen est <em>en préparation</em>.</h2>
+                    <p className="lf-sub">Deux épreuves générées simultanément à partir des annales.<br/>Durée 1h, note sur 20.</p>
+                    <div className="anim-arc">
+                      <div className="arc-wrap">
+                        <svg className="arc-svg" width="220" height="220" viewBox="0 0 220 220">
+                          <circle className="arc-track" cx="110" cy="110" r={r} />
+                          <circle className="arc-fill" cx="110" cy="110" r={r} strokeDasharray={circ} strokeDashoffset={arcOffset} />
+                        </svg>
+                        <div className="arc-center">
+                          <div className="arc-icon"><GraduationCap size={22} strokeWidth={1.8} /></div>
+                          <div className="arc-percent">{Math.round(loadingProgress)}%</div>
+                          <div className="arc-count">Épreuve d'<b>1h</b></div>
+                        </div>
+                      </div>
+                      <div className="arc-side">
+                        <div className="arc-step-num">Étape {stepIdx + 1}/{STEPS.length}</div>
+                        <h3>{STEPS[stepIdx].label}</h3>
+                        <p>{STEPS[stepIdx].desc}</p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            )
+          })()}
 
           {/* ===== ÉPREUVE MATHS ===== */}
           {step === 'epreuve-maths' && sujetMaths && (

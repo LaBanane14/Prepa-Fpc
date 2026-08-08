@@ -26,7 +26,7 @@ export default function RedactionPage() {
   const [correction, setCorrection] = useState(null)
   const [error, setError] = useState('')
   const [showBareme, setShowBareme] = useState(false)
-  const [loadingStep, setLoadingStep] = useState(0)
+  const [loadingProgress, setLoadingProgress] = useState(0)
   const [correctingStep, setCorrectingStep] = useState(0)
 
   // Chrono
@@ -57,13 +57,18 @@ export default function RedactionPage() {
     })
   }, [])
 
-  // Loading animation
+  // Progression du chargement — asymptotique : rapide au début, ralentit vers 99 %
   useEffect(() => {
-    if (step !== 'loading') return
-    const interval = setInterval(() => {
-      setLoadingStep(prev => prev < 3 ? prev + 1 : prev)
-    }, 3000)
-    return () => clearInterval(interval)
+    if (step !== 'loading') { setLoadingProgress(0); return }
+    const t0 = performance.now()
+    let raf
+    const tick = (now) => {
+      const t = (now - t0) / 1000
+      setLoadingProgress(99 * (1 - Math.exp(-Math.pow(t, 1.5) / 18)))
+      raf = requestAnimationFrame(tick)
+    }
+    raf = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(raf)
   }, [step])
 
   // Loading animation correction
@@ -106,7 +111,7 @@ export default function RedactionPage() {
   // currentUser en paramètre : au premier chargement (skip popup), le state `user` n'est pas encore rempli
   async function genererSujet(currentUser = user) {
     setError('')
-    setLoadingStep(0)
+    setLoadingProgress(0)
     setStep('loading')
 
     try {
@@ -140,7 +145,7 @@ export default function RedactionPage() {
     if (timerRef.current) clearInterval(timerRef.current)
     if (!redaction.trim()) { setError('Veuillez rédiger votre réponse avant de soumettre.'); return }
     setError('')
-    setLoadingStep(0)
+    setLoadingProgress(0)
     setStep('correcting')
 
     try {
@@ -174,7 +179,7 @@ export default function RedactionPage() {
   }
 
   function restart() {
-    setSujet(null); setRedaction(''); setCorrection(null); setError(''); setLoadingStep(0); setTimeLeft(30 * 60); setTimerActive(false)
+    setSujet(null); setRedaction(''); setCorrection(null); setError(''); setLoadingProgress(0); setTimeLeft(30 * 60); setTimerActive(false)
     genererSujet()
   }
 
@@ -302,31 +307,101 @@ export default function RedactionPage() {
             </div>
           )}
 
-          {/* ===== LOADING ===== */}
-          {step === 'loading' && (
-            <div className="animate-fade-in min-h-full lg:h-[calc(100vh-2.5rem)] flex items-center justify-center">
-              <div className="bg-white border border-slate-200 rounded-2xl shadow-sm max-w-md sm:max-w-xl w-full flex flex-col items-center justify-center py-8 sm:py-12 px-4 sm:px-8" style={{fontFamily: "'Nunito', sans-serif"}}>
-                <div className="w-16 h-16 sm:w-24 sm:h-24 bg-gradient-to-br from-purple-500 to-violet-500 shadow-xl shadow-purple-200 mb-6 sm:mb-8" style={{animation: 'morph 4s ease-in-out infinite'}}></div>
-                <h2 className="text-lg sm:text-xl font-black text-slate-900 mb-2 text-center">Génération du sujet en cours...</h2>
-                <p className="text-slate-500 font-medium text-xs sm:text-sm text-center mb-6 sm:mb-8">Nous préparons votre épreuve de rédaction.</p>
-                <div className="w-full max-w-md space-y-3">
-                  {[
-                    { label: 'Récupération des annales' },
-                    { label: 'Sélection du sujet' },
-                    { label: 'Rédaction du sujet' },
-                    { label: 'Mise en forme de la page' }
-                  ].map((ls, i) => (
-                    <div key={i} className={`flex items-center gap-3 p-3 rounded-xl transition-all duration-500 ${i < loadingStep ? 'bg-purple-50 border border-purple-200' : i === loadingStep ? 'bg-purple-50 border border-purple-200' : 'bg-slate-50 border border-slate-100 opacity-40'}`}>
-                      <span className={`font-bold text-sm flex-grow ${i < loadingStep ? 'text-purple-700' : i === loadingStep ? 'text-purple-700' : 'text-slate-400'}`}>{ls.label}</span>
-                      {i < loadingStep && <svg className="w-5 h-5 text-purple-500 shrink-0" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg>}
-                      {i === loadingStep && <div className="w-4 h-4 border-2 border-purple-600 border-t-transparent rounded-full animate-spin shrink-0"></div>}
-                      <span className="text-xs font-bold text-slate-400">{i + 1}/4</span>
+          {/* ===== LOADING (LoaderArc) ===== */}
+          {step === 'loading' && (() => {
+            const STEPS = [
+              { label: 'Récupération des annales', desc: 'Lecture des sujets récents du concours FPC pour coller aux épreuves réelles.', at: 0 },
+              { label: 'Sélection du sujet', desc: 'Un thème de culture sanitaire et sociale choisi parmi ceux qui tombent au concours.', at: 25 },
+              { label: 'Rédaction du sujet', desc: 'L\'énoncé et les consignes sont rédigés comme sur une vraie copie d\'examen.', at: 55 },
+              { label: 'Mise en forme de la page', desc: 'Finalisation du sujet et préparation de la grille de correction.', at: 85 },
+            ]
+            const r = 92
+            const circ = 2 * Math.PI * r
+            const arcOffset = circ - (loadingProgress / 100) * circ
+            const stepIdx = STEPS.reduce((a, s, i) => loadingProgress >= s.at ? i : a, 0)
+            return (
+              <div className="animate-fade-in min-h-full lg:h-[calc(100vh-2.5rem)] flex items-center justify-center" style={{fontFamily: "'Nunito', sans-serif", '--tc-main': '#9333ea', '--tc-bright': '#c084fc', '--tc-tint': '#f3e8ff', '--tc-soft-2': 'rgba(147,51,234,0.08)'}}>
+                <style>{`
+                  .la-page { padding: 8px; position: relative; width: 100%; }
+                  .la-frame { background: white; border-radius: 20px; border: 1px solid #e2e8f0; padding: 20px 16px 18px; max-width: 880px; margin: 0 auto; width: 100%; position: relative; overflow: hidden; box-sizing: border-box; }
+                  @media (min-width: 640px) { .la-frame { padding: 48px 48px 40px; border-radius: 28px; } }
+                  .la-frame::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at top right, var(--tc-soft-2), transparent 60%); pointer-events: none; }
+                  .la-frame > * { position: relative; }
+                  .lf-head { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+                  @media (min-width: 640px) { .lf-head { gap: 16px; margin-bottom: 28px; } }
+                  .lf-icon-chip { width: 44px; height: 44px; border-radius: 12px; background: var(--tc-tint); color: var(--tc-main); display: grid; place-items: center; flex-shrink: 0; }
+                  @media (min-width: 640px) { .lf-icon-chip { width: 56px; height: 56px; border-radius: 16px; } }
+                  .lf-head-text { flex: 1; min-width: 0; }
+                  .lf-head-text h2 { margin: 0; font-size: 11px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--tc-main); }
+                  .lf-head-text h1 { margin: 2px 0 0; font-size: 18px; font-weight: 900; letter-spacing: -0.02em; color: #0f172a; }
+                  @media (min-width: 640px) { .lf-head-text h1 { font-size: 24px; } }
+                  .lf-title { font-size: 24px; font-weight: 900; letter-spacing: -0.025em; margin: 6px 0 8px; line-height: 1.1; color: #0f172a; }
+                  @media (min-width: 640px) { .lf-title { font-size: 42px; margin: 8px 0 12px; line-height: 1.05; } }
+                  .lf-title em { font-style: normal; background: linear-gradient(135deg, var(--tc-main) 0%, var(--tc-bright) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+                  .lf-sub { font-size: 13px; line-height: 1.5; color: #64748b; margin: 0 0 20px; max-width: 540px; font-weight: 600; }
+                  @media (min-width: 640px) { .lf-sub { font-size: 15px; line-height: 1.55; margin: 0 0 32px; } }
+                  .anim-arc { display: flex; align-items: center; justify-content: center; gap: 20px; padding: 8px 0 4px; flex-wrap: wrap; }
+                  @media (min-width: 640px) { .anim-arc { gap: 56px; padding: 16px 0 8px; } }
+                  .arc-wrap { position: relative; width: 180px; height: 180px; flex-shrink: 0; }
+                  @media (min-width: 640px) { .arc-wrap { width: 220px; height: 220px; } }
+                  .arc-svg { transform: rotate(-90deg); width: 100%; height: 100%; }
+                  .arc-track { stroke: #f1f5f9; stroke-width: 10; fill: none; }
+                  .arc-fill { stroke: var(--tc-main); stroke-width: 10; fill: none; stroke-linecap: round; }
+                  .arc-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; }
+                  .arc-icon { width: 36px; height: 36px; border-radius: 12px; background: var(--tc-tint); color: var(--tc-main); display: grid; place-items: center; margin-bottom: 2px; }
+                  @media (min-width: 640px) { .arc-icon { width: 44px; height: 44px; border-radius: 14px; margin-bottom: 4px; } }
+                  .arc-percent { font-size: 28px; font-weight: 900; letter-spacing: -0.03em; color: #0f172a; line-height: 1; font-variant-numeric: tabular-nums; }
+                  @media (min-width: 640px) { .arc-percent { font-size: 36px; } }
+                  .arc-count { font-size: 10px; font-weight: 700; color: #94a3b8; letter-spacing: 0.06em; text-transform: uppercase; }
+                  @media (min-width: 640px) { .arc-count { font-size: 12px; letter-spacing: 0.08em; } }
+                  .arc-count b { color: var(--tc-main); }
+                  .arc-side { flex: 1; min-width: 0; max-width: 320px; text-align: center; }
+                  @media (min-width: 640px) { .arc-side { min-width: 220px; text-align: left; } }
+                  .arc-step-num { font-size: 10px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--tc-main); margin-bottom: 4px; display: inline-flex; align-items: center; gap: 6px; }
+                  .arc-step-num::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--tc-main); }
+                  .arc-side h3 { margin: 0 0 6px; font-size: 15px; font-weight: 800; letter-spacing: -0.02em; color: #0f172a; }
+                  @media (min-width: 640px) { .arc-side h3 { font-size: 18px; margin: 0 0 8px; } }
+                  .arc-side p { margin: 0; font-size: 12px; line-height: 1.5; color: #64748b; }
+                  @media (min-width: 640px) { .arc-side p { font-size: 14px; line-height: 1.55; } }
+                `}</style>
+                <div className="la-page">
+                  <div className="la-frame">
+                    <div className="lf-head">
+                      <div className="lf-icon-chip"><PenLine size={26} strokeWidth={1.8} /></div>
+                      <div className="lf-head-text">
+                        <h2>Concours FPC — conditions réelles</h2>
+                        <h1>Entraînement rédactionnel</h1>
+                      </div>
+                      <a href="/dashboard" className="ml-auto shrink-0 bg-slate-900 hover:bg-black text-white font-bold text-sm px-3 py-2.5 sm:px-5 rounded-xl transition flex items-center gap-2">
+                        <span className="hidden sm:inline">Quitter l'exercice</span>
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                      </a>
                     </div>
-                  ))}
+                    <h2 className="lf-title">Votre sujet est <em>en préparation</em>.</h2>
+                    <p className="lf-sub">Sujet de rédaction généré à partir des annales du concours.<br/>Durée 30 min, note sur 10.</p>
+                    <div className="anim-arc">
+                      <div className="arc-wrap">
+                        <svg className="arc-svg" width="220" height="220" viewBox="0 0 220 220">
+                          <circle className="arc-track" cx="110" cy="110" r={r} />
+                          <circle className="arc-fill" cx="110" cy="110" r={r} strokeDasharray={circ} strokeDashoffset={arcOffset} />
+                        </svg>
+                        <div className="arc-center">
+                          <div className="arc-icon"><PenLine size={22} strokeWidth={1.8} /></div>
+                          <div className="arc-percent">{Math.round(loadingProgress)}%</div>
+                          <div className="arc-count">Épreuve de <b>30 min</b></div>
+                        </div>
+                      </div>
+                      <div className="arc-side">
+                        <div className="arc-step-num">Étape {stepIdx + 1}/{STEPS.length}</div>
+                        <h3>{STEPS[stepIdx].label}</h3>
+                        <p>{STEPS[stepIdx].desc}</p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            )
+          })()}
 
           {/* ===== ÉPREUVE ===== */}
           {step === 'epreuve' && sujet && (
