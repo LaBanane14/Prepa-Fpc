@@ -1,13 +1,13 @@
 'use client'
 import { useState, useEffect } from 'react'
 import { supabase } from '../../lib/supabase'
-import { Home, TrendingUp, RotateCcw, UserRound, BadgeCheck, LogOut, Stethoscope, Target, BookOpen, Sparkles, ClipboardCheck, Sigma, Percent, ArrowLeftRight, Equal, ArrowRight } from 'lucide-react'
+import { LayoutDashboard, ChartNoAxesColumn, History, CircleUserRound, BadgeCheck, LogOut, Stethoscope, Target, BookOpen, Sparkles, ClipboardCheck, Sigma, Percent, ArrowLeftRight, Equal, ArrowRight } from 'lucide-react'
 
 const sidebarItems = [
-  { id: 'dashboard', label: 'Accueil', href: '/dashboard', icon: Home },
-  { id: 'progression', label: 'Mes stats', href: '/dashboard?tab=progression', icon: TrendingUp },
-  { id: 'historique', label: 'Historique', href: '/dashboard?tab=historique', icon: RotateCcw },
-  { id: 'profil', label: 'Compte', href: '/dashboard?tab=profil', icon: UserRound },
+  { id: 'dashboard', label: 'Accueil', href: '/dashboard', icon: LayoutDashboard },
+  { id: 'progression', label: 'Mes stats', href: '/dashboard?tab=progression', icon: ChartNoAxesColumn },
+  { id: 'historique', label: 'Historique', href: '/dashboard?tab=historique', icon: History },
+  { id: 'profil', label: 'Compte', href: '/dashboard?tab=profil', icon: CircleUserRound },
   { id: 'abonnement', label: 'Devenir Premium', href: '/dashboard?tab=abonnement', icon: BadgeCheck, premium: true }
 ]
 
@@ -209,27 +209,31 @@ export default function SpecifiquePage() {
 
   return (
     <div className="min-h-screen bg-slate-100 text-slate-900 flex overflow-x-hidden" style={{backgroundImage: 'radial-gradient(#3b82f6 1px, transparent 1px)', backgroundSize: '24px 24px', fontFamily: "'Nunito', sans-serif"}}>
-      <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+      <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Sora:wght@500;600;700&display=swap" rel="stylesheet" />
       <style>{`
         .animate-fade-in { animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
         .animate-stagger { opacity: 0; transform: translateY(20px); animation: staggerIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         @keyframes staggerIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes premiumScan { 0%, 80% { opacity: 1; } 85% { opacity: 0.4; transform: scale(1.15); } 90% { opacity: 1; transform: scale(1); filter: brightness(1.5); } 95% { filter: brightness(1); } 100% { opacity: 1; } }
-        .premium-scan { animation: premiumScan 5s ease-in-out infinite; }
       `}</style>
 
       {sidebarOpen && <div className="fixed inset-0 bg-black/30 z-[45] lg:hidden" onClick={() => setSidebarOpen(false)}></div>}
 
       {/* SIDEBAR */}
       <div className={`fixed top-14 lg:top-0 bottom-0 left-0 z-50 flex items-start lg:items-center pl-0 lg:pl-3 py-0 lg:py-5 transition-transform duration-300 lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
-        <aside className="w-[72px] bg-white rounded-none rounded-br-2xl lg:rounded-2xl shadow-lg shadow-slate-200/60 border border-slate-200/60 border-t-0 lg:border-t flex flex-col items-center py-5 h-full lg:h-[calc(100vh-2.5rem)]" style={{fontFamily: "'Nunito', sans-serif"}}>
+        <aside className="w-[84px] bg-white rounded-none rounded-br-2xl lg:rounded-2xl shadow-lg shadow-slate-200/60 border border-slate-200/60 border-t-0 lg:border-t flex flex-col items-center py-5 h-full lg:h-[calc(100vh-2.5rem)]" style={{fontFamily: "'Sora', 'Nunito', sans-serif"}}>
           <a href="/" className="mb-4"><div className={`w-10 h-10 text-white rounded-xl flex items-center justify-center hover:scale-105 transition-all bg-gradient-to-br ${selectedFamille ? c.gradient : 'from-blue-500 to-blue-600'}`}><Stethoscope size={20} strokeWidth={2.5} /></div></a>
           <div className="w-7 h-px bg-slate-200 mb-3"></div>
           <nav className="flex-1 flex flex-col items-center gap-0.5 w-full px-1.5">
             {sidebarItems.filter(item => !item.premium || !isPremium).map(item => (
-              <a key={item.id} href={item.href} className={`w-full flex flex-col items-center justify-center gap-1 py-3 rounded-xl text-[11px] font-bold transition-all text-center group ${item.premium ? 'text-amber-500 hover:bg-amber-50 hover:text-amber-600' : 'text-slate-900 hover:bg-blue-50 hover:text-blue-600'}`}>
-                <item.icon size={21} strokeWidth={1.6} className={`transition-transform duration-200 group-hover:scale-125 ${item.premium ? 'premium-scan' : ''}`} />
+              <a key={item.id} href={item.href} className={`w-full flex flex-col items-center justify-center gap-1 py-3 rounded-xl text-[11px] font-semibold transition-all text-center group ${item.premium ? 'text-amber-500 hover:bg-amber-50 hover:text-amber-600' : 'text-slate-900 hover:bg-blue-50 hover:text-blue-600'}`}>
+                {item.premium ? (
+                  <span className="w-8 h-8 bg-gradient-to-br from-amber-400 to-yellow-500 text-amber-950 rounded-lg flex items-center justify-center transition-transform duration-200 group-hover:scale-110">
+                    <item.icon size={18} strokeWidth={2} />
+                  </span>
+                ) : (
+                  <item.icon size={20} strokeWidth={1.8} className="transition-transform duration-200 group-hover:scale-125" />
+                )}
                 <span>{item.label}</span>
               </a>
             ))}
@@ -245,7 +249,7 @@ export default function SpecifiquePage() {
       </div>
 
       {/* MAIN */}
-      <div className="flex-1 flex flex-col min-h-screen lg:pl-[90px] max-w-full overflow-x-hidden">
+      <div className="flex-1 flex flex-col min-h-screen lg:pl-[102px] max-w-full overflow-x-hidden">
         <header className="lg:hidden h-14 bg-white border-b border-slate-200 px-4 flex items-center justify-between shrink-0 sticky top-0 z-50">
           <button onClick={() => setSidebarOpen(!sidebarOpen)} className="text-slate-700 p-2 rounded-lg hover:bg-slate-100 transition"><svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
           <span className="font-black text-lg text-slate-900">Prépa <span className={selectedFamille ? c.text : 'text-red-600'}>FPC</span></span>
@@ -456,7 +460,7 @@ export default function SpecifiquePage() {
       {step === 'loading' && selectedFamille && (() => {
         const fillColor = colorMap[selectedFamille.id]?.dropColor || '#3b82f6'
         return (
-        <div className={`fixed inset-0 z-40 lg:pl-[90px] flex flex-col pt-14 lg:pt-0 ${colorMap[selectedFamille.id]?.wrapper || 'bg-slate-100'}`}>
+        <div className={`fixed inset-0 z-40 lg:pl-[102px] flex flex-col pt-14 lg:pt-0 ${colorMap[selectedFamille.id]?.wrapper || 'bg-slate-100'}`}>
           <style>{`
             @keyframes dropFill { 0% { transform: translateY(100%); } 100% { transform: translateY(0%); } }
             @keyframes dropPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
@@ -496,7 +500,7 @@ export default function SpecifiquePage() {
 
       {/* ===== ÉPREUVE ===== */}
       {step === 'epreuve' && sujet && data && selectedFamille && (
-        <div className={`fixed inset-0 z-40 lg:pl-[90px] ${c.wrapper} overflow-y-auto flex flex-col pt-14 lg:pt-0`}>
+        <div className={`fixed inset-0 z-40 lg:pl-[102px] ${c.wrapper} overflow-y-auto flex flex-col pt-14 lg:pt-0`}>
           <div className="flex items-center justify-between gap-3 p-4 pt-4 sm:pt-8 shrink-0">
             <h1 className="text-lg sm:text-2xl md:text-3xl font-black text-slate-800 tracking-tight text-center sm:text-left flex-1" style={{fontFamily: "'Nunito', sans-serif"}}>Entraînement spécifique <span className={c.text}>— {selectedFamille.titre}</span></h1>
             <a href="/dashboard" className="hidden sm:flex bg-slate-900 hover:bg-black text-white font-bold text-sm px-5 py-2.5 rounded-xl transition items-center gap-2 shadow-lg shrink-0">
@@ -600,7 +604,7 @@ export default function SpecifiquePage() {
 
       {/* ===== RÉSULTATS ===== */}
       {step === 'resultat' && correction && selectedFamille && (
-        <div className={`fixed inset-0 z-40 lg:pl-[90px] flex flex-col pt-14 lg:pt-0 ${c.wrapper}`}>
+        <div className={`fixed inset-0 z-40 lg:pl-[102px] flex flex-col pt-14 lg:pt-0 ${c.wrapper}`}>
           <div className="flex items-center justify-between gap-3 p-4 pt-4 sm:pt-8 shrink-0">
             <h1 className="text-lg sm:text-2xl md:text-3xl font-black text-slate-800 tracking-tight text-center sm:text-left flex-1" style={{fontFamily: "'Nunito', sans-serif"}}>Entraînement spécifique <span className={c.text}>— {selectedFamille.titre}</span></h1>
             <a href="/dashboard" className="hidden sm:flex bg-slate-900 hover:bg-black text-white font-bold text-sm px-5 py-2.5 rounded-xl transition items-center gap-2 shadow-lg shrink-0">
