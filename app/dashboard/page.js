@@ -200,7 +200,7 @@ function DashboardContent() {
   }
 
   if (loading) {
-    return <div className="min-h-screen bg-slate-100 flex items-center justify-center"><div className="animate-spin w-8 h-8 border-4 border-red-600 border-t-transparent rounded-full"></div></div>
+    return <div className="min-h-screen bg-slate-50 flex items-center justify-center"><div className="animate-spin w-8 h-8 border-4 border-red-600 border-t-transparent rounded-full"></div></div>
   }
 
   const firstName = user?.user_metadata?.first_name || user?.user_metadata?.full_name?.split(' ')[0] || user?.user_metadata?.name?.split(' ')[0] || user?.email?.split('@')[0] || 'Utilisateur'
@@ -290,19 +290,18 @@ function DashboardContent() {
   function navigateTo(id) { setPage(id); setSidebarOpen(false) }
 
   return (
-    <div className="min-h-screen bg-slate-100 text-slate-900 flex" style={{fontFamily: "'DM Sans', 'Inter', system-ui, sans-serif"}}>
+    <div className="min-h-screen bg-slate-50 text-slate-900 flex" style={{fontFamily: "'DM Sans', 'Inter', system-ui, sans-serif"}}>
       <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
       <style>{`
         @keyframes premiumScan { 0%, 80% { opacity: 1; } 85% { opacity: 0.4; transform: scale(1.15); } 90% { opacity: 1; transform: scale(1); filter: brightness(1.5); } 95% { filter: brightness(1); } 100% { opacity: 1; } }
         .premium-scan { animation: premiumScan 5s ease-in-out infinite; }
       `}</style>
-      <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
 
       {sidebarOpen && <div className="fixed top-14 lg:top-0 inset-x-0 bottom-0 bg-black/30 z-[45] lg:hidden" onClick={() => setSidebarOpen(false)}></div>}
 
       {/* SIDEBAR FLOTTANTE */}
       <div className={`fixed top-14 lg:top-0 bottom-0 left-0 z-50 flex items-start lg:items-center pl-0 lg:pl-3 py-0 lg:py-5 transition-transform duration-300 lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
-        <aside className="w-[72px] bg-white rounded-none rounded-br-2xl lg:rounded-2xl shadow-lg shadow-slate-200/60 border border-slate-200/60 border-t-0 lg:border-t flex flex-col items-center py-5 h-full lg:h-[calc(100vh-2.5rem)]" style={{fontFamily: "'Nunito', sans-serif"}}>
+        <aside className="w-[72px] bg-white rounded-none rounded-br-2xl lg:rounded-2xl shadow-lg shadow-slate-200/60 border border-slate-200/60 border-t-0 lg:border-t flex flex-col items-center py-5 h-full lg:h-[calc(100vh-2.5rem)]">
           <a href="/" className="mb-4">
             <div className="w-10 h-10 bg-red-600 text-white rounded-xl flex items-center justify-center hover:scale-105 transition-transform">
               <Stethoscope size={20} strokeWidth={2.5} />
@@ -414,7 +413,7 @@ function DashboardContent() {
                       </div>
                       <p className="text-sm font-bold text-slate-700 mb-2">Un commentaire ? <span className="font-normal text-slate-400">(optionnel)</span></p>
                       <textarea
-                        className="w-full bg-slate-50 border border-slate-200 rounded-xl p-4 text-sm text-slate-800 leading-relaxed resize-none focus:outline-none focus:ring-2 focus:ring-red-300 focus:border-red-400 transition h-28"
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl p-4 text-sm text-slate-800 leading-relaxed resize-none focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-red-400 transition h-28"
                         placeholder="Ce que vous aimez, ce qu'on pourrait améliorer..."
                         value={reviewComment}
                         onChange={e => setReviewComment(e.target.value)}
@@ -514,7 +513,7 @@ function DashboardContent() {
                       </div>
                       <p className="text-sm font-bold text-slate-700 mb-2">Votre message</p>
                       <textarea
-                        className="w-full bg-slate-50 border border-slate-200 rounded-xl p-4 text-sm text-slate-800 leading-relaxed resize-none focus:outline-none focus:ring-2 focus:ring-red-300 focus:border-red-400 transition h-28 mb-4"
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl p-4 text-sm text-slate-800 leading-relaxed resize-none focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-red-400 transition h-28 mb-4"
                         placeholder="Décrivez votre problème ou votre suggestion..."
                         value={supportMessage}
                         onChange={e => setSupportMessage(e.target.value)}
@@ -584,73 +583,66 @@ function DashboardContent() {
                     <span className="font-black text-sm">Premium {subscriptionPlan === 'monthly' ? 'Mensuel' : 'Annuel'}</span>
                   </div>
                 ) : (
-                  <>
-                    <div className="flex items-center gap-3">
-                        <div onClick={trialDays === 0 ? () => setPage('abonnement') : undefined} className={`${trialDays === 0 ? 'bg-red-500 text-white cursor-pointer hover:bg-red-600 transition' : 'bg-gradient-to-r from-amber-400 to-yellow-500 text-amber-950'} px-4 py-2 rounded-xl flex items-center gap-2 shadow-md`}>
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-                          <span className="font-black text-sm">{trialDays === 0 ? 'Essai expiré' : `${trialDays}j restant${trialDays > 1 ? 's' : ''}`}</span>
-                        </div>
-                        <button onClick={() => setPage('abonnement')} className="bg-slate-900 hover:bg-black text-white font-bold text-sm px-4 py-2 rounded-xl transition shadow-md cursor-pointer">Devenir premium</button>
-                      </div>
-                    {false && (
-                      <button onClick={() => setPage('abonnement')} className="bg-gradient-to-r from-amber-400 to-yellow-500 text-amber-950 font-black text-sm px-5 py-2.5 rounded-xl shadow-md shadow-amber-200/50 hover:shadow-lg transition flex items-center gap-2 cursor-pointer">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                        Devenir premium
-                      </button>
-                    )}
-                  </>
+                  <div className="flex items-center gap-3">
+                    <div onClick={trialDays === 0 ? () => setPage('abonnement') : undefined} className={`${trialDays === 0 ? 'bg-red-500 text-white cursor-pointer hover:bg-red-600 transition' : 'bg-gradient-to-r from-amber-400 to-yellow-500 text-amber-950'} px-4 py-2 rounded-xl flex items-center gap-2 shadow-md`}>
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                      <span className="font-black text-sm">{trialDays === 0 ? 'Essai expiré' : `${trialDays}j restant${trialDays > 1 ? 's' : ''}`}</span>
+                    </div>
+                    <button onClick={() => setPage('abonnement')} className="bg-slate-900 hover:bg-black text-white font-bold text-sm px-4 py-2 rounded-xl transition shadow-md cursor-pointer">Devenir premium</button>
+                  </div>
                 )}
               </div>
 
               {/* ENTRAÎNEMENTS */}
-              <h2 className="text-lg font-black text-slate-900 mb-4">Commencer à m'entraîner</h2>
+              <h2 className="text-xs font-black uppercase tracking-widest text-slate-400 mb-4">Commencer à m'entraîner</h2>
               <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-10">
-                <a href="/specifique" onClick={e => { if (trialDays === 0 && !isPremium) { e.preventDefault(); setShowBlockPopup(true) } }} className="bg-white p-5 rounded-2xl border-2 border-blue-600 shadow-sm hover:shadow-md transition group flex flex-col items-center text-center">
+                <a href="/specifique" onClick={e => { if (trialDays === 0 && !isPremium) { e.preventDefault(); setShowBlockPopup(true) } }} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-blue-200 hover:-translate-y-0.5 transition-all duration-200 group flex flex-col items-center text-center">
                   <div className="w-11 h-11 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
                   </div>
                   <h3 className="font-bold text-slate-900 text-sm mb-1">Entraînement spécifique</h3>
                   <p className="text-xs text-slate-500 flex-1">Tous les types d'exercices de maths avec des explications pour réellement progresser</p>
-                  <span className="text-[10px] mt-2 text-blue-600 font-bold">Ne compte pas dans la moyenne</span>
+                  <span className="text-[10px] font-black bg-blue-50 text-blue-600 px-2 py-0.5 rounded-md mt-3">Ne compte pas dans la moyenne</span>
                 </a>
-                <a href="/maths" onClick={e => { if (trialDays === 0 && !isPremium) { e.preventDefault(); setShowBlockPopup(true) } }} className="bg-white p-5 rounded-2xl border-2 border-red-600 shadow-sm hover:shadow-md transition group flex flex-col items-center text-center relative">
+                <a href="/maths" onClick={e => { if (trialDays === 0 && !isPremium) { e.preventDefault(); setShowBlockPopup(true) } }} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-red-200 hover:-translate-y-0.5 transition-all duration-200 group flex flex-col items-center text-center relative">
                   <span className="absolute top-2 right-2 text-[9px] font-black text-red-600 bg-red-50 px-1.5 py-0.5 rounded-md">30 min</span>
                   <div className="w-11 h-11 bg-red-50 text-red-600 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>
                   </div>
                   <h3 className="font-bold text-slate-900 text-sm mb-1">Entraînement mathématiques</h3>
                   <p className="text-xs text-slate-500 flex-1">Conditions similaires à l'examen pour évaluer son niveau basé en partie sur les annales</p>
-                  <span className="text-[10px] font-black text-red-600 mt-2">Note /10</span>
+                  <span className="text-[10px] font-black bg-red-50 text-red-600 px-2 py-0.5 rounded-md mt-3">Note /10</span>
                 </a>
-                <a href="/redaction" onClick={e => { if (trialDays === 0 && !isPremium) { e.preventDefault(); setShowBlockPopup(true) } }} className="bg-white p-5 rounded-2xl border-2 border-purple-600 shadow-sm hover:shadow-md transition group flex flex-col items-center text-center relative">
+                <a href="/redaction" onClick={e => { if (trialDays === 0 && !isPremium) { e.preventDefault(); setShowBlockPopup(true) } }} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-purple-200 hover:-translate-y-0.5 transition-all duration-200 group flex flex-col items-center text-center relative">
                   <span className="absolute top-2 right-2 text-[9px] font-black text-purple-600 bg-purple-50 px-1.5 py-0.5 rounded-md">30 min</span>
                   <div className="w-11 h-11 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
                   </div>
                   <h3 className="font-bold text-slate-900 text-sm mb-1">Entraînement rédactionnel</h3>
                   <p className="text-xs text-slate-500 flex-1">Analyse de texte, dissertations, culture sanitaire basée en partie sur les annales</p>
-                  <span className="text-[10px] font-black text-purple-600 mt-2">Note /10</span>
+                  <span className="text-[10px] font-black bg-purple-50 text-purple-600 px-2 py-0.5 rounded-md mt-3">Note /10</span>
                 </a>
-                <a href="/examen" onClick={e => { if (trialDays === 0 && !isPremium) { e.preventDefault(); setShowBlockPopup(true) } }} className="bg-white p-5 rounded-2xl border-2 border-yellow-500 shadow-sm hover:shadow-md transition group flex flex-col items-center text-center relative">
-                  <span className="absolute top-2 right-2 text-[9px] font-black text-yellow-500 bg-yellow-50 px-1.5 py-0.5 rounded-md">1H</span>
-                  <div className="w-11 h-11 bg-yellow-50 text-yellow-500 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                <a href="/examen" onClick={e => { if (trialDays === 0 && !isPremium) { e.preventDefault(); setShowBlockPopup(true) } }} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-yellow-200 hover:-translate-y-0.5 transition-all duration-200 group flex flex-col items-center text-center relative">
+                  <span className="absolute top-2 right-2 text-[9px] font-black text-yellow-600 bg-yellow-50 px-1.5 py-0.5 rounded-md">1H</span>
+                  <div className="w-11 h-11 bg-yellow-50 text-yellow-600 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></svg>
                   </div>
                   <h3 className="font-bold text-slate-900 text-sm mb-1">Examen blanc</h3>
                   <p className="text-xs text-slate-500 flex-1">Conditions réelles, sans calculatrice, vous disposez d'un temps imparti d'1H</p>
-                  <span className="text-[10px] font-black text-yellow-500 mt-2">Note /20</span>
+                  <span className="text-[10px] font-black bg-yellow-50 text-yellow-600 px-2 py-0.5 rounded-md mt-3">Note /20</span>
                 </a>
-                <a href="/oral" onClick={e => { if (trialDays === 0 && !isPremium) { e.preventDefault(); setShowBlockPopup(true) } }} className="bg-white p-5 rounded-2xl border-2 border-emerald-600 shadow-sm hover:shadow-md transition group flex flex-col items-center text-center">
+                <a href="/oral" onClick={e => { if (trialDays === 0 && !isPremium) { e.preventDefault(); setShowBlockPopup(true) } }} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-emerald-200 hover:-translate-y-0.5 transition-all duration-200 group flex flex-col items-center text-center">
                   <div className="w-11 h-11 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
                   </div>
                   <h3 className="font-bold text-slate-900 text-sm mb-1">Questions sur votre parcours</h3>
                   <p className="text-xs text-slate-500 flex-1">Simulations de questions possibles sur votre parcours afin de passer l'examen oral dans les meilleures conditions</p>
-                  <span className="text-[10px] mt-2 text-emerald-600 font-bold">Pas de note</span>
+                  <span className="text-[10px] font-black bg-emerald-50 text-emerald-600 px-2 py-0.5 rounded-md mt-3">Pas de note</span>
                 </a>
               </div>
 
               {/* STREAK + MOYENNE + OBJECTIF SEMAINE */}
+              <h2 className="text-xs font-black uppercase tracking-widest text-slate-400 mb-4">Ma progression</h2>
               <div className="grid sm:grid-cols-3 gap-4 mb-10">
                 {/* Streak */}
                 <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-3">
@@ -733,7 +725,7 @@ function DashboardContent() {
               </div>
 
               {/* RACCOURCIS UTILES */}
-              <h2 className="text-lg font-black text-slate-900 mb-4">Raccourcis utiles</h2>
+              <h2 className="text-xs font-black uppercase tracking-widest text-slate-400 mb-4">Raccourcis utiles</h2>
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
                 <a href="/calculs-doses" className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-red-200 transition group flex items-center gap-3">
                   <div className="w-10 h-10 bg-red-50 text-red-600 rounded-xl flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
@@ -848,7 +840,7 @@ function DashboardContent() {
             return (
             <div>
               <h1 className="text-2xl sm:text-3xl font-black text-slate-900 mb-1">Mes stats</h1>
-              <p className="text-slate-400 text-sm mb-8">Suivez votre progression et débloquez vos diplômes.</p>
+              <p className="text-slate-500 font-medium text-sm mb-8">Suivez votre progression et débloquez vos diplômes.</p>
 
               {historique.length === 0 ? (
                 <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-8 text-center">
@@ -861,7 +853,7 @@ function DashboardContent() {
                 <>
                   {/* Stats rapides - 4 cartes */}
                   <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-                    <div className="bg-white rounded-2xl border border-slate-200 p-5 flex items-center gap-4">
+                    <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 flex items-center gap-4">
                       <div className="w-11 h-11 bg-red-50 text-red-500 rounded-xl flex items-center justify-center shrink-0">
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
                       </div>
@@ -870,7 +862,7 @@ function DashboardContent() {
                         <p className="text-[11px] text-slate-400 font-semibold mt-0.5">Exercices faits</p>
                       </div>
                     </div>
-                    <div className="bg-white rounded-2xl border border-slate-200 p-5 flex items-center gap-4">
+                    <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 flex items-center gap-4">
                       <div className="w-11 h-11 bg-blue-50 text-blue-500 rounded-xl flex items-center justify-center shrink-0">
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                       </div>
@@ -879,7 +871,7 @@ function DashboardContent() {
                         <p className="text-[11px] text-slate-400 font-semibold mt-0.5">Temps total</p>
                       </div>
                     </div>
-                    <div className="bg-white rounded-2xl border border-slate-200 p-5 flex items-center gap-4">
+                    <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 flex items-center gap-4">
                       <div className="w-11 h-11 bg-emerald-50 text-emerald-500 rounded-xl flex items-center justify-center shrink-0">
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
                       </div>
@@ -888,7 +880,7 @@ function DashboardContent() {
                         <p className="text-[11px] text-slate-400 font-semibold mt-0.5">Meilleure note</p>
                       </div>
                     </div>
-                    <div className="bg-white rounded-2xl border border-slate-200 p-5 flex items-center gap-4">
+                    <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 flex items-center gap-4">
                       <div className="w-11 h-11 bg-amber-50 text-amber-500 rounded-xl flex items-center justify-center shrink-0">
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M12 2v4"/><path d="m16.2 7.8 2.9-2.9"/><path d="M18 12h4"/><path d="m16.2 16.2 2.9 2.9"/><path d="M12 18v4"/><path d="m4.9 19.1 2.9-2.9"/><path d="M2 12h4"/><path d="m4.9 4.9 2.9 2.9"/></svg>
                       </div>
@@ -902,7 +894,7 @@ function DashboardContent() {
                   {/* Graphiques */}
                   <div className="grid lg:grid-cols-5 gap-6 mb-8">
                     {/* Barres : exercices par jour */}
-                    <div className="lg:col-span-3 bg-white rounded-2xl border border-slate-200 p-6">
+                    <div className="lg:col-span-3 bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
                       <div className="flex items-center justify-between mb-5">
                         <h3 className="font-bold text-slate-900 text-sm">Activité des 14 derniers jours</h3>
                         <span className="text-xs text-slate-400 font-medium">{dailyData.reduce((s, d) => s + d.count, 0)} exercices</span>
@@ -931,7 +923,7 @@ function DashboardContent() {
                     </div>
 
                     {/* Doughnut : répartition par type */}
-                    <div className="lg:col-span-2 bg-white rounded-2xl border border-slate-200 p-6">
+                    <div className="lg:col-span-2 bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
                       <h3 className="font-bold text-slate-900 text-sm mb-5">Répartition</h3>
                       <div className="max-w-[200px] mx-auto">
                         <Doughnut
@@ -970,7 +962,7 @@ function DashboardContent() {
 
                   {/* Ligne : évolution de la moyenne */}
                   {moyenneEvolution.length >= 2 && (
-                    <div className="bg-white rounded-2xl border border-slate-200 p-6 mb-8">
+                    <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 mb-8">
                       <div className="flex items-center justify-between mb-5">
                         <h3 className="font-bold text-slate-900 text-sm">Évolution de la moyenne</h3>
                         <span className="text-xs font-bold text-slate-900 bg-slate-100 px-2.5 py-1 rounded-lg">{moyenneEvolution[moyenneEvolution.length - 1].moy}/20</span>
@@ -1016,7 +1008,7 @@ function DashboardContent() {
               {/* Diplômes */}
               <div className="mb-8">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="font-bold text-slate-900 text-sm">Diplômes</h3>
+                  <h3 className="text-xs font-black uppercase tracking-widest text-slate-400">Diplômes</h3>
                   <span className="text-xs text-slate-400 font-semibold">{unlockedCount}/{badges.length} débloqués</span>
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
@@ -1102,26 +1094,46 @@ function DashboardContent() {
 
             return (
             <div>
-              <h1 className="text-2xl sm:text-3xl font-black text-slate-900 mb-2">Mon historique</h1>
-              <p className="text-slate-500 font-medium text-sm mb-6">Retrouvez vos entraînements passés.</p>
+              <h1 className="text-2xl sm:text-3xl font-black text-slate-900 mb-1">Mon historique</h1>
+              <p className="text-slate-500 font-medium text-sm mb-8">Retrouvez vos entraînements passés.</p>
 
               {/* Stats rapides */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-                <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 text-center">
-                  <p className="text-2xl font-black text-slate-900">{totalExercices}</p>
-                  <p className="text-xs font-bold text-slate-400 uppercase mt-1">Exercices</p>
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 flex items-center gap-4">
+                  <div className="w-11 h-11 bg-red-50 text-red-500 rounded-xl flex items-center justify-center shrink-0">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
+                  </div>
+                  <div>
+                    <p className="text-2xl font-black text-slate-900 leading-none">{totalExercices}</p>
+                    <p className="text-[11px] text-slate-400 font-semibold mt-0.5">Exercices faits</p>
+                  </div>
                 </div>
-                <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 text-center">
-                  <p className="text-2xl font-black text-red-600">{moyenne || '—'}<span className="text-sm">/20</span></p>
-                  <p className="text-xs font-bold text-slate-400 uppercase mt-1">Moyenne</p>
+                <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 flex items-center gap-4">
+                  <div className="w-11 h-11 bg-purple-50 text-purple-500 rounded-xl flex items-center justify-center shrink-0">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+                  </div>
+                  <div>
+                    <p className="text-2xl font-black text-slate-900 leading-none">{moyenne || '—'}<span className="text-sm text-slate-400">/20</span></p>
+                    <p className="text-[11px] text-slate-400 font-semibold mt-0.5">Moyenne</p>
+                  </div>
                 </div>
-                <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 text-center">
-                  <p className="text-2xl font-black text-slate-900">{meilleur || '—'}<span className="text-sm">/20</span></p>
-                  <p className="text-xs font-bold text-slate-400 uppercase mt-1">Meilleur score</p>
+                <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 flex items-center gap-4">
+                  <div className="w-11 h-11 bg-emerald-50 text-emerald-500 rounded-xl flex items-center justify-center shrink-0">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+                  </div>
+                  <div>
+                    <p className="text-2xl font-black text-slate-900 leading-none">{meilleur || '—'}<span className="text-sm text-slate-400">/20</span></p>
+                    <p className="text-[11px] text-slate-400 font-semibold mt-0.5">Meilleur score</p>
+                  </div>
                 </div>
-                <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 text-center">
-                  <p className="text-2xl font-black text-slate-900">{totalMinutes < 60 ? `${totalMinutes} min` : `${totalH}h${totalM > 0 ? String(totalM).padStart(2, '0') : ''}`}</p>
-                  <p className="text-xs font-bold text-slate-400 uppercase mt-1">Temps total</p>
+                <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 flex items-center gap-4">
+                  <div className="w-11 h-11 bg-blue-50 text-blue-500 rounded-xl flex items-center justify-center shrink-0">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  </div>
+                  <div>
+                    <p className="text-2xl font-black text-slate-900 leading-none">{totalMinutes < 60 ? `${totalMinutes} min` : `${totalH}h${totalM > 0 ? String(totalM).padStart(2, '0') : ''}`}</p>
+                    <p className="text-[11px] text-slate-400 font-semibold mt-0.5">Temps total</p>
+                  </div>
                 </div>
               </div>
 
@@ -1278,9 +1290,9 @@ function DashboardContent() {
           {/* ============ MON COMPTE ============ */}
           {page === 'profil' && (
             <div>
-              <h1 className="text-2xl sm:text-3xl font-black text-slate-900 mb-2">Mon compte</h1>
+              <h1 className="text-2xl sm:text-3xl font-black text-slate-900 mb-1">Mon compte</h1>
               <p className="text-slate-500 font-medium text-sm mb-8">Gérez vos informations personnelles.</p>
-              {profileMsg && <div className={`p-4 rounded-xl mb-6 font-bold text-sm ${profileMsg.startsWith('Erreur') ? 'bg-red-50 text-red-700 border border-red-200' : 'bg-red-50 text-red-600 border border-red-200'}`}>{profileMsg}</div>}
+              {profileMsg && <div className={`p-4 rounded-xl mb-6 font-bold text-sm ${profileMsg.startsWith('Erreur') ? 'bg-red-50 text-red-700 border border-red-200' : 'bg-emerald-50 text-emerald-700 border border-emerald-200'}`}>{profileMsg}</div>}
               <div className="flex flex-col lg:flex-row lg:items-stretch gap-6">
                 <form onSubmit={updateProfile} className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-5 flex-1">
                   <div>
@@ -1350,7 +1362,7 @@ function DashboardContent() {
           {/* ============ DEVENIR PREMIUM ============ */}
           {page === 'abonnement' && (
             <div>
-              <h1 className="text-2xl sm:text-3xl font-black text-slate-900 mb-2">Devenir Premium</h1>
+              <h1 className="text-2xl sm:text-3xl font-black text-slate-900 mb-1">Devenir Premium</h1>
               <p className="text-slate-500 font-medium text-sm mb-8">Choisissez la formule qui s'adapte le plus à votre besoin.</p>
               <div className="grid md:grid-cols-3 gap-6 lg:gap-8 max-w-[90%]">
 
