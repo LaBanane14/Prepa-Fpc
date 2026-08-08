@@ -587,7 +587,7 @@ function DashboardContent() {
                   </div>
                 ) : (
                   <div className="flex items-center gap-3">
-                    <div onClick={trialDays === 0 ? () => setPage('abonnement') : undefined} className={`${trialDays === 0 ? 'bg-red-500 text-white cursor-pointer hover:bg-red-600 transition' : 'bg-gradient-to-r from-amber-400 to-yellow-500 text-amber-950'} px-4 py-2 rounded-xl flex items-center gap-2 shadow-md`}>
+                    <div onClick={trialDays === 0 ? () => setPage('abonnement') : undefined} className={`${trialDays === 0 ? 'bg-red-50 text-red-600 border border-red-200 cursor-pointer hover:bg-red-100 transition' : 'bg-gradient-to-r from-amber-400 to-yellow-500 text-amber-950 shadow-md'} px-4 py-2 rounded-xl flex items-center gap-2`}>
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
                       <span className="font-black text-sm">{trialDays === 0 ? 'Essai expiré' : `${trialDays}j restant${trialDays > 1 ? 's' : ''}`}</span>
                     </div>
