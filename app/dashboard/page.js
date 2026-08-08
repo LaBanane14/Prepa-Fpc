@@ -292,39 +292,41 @@ function DashboardContent() {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 flex" style={{fontFamily: "'DM Sans', 'Inter', system-ui, sans-serif"}}>
       <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-      <style>{`
-        @keyframes premiumScan { 0%, 80% { opacity: 1; } 85% { opacity: 0.4; transform: scale(1.15); } 90% { opacity: 1; transform: scale(1); filter: brightness(1.5); } 95% { filter: brightness(1); } 100% { opacity: 1; } }
-        .premium-scan { animation: premiumScan 5s ease-in-out infinite; }
-      `}</style>
 
       {sidebarOpen && <div className="fixed top-14 lg:top-0 inset-x-0 bottom-0 bg-black/30 z-[45] lg:hidden" onClick={() => setSidebarOpen(false)}></div>}
 
       {/* SIDEBAR FLOTTANTE */}
       <div className={`fixed top-14 lg:top-0 bottom-0 left-0 z-50 flex items-start lg:items-center pl-0 lg:pl-3 py-0 lg:py-5 transition-transform duration-300 lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
-        <aside className="w-[84px] bg-slate-900 rounded-none rounded-br-2xl lg:rounded-2xl shadow-lg shadow-slate-900/20 border border-slate-800 border-t-0 lg:border-t flex flex-col items-center py-5 h-full lg:h-[calc(100vh-2.5rem)]">
+        <aside className="w-[84px] bg-white rounded-none rounded-br-2xl lg:rounded-2xl shadow-lg shadow-slate-200/60 border border-slate-200/60 border-t-0 lg:border-t flex flex-col items-center py-5 h-full lg:h-[calc(100vh-2.5rem)]">
           <a href="/" className="mb-4">
             <div className="w-10 h-10 bg-red-600 text-white rounded-xl flex items-center justify-center hover:scale-105 transition-transform">
               <Stethoscope size={20} strokeWidth={2.5} />
             </div>
           </a>
-          <div className="w-7 h-px bg-slate-700 mb-3"></div>
+          <div className="w-7 h-px bg-slate-200 mb-3"></div>
 
           <nav className="flex-1 flex flex-col items-center gap-0.5 w-full px-1.5">
             {menuItems.filter(item => !item.premium || !isPremium).map(item => (
-              <button key={item.id} onClick={() => navigateTo(item.id)} className={`relative w-full flex flex-col items-center justify-center gap-1 py-3 rounded-xl text-[11px] font-bold transition-all cursor-pointer text-center group ${item.premium ? (page === item.id ? 'bg-amber-400/10 text-amber-300' : 'text-amber-400 hover:bg-amber-400/10 hover:text-amber-300') : (page === item.id ? 'bg-red-500/10 text-red-400' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200')}`}>
-                {page === item.id && <span className={`absolute -left-1.5 top-1/2 -translate-y-1/2 w-[3px] h-7 rounded-full ${item.premium ? 'bg-amber-400' : 'bg-red-500'}`}></span>}
-                <item.icon size={21} strokeWidth={1.6} className={`transition-transform duration-200 group-hover:scale-125 ${item.premium ? 'premium-scan' : ''}`} />
+              <button key={item.id} onClick={() => navigateTo(item.id)} className={`relative w-full flex flex-col items-center justify-center gap-1 py-3 rounded-xl text-[11px] font-bold transition-all cursor-pointer text-center group ${item.premium ? (page === item.id ? 'bg-amber-50 text-amber-600' : 'text-amber-500 hover:bg-amber-50 hover:text-amber-600') : (page === item.id ? 'bg-red-50 text-red-600' : 'text-slate-900 hover:bg-red-50 hover:text-red-600')}`}>
+                {page === item.id && <span className={`absolute -left-1.5 top-1/2 -translate-y-1/2 w-[3px] h-7 rounded-full ${item.premium ? 'bg-amber-400' : 'bg-red-600'}`}></span>}
+                {item.premium ? (
+                  <span className="w-8 h-8 bg-gradient-to-br from-amber-400 to-yellow-500 text-amber-950 rounded-lg flex items-center justify-center transition-transform duration-200 group-hover:scale-110">
+                    <item.icon size={18} strokeWidth={1.8} />
+                  </span>
+                ) : (
+                  <item.icon size={21} strokeWidth={1.6} className="transition-transform duration-200 group-hover:scale-125" />
+                )}
                 <span>{item.label}</span>
               </button>
             ))}
           </nav>
 
           <div className="flex flex-col items-center gap-2 mt-auto pt-3">
-            <div className="w-7 h-px bg-slate-700 mb-1"></div>
-            <button onClick={() => navigateTo('profil')} className={`w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs transition-all ${page === 'profil' ? 'bg-red-600 text-white ring-2 ring-red-500/30' : 'bg-slate-800 text-slate-200 hover:bg-slate-700'}`}>
+            <div className="w-7 h-px bg-slate-200 mb-1"></div>
+            <button onClick={() => navigateTo('profil')} className={`w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs transition-all ${page === 'profil' ? 'bg-red-600 text-white ring-2 ring-red-100' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}>
               {firstName.charAt(0).toUpperCase()}
             </button>
-            <button onClick={handleLogout} className="text-slate-400 hover:text-red-400 transition cursor-pointer p-1">
+            <button onClick={handleLogout} className="text-slate-900 hover:text-red-500 transition cursor-pointer p-1">
               <LogOut size={16} strokeWidth={1.8} />
             </button>
           </div>
