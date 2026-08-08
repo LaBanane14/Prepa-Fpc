@@ -1,5 +1,6 @@
 'use client'
 import { useState, useEffect, Suspense } from 'react'
+import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { supabase } from '../../lib/supabase'
 import { LayoutDashboard, ChartNoAxesColumn, History, CircleUserRound, BadgeCheck, LogOut, Stethoscope, CircleX, CreditCard, Lightbulb, MessageCircle, CircleHelp } from 'lucide-react'
@@ -599,15 +600,15 @@ function DashboardContent() {
               {/* ENTRAÎNEMENTS */}
               <h2 className="text-xs font-black uppercase tracking-widest text-slate-400 mb-4">Commencer à m'entraîner</h2>
               <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-10">
-                <a href="/specifique" onClick={e => { if (trialDays === 0 && !isPremium) { e.preventDefault(); setShowBlockPopup(true) } }} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-blue-200 hover:-translate-y-0.5 transition-all duration-200 group flex flex-col items-center text-center">
+                <Link href="/specifique" onClick={e => { if (trialDays === 0 && !isPremium) { e.preventDefault(); setShowBlockPopup(true) } }} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-blue-200 hover:-translate-y-0.5 transition-all duration-200 group flex flex-col items-center text-center">
                   <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
                   </div>
                   <h3 className="font-bold text-slate-900 text-sm mb-1">Entraînement spécifique</h3>
                   <p className="text-xs text-slate-500 flex-1">Tous les types d'exercices de maths avec des explications pour réellement progresser</p>
                   <span className="text-[10px] font-black bg-blue-50 text-blue-600 px-2 py-0.5 rounded-md mt-3">Ne compte pas dans la moyenne</span>
-                </a>
-                <a href="/maths" onClick={e => { if (trialDays === 0 && !isPremium) { e.preventDefault(); setShowBlockPopup(true) } }} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-red-200 hover:-translate-y-0.5 transition-all duration-200 group flex flex-col items-center text-center relative">
+                </Link>
+                <Link href="/maths" onClick={e => { if (trialDays === 0 && !isPremium) { e.preventDefault(); setShowBlockPopup(true) } }} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-red-200 hover:-translate-y-0.5 transition-all duration-200 group flex flex-col items-center text-center relative">
                   <span className="absolute top-2 right-2 text-[9px] font-black text-red-600 bg-red-50 px-1.5 py-0.5 rounded-md">30 min</span>
                   <div className="w-12 h-12 bg-red-50 text-red-600 rounded-2xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>
@@ -615,8 +616,8 @@ function DashboardContent() {
                   <h3 className="font-bold text-slate-900 text-sm mb-1">Entraînement mathématiques</h3>
                   <p className="text-xs text-slate-500 flex-1">Conditions similaires à l'examen pour évaluer son niveau basé en partie sur les annales</p>
                   <span className="text-[10px] font-black bg-red-50 text-red-600 px-2 py-0.5 rounded-md mt-3">Note /10</span>
-                </a>
-                <a href="/redaction" onClick={e => { if (trialDays === 0 && !isPremium) { e.preventDefault(); setShowBlockPopup(true) } }} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-purple-200 hover:-translate-y-0.5 transition-all duration-200 group flex flex-col items-center text-center relative">
+                </Link>
+                <Link href="/redaction" onClick={e => { if (trialDays === 0 && !isPremium) { e.preventDefault(); setShowBlockPopup(true) } }} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-purple-200 hover:-translate-y-0.5 transition-all duration-200 group flex flex-col items-center text-center relative">
                   <span className="absolute top-2 right-2 text-[9px] font-black text-purple-600 bg-purple-50 px-1.5 py-0.5 rounded-md">30 min</span>
                   <div className="w-12 h-12 bg-purple-50 text-purple-600 rounded-2xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
@@ -624,8 +625,8 @@ function DashboardContent() {
                   <h3 className="font-bold text-slate-900 text-sm mb-1">Entraînement rédactionnel</h3>
                   <p className="text-xs text-slate-500 flex-1">Analyse de texte, dissertations, culture sanitaire basée en partie sur les annales</p>
                   <span className="text-[10px] font-black bg-purple-50 text-purple-600 px-2 py-0.5 rounded-md mt-3">Note /10</span>
-                </a>
-                <a href="/examen" onClick={e => { if (trialDays === 0 && !isPremium) { e.preventDefault(); setShowBlockPopup(true) } }} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-yellow-200 hover:-translate-y-0.5 transition-all duration-200 group flex flex-col items-center text-center relative">
+                </Link>
+                <Link href="/examen" onClick={e => { if (trialDays === 0 && !isPremium) { e.preventDefault(); setShowBlockPopup(true) } }} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-yellow-200 hover:-translate-y-0.5 transition-all duration-200 group flex flex-col items-center text-center relative">
                   <span className="absolute top-2 right-2 text-[9px] font-black text-yellow-600 bg-yellow-50 px-1.5 py-0.5 rounded-md">1H</span>
                   <div className="w-12 h-12 bg-yellow-50 text-yellow-600 rounded-2xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></svg>
@@ -633,15 +634,15 @@ function DashboardContent() {
                   <h3 className="font-bold text-slate-900 text-sm mb-1">Examen blanc</h3>
                   <p className="text-xs text-slate-500 flex-1">Conditions réelles, sans calculatrice, vous disposez d'un temps imparti d'1H</p>
                   <span className="text-[10px] font-black bg-yellow-50 text-yellow-600 px-2 py-0.5 rounded-md mt-3">Note /20</span>
-                </a>
-                <a href="/oral" onClick={e => { if (trialDays === 0 && !isPremium) { e.preventDefault(); setShowBlockPopup(true) } }} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-emerald-200 hover:-translate-y-0.5 transition-all duration-200 group flex flex-col items-center text-center">
+                </Link>
+                <Link href="/oral" onClick={e => { if (trialDays === 0 && !isPremium) { e.preventDefault(); setShowBlockPopup(true) } }} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-emerald-200 hover:-translate-y-0.5 transition-all duration-200 group flex flex-col items-center text-center">
                   <div className="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
                   </div>
                   <h3 className="font-bold text-slate-900 text-sm mb-1">Questions sur votre parcours</h3>
                   <p className="text-xs text-slate-500 flex-1">Simulations de questions possibles sur votre parcours afin de passer l'examen oral dans les meilleures conditions</p>
                   <span className="text-[10px] font-black bg-emerald-50 text-emerald-600 px-2 py-0.5 rounded-md mt-3">Pas de note</span>
-                </a>
+                </Link>
               </div>
 
               {/* STREAK + MOYENNE + OBJECTIF SEMAINE */}

@@ -207,7 +207,7 @@ export default function MathsPage() {
   const timePercent = (timeLeft / (30 * 60)) * 100
   const isUrgent = timeLeft < 5 * 60
 
-  if (authLoading) return <div className="min-h-screen bg-slate-50 flex items-center justify-center"><div className="animate-spin w-8 h-8 border-4 border-red-600 border-t-transparent rounded-full"></div></div>
+  if (authLoading) return <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center gap-4"><div className="animate-spin w-8 h-8 border-4 border-red-600 border-t-transparent rounded-full"></div><p className="text-sm font-bold text-slate-400" style={{fontFamily: "'Nunito', sans-serif"}}>Ouverture de l'épreuve...</p></div>
 
   if (showAccessBlock) return (
     <div className="min-h-screen bg-[#eceef1] flex items-center justify-center p-4">
