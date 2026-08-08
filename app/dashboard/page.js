@@ -301,7 +301,7 @@ function DashboardContent() {
 
       {/* SIDEBAR FLOTTANTE */}
       <div className={`fixed top-14 lg:top-0 bottom-0 left-0 z-50 flex items-start lg:items-center pl-0 lg:pl-3 py-0 lg:py-5 transition-transform duration-300 lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
-        <aside className="w-[72px] bg-white rounded-none rounded-br-2xl lg:rounded-2xl shadow-lg shadow-slate-200/60 border border-slate-200/60 border-t-0 lg:border-t flex flex-col items-center py-5 h-full lg:h-[calc(100vh-2.5rem)]">
+        <aside className="w-[84px] bg-white rounded-none rounded-br-2xl lg:rounded-2xl shadow-lg shadow-slate-200/60 border border-slate-200/60 border-t-0 lg:border-t flex flex-col items-center py-5 h-full lg:h-[calc(100vh-2.5rem)]">
           <a href="/" className="mb-4">
             <div className="w-10 h-10 bg-red-600 text-white rounded-xl flex items-center justify-center hover:scale-105 transition-transform">
               <Stethoscope size={20} strokeWidth={2.5} />
@@ -331,7 +331,7 @@ function DashboardContent() {
       </div>
 
       {/* MAIN */}
-      <div className="flex-1 flex flex-col min-h-screen lg:pl-[90px]">
+      <div className="flex-1 flex flex-col min-h-screen lg:pl-[102px]">
         {/* Mobile top bar */}
         <header className="lg:hidden h-14 bg-white border-b border-slate-200 px-4 flex items-center justify-between shrink-0 sticky top-0 z-30">
           <button onClick={() => setSidebarOpen(!sidebarOpen)} className="text-slate-700 p-2 rounded-lg hover:bg-slate-100 transition">
