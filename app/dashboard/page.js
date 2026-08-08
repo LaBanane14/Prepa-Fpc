@@ -2,7 +2,7 @@
 import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { supabase } from '../../lib/supabase'
-import { LayoutDashboard, ChartNoAxesColumn, History, CircleUserRound, Crown, BadgeCheck, LogOut, Stethoscope, CircleX, CreditCard, Lightbulb, MessageCircle, CircleHelp } from 'lucide-react'
+import { LayoutDashboard, ChartNoAxesColumn, History, CircleUserRound, BadgeCheck, LogOut, Stethoscope, CircleX, CreditCard, Lightbulb, MessageCircle, CircleHelp } from 'lucide-react'
 
 import { Bar, Doughnut, Line } from 'react-chartjs-2'
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, ArcElement, PointElement, LineElement, Title, Tooltip, Legend, Filler } from 'chart.js'
@@ -13,7 +13,7 @@ const menuItems = [
   { id: 'progression', label: 'Mes stats', icon: ChartNoAxesColumn },
   { id: 'historique', label: 'Historique', icon: History },
   { id: 'profil', label: 'Compte', icon: CircleUserRound },
-  { id: 'abonnement', label: 'Devenir Premium', icon: Crown, premium: true }
+  { id: 'abonnement', label: 'Devenir Premium', icon: BadgeCheck, premium: true }
 ]
 
 export default function Dashboard() {
