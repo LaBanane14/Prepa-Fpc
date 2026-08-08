@@ -291,7 +291,7 @@ function DashboardContent() {
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 flex" style={{fontFamily: "'DM Sans', 'Inter', system-ui, sans-serif"}}>
-      <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&family=Sora:wght@500;600;700&family=Caveat:wght@700&display=swap" rel="stylesheet" />
+      <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&family=Sora:wght@500;600;700&display=swap" rel="stylesheet" />
 
       {sidebarOpen && <div className="fixed top-14 lg:top-0 inset-x-0 bottom-0 bg-black/30 z-[45] lg:hidden" onClick={() => setSidebarOpen(false)}></div>}
 
@@ -1368,84 +1368,89 @@ function DashboardContent() {
             <div>
               <h1 className="text-2xl sm:text-3xl font-black text-slate-900 mb-1">Devenir Premium</h1>
               <p className="text-slate-500 font-medium text-sm mb-8">Choisissez la formule qui s'adapte le plus à votre besoin.</p>
-              <div className="relative max-w-4xl">
-                {/* Annotation manuscrite vers la colonne Sérénité */}
-                <div aria-hidden="true" className="absolute hidden lg:block pointer-events-none z-10" style={{top: '-38px', right: '5%'}}>
-                  <p className="text-[1.45rem] text-red-600 rotate-3" style={{fontFamily: "'Caveat', cursive", fontWeight: 700}}>Le plus populaire !</p>
-                  <svg className="w-12 h-12 text-red-500/80 ml-8 mt-1" viewBox="0 0 60 50" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M52 5 C 42 24, 28 36, 12 41"/><path d="M22 43 12 41 14 31"/></svg>
-                </div>
+              <div className="grid md:grid-cols-3 gap-6 lg:gap-8 max-w-[90%]">
 
-                <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-6">
-                  <div className="grid" style={{gridTemplateColumns: '1.35fr 0.9fr 1fr'}}>
-
-                    {/* En-tête : noms des formules et prix */}
-                    <div></div>
-                    <div className="px-3 sm:px-5 pt-6 pb-5 text-center rounded-t-2xl bg-slate-50">
-                      <p className="text-[11px] font-black uppercase tracking-widest text-slate-400 mb-3">Formule mensuelle</p>
-                      <div className="flex items-baseline justify-center gap-1">
-                        <span className="text-2xl sm:text-3xl font-black tracking-tight tabular-nums text-slate-900">12,99€</span>
-                        <span className="text-slate-400 font-bold text-xs sm:text-sm">/mois</span>
-                      </div>
-                      <p className="text-slate-400 text-[11px] font-bold mt-2 leading-snug">Renouvellement automatique, résiliable en un clic</p>
-                    </div>
-                    <div className="relative px-3 sm:px-5 pt-6 pb-5 text-center rounded-t-2xl bg-red-50/70 border-x-2 border-t-2 border-red-600">
-                      <div className="inline-block bg-red-600 text-white px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider shadow-md shadow-red-200 mb-3">−40 %</div>
-                      <p className="text-[11px] font-black uppercase tracking-widest text-red-600 mb-3">Pack Sérénité</p>
-                      <div className="flex items-baseline justify-center gap-1">
-                        <span className="text-2xl sm:text-3xl font-black tracking-tight tabular-nums text-red-600">89,99€</span>
-                        <span className="text-slate-400 font-bold text-xs sm:text-sm">/an</span>
-                      </div>
-                      <p className="mt-1.5 text-[12px] font-bold"><span className="line-through text-slate-300">155,88€</span> <span className="text-red-600">soit 7,50€/mois</span></p>
-                      <p className="text-slate-400 text-[11px] font-bold mt-1.5 leading-snug">1 seul paiement, pas de renouvellement automatique</p>
-                    </div>
-
-                    {/* Lignes d'avantages */}
-                    {[
-                      { label: 'Entraînement rédaction et mathématique illimités', mensuel: true, serenite: true },
-                      { label: "Entraînement à partir d'annales", mensuel: true, serenite: true },
-                      { label: 'Examen blanc écrit', mensuel: true, serenite: true },
-                      { label: 'Dashboard personnalisable', mensuel: true, serenite: true },
-                      { label: 'Méthodologie Dossier & Oral', mensuel: true, serenite: true },
-                      { label: 'Résiliable à tout moment', mensuel: true, serenite: false },
-                    ].map((l, i, arr) => (
-                      <div key={i} className="contents">
-                        <div className="flex items-center gap-2 py-3.5 pr-3 sm:pr-6 border-b border-slate-100 text-[13px] sm:text-sm text-slate-600 font-medium leading-snug">{l.label}</div>
-                        <div className="flex items-center justify-center py-3.5 border-b border-slate-100 bg-slate-50">
-                          {l.mensuel
-                            ? <svg className="w-4 h-4 text-slate-900" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-                            : <svg className="w-4 h-4 text-slate-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round"><path d="M5 12h14"/></svg>}
-                        </div>
-                        <div className="flex items-center justify-center py-3.5 bg-red-50/70 border-x-2 border-red-600" style={{borderBottom: i < arr.length - 1 ? '1px solid #fecaca' : 'none'}}>
-                          {l.serenite
-                            ? <span className="w-6 h-6 rounded-full flex items-center justify-center bg-red-100"><svg className="w-3.5 h-3.5 text-red-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
-                            : <svg className="w-4 h-4 text-red-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round"><path d="M5 12h14"/></svg>}
-                        </div>
-                      </div>
-                    ))}
-
-                    {/* Boutons */}
-                    <div></div>
-                    <div className="px-2 sm:px-4 pt-5 pb-6 flex items-start justify-center rounded-b-2xl bg-slate-50">
-                      <button onClick={() => handleCheckout('monthly')} disabled={checkoutLoading} className="w-full max-w-[200px] bg-slate-900 hover:bg-black text-white font-bold text-sm py-3 rounded-full transition cursor-pointer disabled:opacity-50">{checkoutLoading ? 'Redirection...' : "S'abonner"}</button>
-                    </div>
-                    <div className="px-3 sm:px-5 pt-5 pb-6 flex items-start justify-center rounded-b-2xl bg-red-50/70 border-x-2 border-b-2 border-red-600">
-                      <button onClick={() => handleCheckout('yearly')} disabled={checkoutLoading} className="w-full max-w-[220px] inline-flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white font-bold text-sm py-3 rounded-full transition shadow-lg shadow-red-200 cursor-pointer disabled:opacity-50 group">
-                        {checkoutLoading ? 'Redirection...' : (<>S'abonner <svg className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14m-7-7 7 7-7 7"/></svg></>)}
-                      </button>
-                    </div>
-
+                {/* Essai Gratuit */}
+                <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm flex flex-col transition hover:shadow-md">
+                  <div className="mb-6">
+                    <h3 className="text-lg font-black text-slate-900 mb-1 uppercase tracking-tight">Essai Gratuit</h3>
+                    <p className="text-slate-500 font-bold text-sm">Testez la plateforme pendant 7 jours.</p>
                   </div>
+                  <div className="mb-8">
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-3xl font-black text-slate-900 tracking-tight">0€</span>
+                      <span className="text-slate-500 font-bold">/ 7 jours</span>
+                    </div>
+                    <p className="text-slate-400 text-xs font-bold mt-1 uppercase">Sans carte bancaire</p>
+                  </div>
+                  <div className="flex-1">
+                    <ul className="space-y-3 mb-8">
+                      {["Entraînement rédaction et mathématique illimités", "Entrainement à partir d'annales", "Examen blanc écrit", "Dashboard personnalisable", "Méthodologie Dossier & Oral"].map((item, i) => (
+                        <li key={i} className="flex items-center gap-3 text-slate-900 font-bold text-sm">
+                          <div className="bg-slate-200 p-0.5 rounded-md shrink-0"><svg className="w-3.5 h-3.5 text-slate-900" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg></div>
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="w-full py-3.5 bg-slate-50 border border-slate-200 text-slate-700 font-black rounded-xl text-center text-sm">{trialDays === 0 ? 'Expiré' : `Expire dans ${trialDays} jour${trialDays > 1 ? 's' : ''}`}</div>
                 </div>
 
-                {/* Réassurance sous le comparatif */}
-                <div className="mt-6 flex flex-wrap items-center justify-center gap-x-7 gap-y-2.5 text-[13px] font-bold text-slate-500">
-                  {[trialDays === 0 ? 'Essai gratuit terminé' : `Essai gratuit : ${trialDays} jour${trialDays > 1 ? 's' : ''} restant${trialDays > 1 ? 's' : ''}`, 'Paiement sécurisé via Stripe', 'Activation immédiate'].map((t, i) => (
-                    <span key={i} className="inline-flex items-center gap-2">
-                      <span className="w-5 h-5 rounded-full bg-red-100 flex items-center justify-center"><svg className="w-3 h-3 text-red-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
-                      {t}
-                    </span>
-                  ))}
+                {/* Formule Mensuelle */}
+                <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm flex flex-col transition hover:shadow-md">
+                  <div className="mb-6">
+                    <h3 className="text-lg font-black text-slate-900 mb-1 uppercase tracking-tight">Formule Mensuelle</h3>
+                    <p className="text-slate-500 font-bold text-sm">Flexibilité totale, sans engagement.</p>
+                  </div>
+                  <div className="mb-8">
+                    <div className="flex items-baseline gap-1 text-red-600">
+                      <span className="text-3xl font-black tracking-tight">12,99€</span>
+                      <span className="text-slate-500 font-bold">/mois</span>
+                    </div>
+                    <p className="text-red-500 text-xs font-bold mt-1 uppercase">Renouvellement automatique</p>
+                  </div>
+                  <div className="flex-1">
+                    <ul className="space-y-3 mb-8">
+                      {["Entraînement rédaction et mathématique illimités", "Entrainement à partir d'annales", "Examen blanc écrit", "Dashboard personnalisable", "Résiliable à tout moment"].map((item, i) => (
+                        <li key={i} className="flex items-center gap-3 text-slate-900 font-bold text-sm">
+                          <div className="bg-red-100 p-0.5 rounded-md shrink-0"><svg className="w-3.5 h-3.5 text-red-600" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg></div>
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <button onClick={() => handleCheckout('monthly')} disabled={checkoutLoading} className="w-full py-3.5 bg-red-600 hover:bg-red-700 text-white font-black rounded-xl text-center transition shadow-lg shadow-red-200 text-sm cursor-pointer disabled:opacity-50">{checkoutLoading ? 'Redirection...' : "S'abonner maintenant"}</button>
                 </div>
+
+                {/* Pack Sérénité */}
+                <div className="bg-white p-6 sm:p-8 rounded-2xl border-2 border-red-600 shadow-lg shadow-red-100 relative flex flex-col overflow-hidden">
+                  <div className="absolute top-4 right-4">
+                    <div className="bg-red-50 text-red-600 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">40% d'Économie</div>
+                  </div>
+                  <div className="mb-6">
+                    <h3 className="text-lg font-black text-slate-900 mb-1 uppercase tracking-tight">Pack Sérénité</h3>
+                    <p className="text-slate-500 font-bold text-sm">Accès complet pendant 1 an.</p>
+                  </div>
+                  <div className="mb-8">
+                    <div className="flex items-baseline gap-1 text-red-600">
+                      <span className="text-3xl font-black tracking-tight">89,99€</span>
+                      <span className="text-slate-500 font-bold">pour 1 an</span>
+                    </div>
+                    <p className="text-red-500 text-xs font-black mt-1 uppercase">1 seul paiement · Pas de renouvellement</p>
+                  </div>
+                  <div className="flex-1">
+                    <ul className="space-y-3 mb-8">
+                      {["Entraînement rédaction et mathématique illimités", "Entrainement à partir d'annales", "Examen blanc écrit", "Dashboard personnalisable", "Méthodologie Dossier & Oral"].map((item, i) => (
+                        <li key={i} className="flex items-center gap-3 text-slate-900 font-bold text-sm">
+                          <div className="bg-red-100 p-0.5 rounded-md shrink-0"><svg className="w-3.5 h-3.5 text-red-600" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg></div>
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <button onClick={() => handleCheckout('yearly')} disabled={checkoutLoading} className="w-full py-3.5 bg-red-600 hover:bg-red-700 text-white font-black rounded-xl text-center transition shadow-lg shadow-red-200 text-sm cursor-pointer disabled:opacity-50">{checkoutLoading ? 'Redirection...' : "S'abonner maintenant"}</button>
+                </div>
+
               </div>
 
             </div>
