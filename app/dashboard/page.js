@@ -2,18 +2,18 @@
 import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { supabase } from '../../lib/supabase'
-import { Home, TrendingUp, RotateCcw, UserRound, BadgeCheck, LogOut, Stethoscope, CircleX, CreditCard, Lightbulb, MessageCircle, CircleHelp } from 'lucide-react'
+import { LayoutDashboard, ChartNoAxesColumn, History, CircleUserRound, Crown, BadgeCheck, LogOut, Stethoscope, CircleX, CreditCard, Lightbulb, MessageCircle, CircleHelp } from 'lucide-react'
 
 import { Bar, Doughnut, Line } from 'react-chartjs-2'
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, ArcElement, PointElement, LineElement, Title, Tooltip, Legend, Filler } from 'chart.js'
 ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, PointElement, LineElement, Title, Tooltip, Legend, Filler)
 
 const menuItems = [
-  { id: 'dashboard', label: 'Accueil', icon: Home },
-  { id: 'progression', label: 'Mes stats', icon: TrendingUp },
-  { id: 'historique', label: 'Historique', icon: RotateCcw },
-  { id: 'profil', label: 'Compte', icon: UserRound },
-  { id: 'abonnement', label: 'Devenir Premium', icon: BadgeCheck, premium: true }
+  { id: 'dashboard', label: 'Accueil', icon: LayoutDashboard },
+  { id: 'progression', label: 'Mes stats', icon: ChartNoAxesColumn },
+  { id: 'historique', label: 'Historique', icon: History },
+  { id: 'profil', label: 'Compte', icon: CircleUserRound },
+  { id: 'abonnement', label: 'Devenir Premium', icon: Crown, premium: true }
 ]
 
 export default function Dashboard() {
@@ -291,13 +291,13 @@ function DashboardContent() {
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 flex" style={{fontFamily: "'DM Sans', 'Inter', system-ui, sans-serif"}}>
-      <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+      <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
 
       {sidebarOpen && <div className="fixed top-14 lg:top-0 inset-x-0 bottom-0 bg-black/30 z-[45] lg:hidden" onClick={() => setSidebarOpen(false)}></div>}
 
       {/* SIDEBAR FLOTTANTE */}
       <div className={`fixed top-14 lg:top-0 bottom-0 left-0 z-50 flex items-start lg:items-center pl-0 lg:pl-3 py-0 lg:py-5 transition-transform duration-300 lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
-        <aside className="w-[84px] bg-white rounded-none rounded-br-2xl lg:rounded-2xl shadow-lg shadow-slate-200/60 border border-slate-200/60 border-t-0 lg:border-t flex flex-col items-center py-5 h-full lg:h-[calc(100vh-2.5rem)]">
+        <aside className="w-[84px] bg-white rounded-none rounded-br-2xl lg:rounded-2xl shadow-lg shadow-slate-200/60 border border-slate-200/60 border-t-0 lg:border-t flex flex-col items-center py-5 h-full lg:h-[calc(100vh-2.5rem)]" style={{fontFamily: "'Plus Jakarta Sans', 'DM Sans', sans-serif"}}>
           <a href="/" className="mb-4">
             <div className="w-10 h-10 bg-red-600 text-white rounded-xl flex items-center justify-center hover:scale-105 transition-transform">
               <Stethoscope size={20} strokeWidth={2.5} />
@@ -307,14 +307,14 @@ function DashboardContent() {
 
           <nav className="flex-1 flex flex-col items-center gap-0.5 w-full px-1.5">
             {menuItems.filter(item => !item.premium || !isPremium).map(item => (
-              <button key={item.id} onClick={() => navigateTo(item.id)} className={`relative w-full flex flex-col items-center justify-center gap-1 py-3 rounded-xl text-[11px] font-bold transition-all cursor-pointer text-center group ${item.premium ? (page === item.id ? 'bg-amber-50 text-amber-600' : 'text-amber-500 hover:bg-amber-50 hover:text-amber-600') : (page === item.id ? 'bg-red-50 text-red-600' : 'text-slate-900 hover:bg-red-50 hover:text-red-600')}`}>
+              <button key={item.id} onClick={() => navigateTo(item.id)} className={`relative w-full flex flex-col items-center justify-center gap-1 py-3 rounded-xl text-[11px] font-semibold transition-all cursor-pointer text-center group ${item.premium ? (page === item.id ? 'bg-amber-50 text-amber-600' : 'text-amber-500 hover:bg-amber-50 hover:text-amber-600') : (page === item.id ? 'bg-red-50 text-red-600' : 'text-slate-900 hover:bg-red-50 hover:text-red-600')}`}>
                 {page === item.id && <span className={`absolute -left-1.5 top-1/2 -translate-y-1/2 w-[3px] h-7 rounded-full ${item.premium ? 'bg-amber-400' : 'bg-red-600'}`}></span>}
                 {item.premium ? (
                   <span className="w-8 h-8 bg-gradient-to-br from-amber-400 to-yellow-500 text-amber-950 rounded-lg flex items-center justify-center transition-transform duration-200 group-hover:scale-110">
-                    <item.icon size={18} strokeWidth={1.8} />
+                    <item.icon size={18} strokeWidth={2} />
                   </span>
                 ) : (
-                  <item.icon size={21} strokeWidth={1.6} className="transition-transform duration-200 group-hover:scale-125" />
+                  <item.icon size={20} strokeWidth={1.8} className="transition-transform duration-200 group-hover:scale-125" />
                 )}
                 <span>{item.label}</span>
               </button>
