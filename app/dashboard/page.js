@@ -600,7 +600,7 @@ function DashboardContent() {
               <h2 className="text-xs font-black uppercase tracking-widest text-slate-400 mb-4">Commencer à m'entraîner</h2>
               <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-10">
                 <a href="/specifique" onClick={e => { if (trialDays === 0 && !isPremium) { e.preventDefault(); setShowBlockPopup(true) } }} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-blue-200 hover:-translate-y-0.5 transition-all duration-200 group flex flex-col items-center text-center">
-                  <div className="w-11 h-11 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                  <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
                   </div>
                   <h3 className="font-bold text-slate-900 text-sm mb-1">Entraînement spécifique</h3>
@@ -609,7 +609,7 @@ function DashboardContent() {
                 </a>
                 <a href="/maths" onClick={e => { if (trialDays === 0 && !isPremium) { e.preventDefault(); setShowBlockPopup(true) } }} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-red-200 hover:-translate-y-0.5 transition-all duration-200 group flex flex-col items-center text-center relative">
                   <span className="absolute top-2 right-2 text-[9px] font-black text-red-600 bg-red-50 px-1.5 py-0.5 rounded-md">30 min</span>
-                  <div className="w-11 h-11 bg-red-50 text-red-600 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                  <div className="w-12 h-12 bg-red-50 text-red-600 rounded-2xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>
                   </div>
                   <h3 className="font-bold text-slate-900 text-sm mb-1">Entraînement mathématiques</h3>
@@ -618,7 +618,7 @@ function DashboardContent() {
                 </a>
                 <a href="/redaction" onClick={e => { if (trialDays === 0 && !isPremium) { e.preventDefault(); setShowBlockPopup(true) } }} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-purple-200 hover:-translate-y-0.5 transition-all duration-200 group flex flex-col items-center text-center relative">
                   <span className="absolute top-2 right-2 text-[9px] font-black text-purple-600 bg-purple-50 px-1.5 py-0.5 rounded-md">30 min</span>
-                  <div className="w-11 h-11 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                  <div className="w-12 h-12 bg-purple-50 text-purple-600 rounded-2xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
                   </div>
                   <h3 className="font-bold text-slate-900 text-sm mb-1">Entraînement rédactionnel</h3>
@@ -627,7 +627,7 @@ function DashboardContent() {
                 </a>
                 <a href="/examen" onClick={e => { if (trialDays === 0 && !isPremium) { e.preventDefault(); setShowBlockPopup(true) } }} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-yellow-200 hover:-translate-y-0.5 transition-all duration-200 group flex flex-col items-center text-center relative">
                   <span className="absolute top-2 right-2 text-[9px] font-black text-yellow-600 bg-yellow-50 px-1.5 py-0.5 rounded-md">1H</span>
-                  <div className="w-11 h-11 bg-yellow-50 text-yellow-600 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                  <div className="w-12 h-12 bg-yellow-50 text-yellow-600 rounded-2xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></svg>
                   </div>
                   <h3 className="font-bold text-slate-900 text-sm mb-1">Examen blanc</h3>
@@ -635,7 +635,7 @@ function DashboardContent() {
                   <span className="text-[10px] font-black bg-yellow-50 text-yellow-600 px-2 py-0.5 rounded-md mt-3">Note /20</span>
                 </a>
                 <a href="/oral" onClick={e => { if (trialDays === 0 && !isPremium) { e.preventDefault(); setShowBlockPopup(true) } }} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-emerald-200 hover:-translate-y-0.5 transition-all duration-200 group flex flex-col items-center text-center">
-                  <div className="w-11 h-11 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                  <div className="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
                   </div>
                   <h3 className="font-bold text-slate-900 text-sm mb-1">Questions sur votre parcours</h3>
@@ -665,6 +665,7 @@ function DashboardContent() {
                     )}
                   </div>
                   <div>
+                    <p className="text-sm font-black text-slate-900 mb-1">Ma série</p>
                     <p className="text-2xl font-black text-slate-900">{streak} <span className="text-xs font-bold text-slate-400">jour(s) d'affilée</span></p>
                   </div>
                 </div>
@@ -698,13 +699,13 @@ function DashboardContent() {
                       <p className="text-sm font-black text-slate-900">Objectif de la semaine</p>
                       <span className="text-xs font-black text-slate-400">{weekData.count}/5 exercices</span>
                     </div>
-                    <div className="w-full h-3 bg-slate-100 rounded-full overflow-hidden mb-3">
-                      <div className="h-full bg-red-500 rounded-full transition-all duration-500" style={{width: `${weekProgress}%`}}></div>
+                    <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden mb-3">
+                      <div className="h-full bg-gradient-to-r from-red-500 to-red-600 rounded-full transition-all duration-500" style={{width: `${weekProgress}%`}}></div>
                     </div>
                     <div className="flex justify-between">
                       {['L', 'M', 'M', 'J', 'V', 'S', 'D'].map((day, i) => (
                         <div key={i} className="flex flex-col items-center gap-1">
-                          <div className={`w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-black ${weekData.daysWithExercise.has(i) ? 'bg-red-100 text-red-600' : 'bg-slate-100 text-slate-400'}`}>
+                          <div className={`w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-black ${weekData.daysWithExercise.has(i) ? 'bg-red-600 text-white shadow-sm shadow-red-200' : 'bg-slate-100 text-slate-400'}`}>
                             {weekData.daysWithExercise.has(i) ? <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg> : day}
                           </div>
                         </div>
@@ -717,8 +718,8 @@ function DashboardContent() {
                       <p className="text-sm font-black text-slate-900">Objectif du mois</p>
                       <span className="text-xs font-black text-slate-400">{monthData.count}/20 exercices</span>
                     </div>
-                    <div className="w-full h-3 bg-slate-100 rounded-full overflow-hidden mb-3">
-                      <div className="h-full bg-amber-500 rounded-full transition-all duration-500" style={{width: `${monthProgress}%`}}></div>
+                    <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden mb-3">
+                      <div className="h-full bg-gradient-to-r from-amber-400 to-amber-500 rounded-full transition-all duration-500" style={{width: `${monthProgress}%`}}></div>
                     </div>
                     <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3 text-center">
                       <p className="text-sm font-bold text-emerald-700">Continue comme ça, c'est très bien !</p>
@@ -730,7 +731,7 @@ function DashboardContent() {
               {/* RACCOURCIS UTILES */}
               <h2 className="text-xs font-black uppercase tracking-widest text-slate-400 mb-4">Raccourcis utiles</h2>
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
-                <a href="/calculs-doses" className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-red-200 transition group flex items-center gap-3">
+                <a href="/calculs-doses" className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-red-200 hover:-translate-y-0.5 transition-all duration-200 group flex items-center gap-3">
                   <div className="w-10 h-10 bg-red-50 text-red-600 rounded-xl flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2Z"/><path d="M9 7h6"/><path d="M12 7v6"/><path d="M9 17h6"/></svg>
                   </div>
@@ -739,7 +740,7 @@ function DashboardContent() {
                     <p className="text-[10px] text-slate-400 font-medium">Calculs de doses</p>
                   </div>
                 </a>
-                <a href="/blog" className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-purple-200 transition group flex items-center gap-3">
+                <a href="/blog" className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-purple-200 hover:-translate-y-0.5 transition-all duration-200 group flex items-center gap-3">
                   <div className="w-10 h-10 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
                   </div>
@@ -748,7 +749,7 @@ function DashboardContent() {
                     <p className="text-[10px] text-slate-400 font-medium">Articles</p>
                   </div>
                 </a>
-                <button onClick={() => { setShowReviewPopup(true); setReviewRating(0); setReviewComment(''); setReviewSent(false) }} className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-amber-200 transition group flex items-center gap-3 cursor-pointer text-left">
+                <button onClick={() => { setShowReviewPopup(true); setReviewRating(0); setReviewComment(''); setReviewSent(false) }} className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-amber-200 hover:-translate-y-0.5 transition-all duration-200 group flex items-center gap-3 cursor-pointer text-left">
                   <div className="w-10 h-10 bg-amber-50 text-amber-500 rounded-xl flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
                   </div>
@@ -757,7 +758,7 @@ function DashboardContent() {
                     <p className="text-[10px] text-slate-400 font-medium">Donnez votre avis</p>
                   </div>
                 </button>
-                <button onClick={() => { setShowSupportPopup(true); setSupportCategory(''); setSupportMessage(''); setSupportFile(null); setSupportSent(false) }} className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-slate-300 transition group flex items-center gap-3 cursor-pointer text-left">
+                <button onClick={() => { setShowSupportPopup(true); setSupportCategory(''); setSupportMessage(''); setSupportFile(null); setSupportSent(false) }} className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-slate-300 hover:-translate-y-0.5 transition-all duration-200 group flex items-center gap-3 cursor-pointer text-left">
                   <div className="w-10 h-10 bg-slate-100 text-slate-500 rounded-xl flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
                     <CircleHelp size={20} strokeWidth={1.8} />
                   </div>
@@ -770,7 +771,7 @@ function DashboardContent() {
 
               {/* CTA Premium */}
               {!isPremium && (
-                <div className="bg-slate-900 rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="bg-slate-900 rounded-2xl border border-slate-800 shadow-lg shadow-slate-900/10 p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-4">
                   <div>
                     <div className="flex items-center gap-2 mb-2"><span className="bg-slate-700 text-slate-300 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider">Plan gratuit</span></div>
                     <h3 className="text-lg font-black text-white mb-1">Passez au niveau supérieur</h3>
