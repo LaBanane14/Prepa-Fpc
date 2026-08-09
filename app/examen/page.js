@@ -25,6 +25,8 @@ export default function ExamenPage() {
   const [error, setError] = useState('')
   const [showBareme, setShowBareme] = useState(false)
   const [loadingProgress, setLoadingProgress] = useState(0)
+  const [showWaitPopup, setShowWaitPopup] = useState(false)
+  const genStartedRef = useRef(false)
   const [correctingStep, setCorrectingStep] = useState(0)
 
   // Maths state
@@ -62,7 +64,8 @@ export default function ExamenPage() {
       setAuthLoading(false)
       const skipPopup = localStorage.getItem('examen_skip_info') === 'true'
       if (skipPopup) {
-        genererSujets(session.user)
+        // Garde anti double-lancement (StrictMode monte deux fois en dev)
+        if (!genStartedRef.current) { genStartedRef.current = true; genererSujets(session.user) }
       } else {
         setShowInfoPopup(true)
         setStep(null)
@@ -150,8 +153,8 @@ export default function ExamenPage() {
         })
       ])
       const [dataMaths, dataRedaction] = await Promise.all([resMaths.json(), resRedaction.json()])
-      if (!resMaths.ok || dataMaths.error) { setError(dataMaths.error || 'Erreur lors de la génération du sujet maths.'); window.location.href = '/dashboard'; return }
-      if (!resRedaction.ok || dataRedaction.error) { setError(dataRedaction.error || 'Erreur lors de la génération du sujet rédaction.'); window.location.href = '/dashboard'; return }
+      if (!resMaths.ok || dataMaths.error) { setStep(null); setShowWaitPopup(true); return }
+      if (!resRedaction.ok || dataRedaction.error) { setStep(null); setShowWaitPopup(true); return }
       const elapsed = Date.now() - startTime
       if (elapsed < 25000) await new Promise(r => setTimeout(r, 25000 - elapsed))
       setSujetMaths(dataMaths.sujet)
@@ -163,8 +166,8 @@ export default function ExamenPage() {
       setStep('epreuve-maths')
       setTimerActive(true)
     } catch (err) {
-      setError('Erreur de connexion.')
-      window.location.href = '/dashboard'
+      setStep(null)
+      setShowWaitPopup(true)
     }
   }
 
@@ -369,6 +372,26 @@ export default function ExamenPage() {
                     <input type="checkbox" checked={dontShowAgain} onChange={e => setDontShowAgain(e.target.checked)} className="w-4 h-4 rounded border-slate-300 text-yellow-500 focus:ring-yellow-500 cursor-pointer" />
                     <span className="text-xs text-slate-400 font-medium">Ne plus afficher ce message</span>
                   </label>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ===== POPUP PATIENTER ===== */}
+          {showWaitPopup && (
+            <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
+              <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full animate-fade-in overflow-hidden">
+                <div className="bg-slate-900 px-6 py-5">
+                  <div className="text-3xl mb-2">⏳</div>
+                  <h2 className="text-lg font-black text-white">Un petit instant...</h2>
+                  <p className="text-slate-400 text-sm font-medium mt-1">La génération n'a pas pu démarrer.</p>
+                </div>
+                <div className="p-6 text-center">
+                  <p className="text-slate-500 font-medium text-sm mb-6">Trop de générations rapprochées ou petit souci de connexion. Patientez quelques secondes, puis relancez l'épreuve.</p>
+                  <div className="flex flex-col gap-3">
+                    <button onClick={() => { setShowWaitPopup(false); genererSujets() }} className="bg-slate-900 hover:bg-black text-white font-bold py-3 px-6 rounded-xl transition shadow-lg text-sm cursor-pointer">Réessayer</button>
+                    <a href="/dashboard" className="text-slate-500 font-medium text-sm hover:text-slate-700 transition">Retour au tableau de bord</a>
+                  </div>
                 </div>
               </div>
             </div>
