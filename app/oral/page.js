@@ -51,7 +51,7 @@ export default function OralPage() {
       const trialMs = 7 * 24 * 60 * 60 * 1000 - (Date.now() - new Date(session.user.created_at))
       if (!hasSub && trialMs <= 0) { setShowAccessBlock(true); setAuthLoading(false); return }
       setAuthLoading(false)
-      const skipPopup = localStorage.getItem('oral_skip_info') === 'true'
+      const skipPopup = session.user.user_metadata?.oral_skip_info === true || localStorage.getItem('oral_skip_info') === 'true'
       if (skipPopup) {
         setStep('upload')
       } else {
@@ -84,7 +84,10 @@ export default function OralPage() {
   }, [timerActive])
 
   function handleStartFromPopup() {
-    if (dontShowAgain) localStorage.setItem('oral_skip_info', 'true')
+    if (dontShowAgain) {
+      localStorage.setItem('oral_skip_info', 'true')
+      supabase.auth.updateUser({ data: { oral_skip_info: true } })
+    }
     setShowInfoPopup(false)
     setStep('upload')
   }

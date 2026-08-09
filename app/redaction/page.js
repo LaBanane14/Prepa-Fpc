@@ -49,7 +49,7 @@ export default function RedactionPage() {
       const trialMs = 7 * 24 * 60 * 60 * 1000 - (Date.now() - new Date(session.user.created_at))
       if (!hasSub && trialMs <= 0) { setShowAccessBlock(true); setAuthLoading(false); return }
       setAuthLoading(false)
-      const skipPopup = localStorage.getItem('redaction_skip_info') === 'true'
+      const skipPopup = session.user.user_metadata?.redaction_skip_info === true || localStorage.getItem('redaction_skip_info') === 'true'
       if (skipPopup) {
         // Garde anti double-lancement (StrictMode monte deux fois en dev)
         if (!genStartedRef.current) { genStartedRef.current = true; genererSujet(session.user) }
@@ -106,7 +106,10 @@ export default function RedactionPage() {
   async function handleLogout() { await supabase.auth.signOut(); window.location.href = '/' }
 
   function handleStartFromPopup() {
-    if (dontShowAgain) localStorage.setItem('redaction_skip_info', 'true')
+    if (dontShowAgain) {
+      localStorage.setItem('redaction_skip_info', 'true')
+      supabase.auth.updateUser({ data: { redaction_skip_info: true } })
+    }
     setShowInfoPopup(false)
     genererSujet()
   }

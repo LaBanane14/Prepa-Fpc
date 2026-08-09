@@ -103,7 +103,7 @@ export default function SpecifiquePage() {
       const trialMs = 7 * 24 * 60 * 60 * 1000 - (Date.now() - new Date(session.user.created_at))
       if (!hasSub && trialMs <= 0) { setShowAccessBlock(true); setAuthLoading(false); return }
       setAuthLoading(false)
-      const skipPopup = localStorage.getItem('specifique_skip_info') === 'true'
+      const skipPopup = session.user.user_metadata?.specifique_skip_info === true || localStorage.getItem('specifique_skip_info') === 'true'
       if (!skipPopup) {
         setShowInfoPopup(true)
         setStep(null)
@@ -288,7 +288,7 @@ export default function SpecifiquePage() {
                   </div>
                 ))}
               </div>
-              <button onClick={() => { if (dontShowAgain) localStorage.setItem('specifique_skip_info', 'true'); setShowInfoPopup(false); setStep('choix') }} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl transition shadow-lg shadow-blue-200/50 text-sm flex items-center justify-center gap-2 cursor-pointer mb-4">
+              <button onClick={() => { if (dontShowAgain) { localStorage.setItem('specifique_skip_info', 'true'); supabase.auth.updateUser({ data: { specifique_skip_info: true } }) } setShowInfoPopup(false); setStep('choix') }} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl transition shadow-lg shadow-blue-200/50 text-sm flex items-center justify-center gap-2 cursor-pointer mb-4">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
                 C'est parti !
               </button>

@@ -50,7 +50,7 @@ export default function MathsPage() {
       const trialMs = 7 * 24 * 60 * 60 * 1000 - (Date.now() - created)
       if (!hasSub && trialMs <= 0) { setShowAccessBlock(true); setAuthLoading(false); return }
       setAuthLoading(false)
-      const skipPopup = localStorage.getItem('maths_skip_info') === 'true'
+      const skipPopup = session.user.user_metadata?.maths_skip_info === true || localStorage.getItem('maths_skip_info') === 'true'
       if (skipPopup) {
         // Garde anti double-lancement (StrictMode monte deux fois en dev)
         if (!genStartedRef.current) { genStartedRef.current = true; genererSujet(session.user) }
@@ -107,7 +107,11 @@ export default function MathsPage() {
   async function handleLogout() { await supabase.auth.signOut(); window.location.href = '/' }
 
   function handleStartFromPopup() {
-    if (dontShowAgain) localStorage.setItem('maths_skip_info', 'true')
+    if (dontShowAgain) {
+      localStorage.setItem('maths_skip_info', 'true')
+      // Enregistré aussi sur le compte : la préférence suit l'utilisateur (appareils, domaines, purge navigateur)
+      supabase.auth.updateUser({ data: { maths_skip_info: true } })
+    }
     setShowInfoPopup(false)
     genererSujet()
   }
