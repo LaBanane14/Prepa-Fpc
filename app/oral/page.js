@@ -312,42 +312,70 @@ export default function OralPage() {
 
           {/* ===== UPLOAD ===== */}
           {step === 'upload' && (
-            <div className="animate-fade-in min-h-full lg:h-[calc(100vh-2.5rem)] flex items-center justify-center">
-              <div className="bg-white border border-slate-200 rounded-2xl shadow-sm max-w-2xl w-full p-6 sm:p-10">
+            <div className="animate-fade-in min-h-full lg:h-[calc(100vh-2.5rem)] flex items-center justify-center" style={{fontFamily: "'Nunito', sans-serif"}}>
+              <div className="relative bg-white border border-slate-200 rounded-[20px] sm:rounded-[28px] max-w-2xl w-full p-6 sm:p-12 overflow-hidden">
+                <div aria-hidden="true" className="absolute inset-0 pointer-events-none" style={{background: 'radial-gradient(circle at top right, rgba(5,150,105,0.08), transparent 60%)'}}></div>
+                <div className="relative">
 
-                {/* Top bar */}
-                <div className="flex items-center justify-end mb-6">
-                  <a href="/dashboard" className="bg-slate-900 hover:bg-black text-white font-bold text-sm px-5 py-2.5 rounded-xl transition flex items-center gap-2">
-                    Quitter l'exercice
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-                  </a>
-                </div>
-
-                {/* Upload zone */}
-                {error && <div className="bg-red-50 border border-red-200 text-red-700 font-bold text-sm p-4 rounded-xl mb-6 text-center">{error}</div>}
-
-                <label className="block cursor-pointer mb-6">
-                  <div className="bg-gradient-to-br from-emerald-50 to-teal-50 border-2 border-dashed border-emerald-300 hover:border-emerald-500 rounded-3xl p-8 sm:p-12 lg:p-16 text-center transition-all hover:shadow-lg hover:shadow-emerald-100 group">
-                    <div className="w-20 h-20 bg-white text-emerald-500 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-emerald-100 group-hover:scale-110 transition-transform">
-                      <svg className="w-10 h-10" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M12 18v-6"/><path d="m9 15 3-3 3 3"/></svg>
+                  {/* En-tête façon LoaderArc */}
+                  <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8 flex-wrap">
+                    <div className="w-11 h-11 sm:w-14 sm:h-14 bg-emerald-100 text-emerald-600 rounded-xl sm:rounded-2xl grid place-items-center shrink-0">
+                      <MessageCircleQuestion size={26} strokeWidth={1.8} />
                     </div>
-                    <p className="font-black text-slate-800 text-xl mb-2">Déposez votre CV ici</p>
-                    <p className="text-slate-500 font-medium mb-6">ou cliquez pour parcourir vos fichiers</p>
-                    <div className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 sm:px-8 py-2.5 sm:py-3 rounded-xl transition shadow-lg shadow-emerald-200">
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                      Importer mon CV
+                    <div className="flex-1 min-w-0">
+                      <h2 className="text-[11px] font-extrabold uppercase tracking-widest text-emerald-600">Oral FPC — entretien personnalisé</h2>
+                      <h1 className="text-lg sm:text-2xl font-black text-slate-900 mt-0.5">Préparation à l'oral</h1>
                     </div>
-                    <p className="text-xs text-slate-400 mt-4">PDF uniquement — 10 Mo max</p>
+                    <a href="/dashboard" className="ml-auto shrink-0 bg-slate-900 hover:bg-black text-white font-bold text-sm px-3 py-2.5 sm:px-5 rounded-xl transition flex items-center gap-2">
+                      <span className="hidden sm:inline">Quitter l'exercice</span>
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                    </a>
                   </div>
-                  <input type="file" accept=".pdf,application/pdf" onChange={handleUpload} className="hidden" />
-                </label>
 
-                {/* Pas de note */}
-                <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start gap-3">
-                  <svg className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M12 9v4"/><path d="M12 17h.01"/><circle cx="12" cy="12" r="10"/></svg>
-                  <p className="text-sm text-amber-800 font-medium"><strong>Pas de notation !</strong> Le but est seulement de vous préparer au mieux pour le jour J.</p>
+                  <h2 className="text-2xl sm:text-4xl font-black tracking-tight text-slate-900 mb-2">Votre CV, <span className="bg-gradient-to-r from-emerald-600 to-emerald-400 bg-clip-text text-transparent">vos questions</span>.</h2>
+                  <p className="text-[13px] sm:text-[15px] text-slate-500 font-semibold mb-6 sm:mb-8 max-w-lg">Déposez votre CV : notre IA prépare 10 questions de jury personnalisées sur votre parcours.</p>
+
+                  {error && <div className="bg-red-50 border border-red-200 text-red-700 font-bold text-sm p-4 rounded-xl mb-5 text-center">{error}</div>}
+
+                  {/* Dropzone compacte */}
+                  <label className="block cursor-pointer">
+                    <div className="border-[1.5px] border-emerald-200 hover:border-emerald-400 bg-emerald-50/60 rounded-2xl p-4 sm:p-5 flex items-center gap-3 sm:gap-4 transition-all hover:shadow-lg hover:shadow-emerald-100 group">
+                      <div className="w-11 h-11 sm:w-12 sm:h-12 bg-white text-emerald-600 rounded-xl grid place-items-center shrink-0 shadow-sm group-hover:scale-110 transition-transform">
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M12 18v-6"/><path d="m9 15 3-3 3 3"/></svg>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-black text-slate-900 text-sm sm:text-base">Déposez votre CV ici</p>
+                        <p className="text-xs sm:text-sm text-slate-500 font-medium">PDF uniquement · 10 Mo max</p>
+                      </div>
+                      <span className="shrink-0 inline-flex items-center gap-2 bg-emerald-600 group-hover:bg-emerald-700 text-white font-bold text-sm px-4 sm:px-6 py-2.5 rounded-full transition shadow-lg shadow-emerald-200">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                        <span className="hidden sm:inline">Parcourir</span>
+                      </span>
+                    </div>
+                    <input type="file" accept=".pdf,application/pdf" onChange={handleUpload} className="hidden" />
+                  </label>
+
+                  {/* Les 3 étapes */}
+                  <div className="grid sm:grid-cols-3 gap-3 sm:gap-4 mt-6 sm:mt-8">
+                    {[
+                      'Déposez votre CV en PDF',
+                      'L\'IA analyse votre parcours',
+                      'Répondez à 10 questions de jury personnalisées',
+                    ].map((txt, i) => (
+                      <div key={i} className="flex items-start gap-2.5">
+                        <span className="w-6 h-6 bg-emerald-100 text-emerald-700 rounded-full grid place-items-center text-xs font-black shrink-0">{i + 1}</span>
+                        <p className="text-xs sm:text-[13px] text-slate-600 font-semibold leading-snug pt-1">{txt}</p>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Sans notation */}
+                  <div className="flex items-center gap-2 mt-6 sm:mt-8">
+                    <svg className="w-4 h-4 text-emerald-600 shrink-0" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg>
+                    <p className="text-xs sm:text-sm text-slate-500 font-semibold">Sans notation — le but est seulement de vous préparer au mieux pour le jour J.</p>
+                  </div>
+
                 </div>
-
               </div>
             </div>
           )}
