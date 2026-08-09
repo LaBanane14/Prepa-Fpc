@@ -598,7 +598,7 @@ function DashboardContent() {
               </div>
 
               {/* ENTRAÎNEMENTS */}
-              <h2 className="text-xs font-black uppercase tracking-widest text-slate-400 mb-4">Commencer à m'entraîner</h2>
+              <h2 className="text-xs font-black uppercase tracking-widest text-slate-900 mb-4">Commencer à m'entraîner</h2>
               <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-10">
                 <Link href="/specifique" onClick={e => { if (trialDays === 0 && !isPremium) { e.preventDefault(); setShowBlockPopup(true) } }} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-blue-200 hover:-translate-y-0.5 transition-all duration-200 group flex flex-col items-center text-center">
                   <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
@@ -646,7 +646,7 @@ function DashboardContent() {
               </div>
 
               {/* STREAK + MOYENNE + OBJECTIF SEMAINE */}
-              <h2 className="text-xs font-black uppercase tracking-widest text-slate-400 mb-4">Ma progression</h2>
+              <h2 className="text-xs font-black uppercase tracking-widest text-slate-900 mb-4">Ma progression</h2>
               <div className="grid sm:grid-cols-3 gap-4 mb-10">
                 {/* Streak */}
                 <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-3">
@@ -730,7 +730,7 @@ function DashboardContent() {
               </div>
 
               {/* RACCOURCIS UTILES */}
-              <h2 className="text-xs font-black uppercase tracking-widest text-slate-400 mb-4">Raccourcis utiles</h2>
+              <h2 className="text-xs font-black uppercase tracking-widest text-slate-900 mb-4">Raccourcis utiles</h2>
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
                 <a href="/calculs-doses" className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-red-200 hover:-translate-y-0.5 transition-all duration-200 group flex items-center gap-3">
                   <div className="w-10 h-10 bg-red-50 text-red-600 rounded-xl flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
